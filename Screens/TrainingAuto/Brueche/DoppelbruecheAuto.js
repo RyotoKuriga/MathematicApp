@@ -1,18 +1,18 @@
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 import React, { useState } from 'react';
 import * as math from 'mathjs';
-import { ScaledSheet, moderateScale, verticalScale, scale } from 'react-native-size-matters';
 import MathView from 'react-native-math-view';
+import { ScaledSheet, moderateScale, verticalScale, scale } from 'react-native-size-matters';
 import Slider from '@react-native-community/slider';
 
-export function MultiplikationUndDivisionAutoUebung() {
-  const [Expression, setExpression] = useState('');
+export function DoppelbruecheAuto() {
+  const [Expression1, setExpression1] = useState('');
+  const [Expression2, setExpression2] = useState('');
   const [Solution, setSolution] = useState('');
   const [Result, setResult] = useState('');
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [Brueche, setBrueche] = useState(false);
   const [SliderValue, setSliderValue] = useState(3);
 
-  const mathText = '\\LARGE'
 
   const getRandomInt = (min, max, exclude) => {
     let num;
@@ -22,42 +22,24 @@ export function MultiplikationUndDivisionAutoUebung() {
     return num;
   }
 
+
   const createExpression = () => {
+    let nums = []
+    let expr;
+    let calc;
+
     setSolution('');
 
-    const vars = ['a', 'b', 'c'];
-    const signs = ['*', '/']
-    const amount = SliderValue;
-    let expr = [];
-    let sol;
-
-    for (let i = 0; i < amount; i++) {
-      const randomNum = getRandomInt(0, 10, [0, 1]);
-      const randomVar = vars[getRandomInt(0, 2, [])];
-      expr.push(randomNum + randomVar);
-
-      if (i < amount - 1) {
-        expr.push(signs[getRandomInt(0, 1, [])]);
-      };
+    for (let i = 0; i < 4; i++) {
+      nums.push(getRandomInt(-20, 20, [0]));
     };
 
-
-    expr = expr.join('  ');
-    
-    setExpression(expr);
-
-
-    sol = math.simplify(`${expr}`).toString();
-
-    sol = sol.split(' ');
-    sol = sol.join('');
-    console.log(sol);
-    sol = getFraction(sol);
-
-
-    
-    setResult(sol);
-  };
+    expr = `\\dfrac{\\dfrac{${nums[0]}}{${nums[1]}}}{\\dfrac{${nums[2]}}{${nums[3]}}}`;
+    calc = math.simplify(`(${nums[0]} / ${nums[1]}) / (${nums[2]} / ${nums[3]})`);
+    calc = getFraction(calc.toString());
+    setResult(calc);
+    setExpression1(expr);
+  }
 
   const getFraction = (string) => {
     const array = string.split("");
@@ -78,15 +60,20 @@ export function MultiplikationUndDivisionAutoUebung() {
     part1 = part1.join("");
     part2 = part2.join("");
 
-    console.log(part1 +'  ' + part2);
-
     if (part1.length === 0 || part2.length === 0) {
       return string;
     } else if (part1 == 1) {
       return part2;
     } else {
-        
-      return `\\dfrac{${part2}}{${part1}}`;
+        const num1 = parseFloat(part1);
+        const num2 = parseFloat(part2);
+
+        if (num1 < 0 || num2 < 0) {
+            return `-\\dfrac{${math.abs(num2)}}{${math.abs(num1)}}`;
+        } else {
+            return `\\dfrac{${num2}}{${num1}}`;
+        }
+      
     }
   };
 
@@ -94,50 +81,37 @@ export function MultiplikationUndDivisionAutoUebung() {
     setSolution(Result);
   }
 
+
+
   return (
     <View style={styles.container}>
       <View style={styles.containerExpression}>
         <Text style={stylesScaled.text}>
-          {Expression ? <MathView math={`${mathText} ${Expression}`}/> : createExpression(isEnabled)}
+          {Expression1 ? <MathView math={`\\Large ${Expression1}`}/> : createExpression}
+        </Text>
+      </View>
+
+      <View style={styles.containerExpression2}>
+        <Text style={stylesScaled.text}>
+          {Expression2 ? <MathView math={`\\Large ${Expression2}`}/> : createExpression}
         </Text>
       </View>
 
       <View style={styles.button1}>
         <Pressable onPress={solveExpression}>
           <Text style={stylesScaled.text}>
-            {Solution ? <MathView math={`${mathText} ${Solution}`}/> : 'Lösung anzeigen'}
+            {Solution ? <MathView math={`\\Large ${Solution}`}/> : 'Lösung anzeigen'}
           </Text>
         </Pressable>
       </View>
 
       <View style={styles.button2}>
-        <Pressable onPress={() => createExpression(isEnabled)}>
+        <Pressable onPress={createExpression}>
           <Text style={stylesScaled.text}>
             Ausdruck erstellen
           </Text>
         </Pressable>
-      </View>
-
-      <View style={styles.toggleContainer}>
-        <View>
-          <Text style={styles.toggleText}>
-            Anzahl Glieder
-          </Text>
-        </View>
-        
-        <View style={styles.switchContainer}>
-          <Slider
-            style={{width: 200, height: 40}}
-            minimumValue={2}
-            maximumValue={4}
-            minimumTrackTintColor="#E5CBC6"
-            maximumTrackTintColor="#000000"
-            step={1}
-            value={SliderValue}
-            onValueChange={value => {setSliderValue(value)}}
-          />
-        </View>
-      </View>
+      </View>   
     </View>
   );
 }
@@ -152,6 +126,10 @@ const styles = ScaledSheet.create({
   containerExpression: {
     padding: verticalScale(20),
     marginVertical: verticalScale(20),
+  },
+  containerExpression2: {
+    padding: verticalScale(0),
+    marginVertical: verticalScale(0),
   },
   button1: {
     position: 'absolute',
@@ -171,7 +149,7 @@ const styles = ScaledSheet.create({
   },
   switch: {
     position: 'absolute',
-    marginTop: verticalScale(360),
+    marginTop: verticalScale(320),
   },
   switchContainer: {
     position: 'absolute',

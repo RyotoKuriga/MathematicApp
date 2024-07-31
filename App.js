@@ -53,7 +53,19 @@ import { MengenoperationenUebung } from './Screens/TrainingAuto/Mengen/Mengenope
 
 import { AdditionUndSubtraktionAutoUebung } from './Screens/TrainingAuto/Grundoperationen/AdditionUndSubtraktionAutoUebung';
 import { MultiplikationUndDivisionAutoUebung } from './Screens/TrainingAuto/Grundoperationen/MultiplikationUndDivisionAutoUebung';
+
 import { AusklammernAuto } from './Screens/TrainingAuto/Faktorisieren/AusklammernAuto';
+import { BinomischeFormelnAuto } from './Screens/TrainingAuto/Faktorisieren/BinomischeFormelnAuto';
+
+import { ErweiternUndKuerzenAuto } from './Screens/TrainingAuto/Brueche/ErweiternUndKuerzenAuto';
+import { BruecheMultiplizierenUndDividieren } from './Screens/TrainingAuto/Brueche/BruecheMultiplizierenUndDividieren';
+import { DoppelbruecheAuto } from './Screens/TrainingAuto/Brueche/DoppelbruecheAuto';
+
+import { GleichungssystemeAufloesen } from './Screens/TrainingAuto/Gleichungssysteme/GleichungssystemeLoesen';
+
+import { FunktionBestimmen } from './Screens/TrainingAuto/LineareFunktionen/FunktionBestimmen';
+import { SchnittpunktBestimmen } from './Screens/TrainingAuto/LineareFunktionen/SchnittpunktBestimmen';
+import { BruecheAdditionUndSubtraktionAuto } from './Screens/TrainingAuto/Brueche/BruecheAddierenUndSubtrahieren';
 
 //ÜbungenManu
 
@@ -61,6 +73,13 @@ import { MengenNotationManu } from './Screens/TrainingManu/Mengen/Mengennotation
 import { BinomischeFormelnManu } from './Screens/TrainingManu/Faktorisieren/BinomischeFormelnManu';
 import { AusklammernManu } from './Screens/TrainingManu/Faktorisieren/AusklammernManu';
 import { GleichungssystemeManu } from './Screens/TrainingManu/Gleichungssysteme/GleichungsystemeManu';
+import { LineareFunktionenManu } from './Screens/TrainingManu/LineareFunktionen/LineareFunktionenManu';
+import { Grundoperationen } from './Screens/TrainingManu/Grundoperationen/Grundoperationen';
+import { Potenzrechnen } from './Screens/TrainingManu/Grundoperationen/Potenzrechnen';
+import { composition } from 'mathjs';
+import { Betragsaufgaben } from './Screens/TrainingManu/Grundoperationen/Betragsaufgaben';
+import { Bruchrechnen } from './Screens/TrainingManu/Brueche/Bruchrechnen';
+
 
 const Tab = createBottomTabNavigator();
 const ScreenStack = createNativeStackNavigator();
@@ -139,13 +158,30 @@ function TrainingChoice() {
     { name: 'Mengenoperationenübung', component: MengenoperationenUebung},
 
     { name: '  Ausklammern  ', component: AusklammernAuto},
+    { name: '  Binomische Formeln  ', component: BinomischeFormelnAuto},
+    { name: 'Erweitern & Kürzen', component: ErweiternUndKuerzenAuto},
+
+    { name: 'Brüche addieren & subtrahieren', component: BruecheAdditionUndSubtraktionAuto},
+    { name: 'Brüche multiplizieren & dividieren', component: BruecheMultiplizierenUndDividieren},
+    { name: ' Doppelbrüche ', component: DoppelbruecheAuto},
+
+    { name: 'Funktionen bestimmen', component: FunktionBestimmen},
+    { name: 'Schnittpunkt bestimmen', component: SchnittpunktBestimmen},
+    { name: 'Gleichungssysteme lösen', component: GleichungssystemeAufloesen},
 
     //manu
 
     { name: 'Mengen', component: MengenNotationManu},
     { name: ' Binomische Formeln ', component: BinomischeFormelnManu},
     { name: ' Ausklammern ', component: AusklammernManu},
-    { name: 'Gleichungssysteme', component: GleichungssystemeManu}
+    { name: 'Gleichungssysteme', component: GleichungssystemeManu},
+    { name: ' Lineare Funktionen ', component: LineareFunktionenManu},
+
+    { name: 'Grundoperationen', component: Grundoperationen},
+    { name: 'Potenzrechnen', component: Potenzrechnen},
+    { name: 'Betragsaufgaben', component: Betragsaufgaben},
+    { name: 'Bruchrechnen', component: Bruchrechnen},
+
   ];
 
   return (
@@ -153,6 +189,7 @@ function TrainingChoice() {
       <ScreenStack.Screen 
         name='Training' 
         component={Training}
+        
         options={{
           headerShown: true,
         }}

@@ -8,13 +8,13 @@ export function Theorie() {
 
   const buttons = [
     { id: 1, text: 'Mengenlehre', subButtons: ['Was sind Mengen?', 'Zahlenmengen', 'Mengenoperationen'] },
-    { id: 2, text: 'Grundoperationen', subButtons: ['Addition & Subtraktion', 'Multiplikation & Division', 'Potenzen & Wurzeln', 'Betrag', 'Polynomdivision'] },
-    { id: 3, text: 'Faktorisieren', subButtons: ['Ausklammern', 'Mehrfaches Ausklammern', 'Klammeransatz', 'Binomische Formeln'] },
+    { id: 2, text: 'Grundoperationen', subButtons: ['Addition & Subtraktion', 'Multiplikation & Division', 'Potenzen & Wurzeln', 'Betrag'] },
+    { id: 3, text: 'Faktorisieren', subButtons: ['Ausklammern', 'Mehrfaches Ausklammern', 'Klammeransatz', '  Binomische Formeln  '] },
     { id: 4, text: 'Bruchrechnen', subButtons: ['Was ist ein Bruch?', 'Kürzen & Erweitern', 'Multiplikation & Division von Brüchen', 'Doppelbrüche'] },
     { id: 5, text: 'Gleichungssysteme', subButtons: ['Gleichungssysteme auflösen'] },
     { id: 6, text: 'Lineare Funktionen', subButtons: ['Was ist eine Funktion?', 'Lineare Funktionen I', 'Lineare Funktionen II', 'Lineare Funktionen III'] },
-    { id: 7, text: 'Strahlensätze', subButtons: ['Die drei Strahlensätze', 'Zentrische Streckung'] },
-    { id: 8, text: 'Stochastik', subButtons: ['Wahrscheinlichkeit', 'Statistik'] },
+    /*{ id: 7, text: 'Strahlensätze', subButtons: ['Die drei Strahlensätze', 'Zentrische Streckung'] },
+    { id: 8, text: 'Stochastik', subButtons: ['Wahrscheinlichkeit', 'Statistik'] }*/,
   ];
 
   const handleButtonPress = (buttonId, subButtonsCount) => {
@@ -73,6 +73,7 @@ export function Theorie() {
           )}
         </View>
       ))}
+      <View style={{height: 100}}></View>
     </ScrollView>
 );
 }

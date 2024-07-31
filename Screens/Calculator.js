@@ -2,214 +2,254 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState, useRef } from 'react';
 import { StyleSheet, View, Pressable, ScrollView, Text } from 'react-native';
 import MathView from 'react-native-math-view';
+import * as math from 'mathjs';
 
 export function Calculator() {
-  const [latexExpr, setLatexExpr] = useState('');
-  const [jsExpr, setJsExpr] = useState('');
+  const buttons = [
+    { buttonValue: 'C', value: 'C' },
+    { buttonValue: 'dlt', value: 'dlt' },
+    { buttonValue: '\\leftarrow', value: '\\leftarrow' },
+    { buttonValue: '\\rightarrow', value: '\\rightarrow' },
+    { buttonValue: '${math.sin(}', value: '\\sin(' },
+    { buttonValue: `${math.cos}`, value: '\\cos(' },
+    { buttonValue: `${math.tan}`, value: '\\tan(' },
+    { buttonValue: `${math.pi}`, value: '\\pi' },
+    { buttonValue: '\\frac{\\square}{\\square}', value: '\\frac{\\square}{\\square}' },
+    { buttonValue: 'x^\\square', value: 'x^\\square' },
+    { buttonValue: '\\sqrt{\\square}', value: '\\sqrt{\\square}' },
+    { buttonValue: `${math.e}`, value: 'e' },
+    { buttonValue: '7', value: '7' },
+    { buttonValue: '8', value: '8' },
+    { buttonValue: '9', value: '9' },
+    { buttonValue: '/', value: '/' },
+    { buttonValue: '4', value: '4' },
+    { buttonValue: '5', value: '5' },
+    { buttonValue: '6', value: '6' },
+    { buttonValue: '*', value: ' \\times ' },
+    { buttonValue: '1', value: '1' },
+    { buttonValue: '2', value: '2' },
+    { buttonValue: '3', value: '3' },
+    { buttonValue: '-', value: '-' },
+    { buttonValue: '0', value: '0' },
+    { buttonValue: '.', value: '.' },
+    { buttonValue: '=', value: '=' },
+    { buttonValue: '+', value: '+' },
+    { buttonValue: '(', value: '(' },
+    { buttonValue: ')', value: ')' },
+    { buttonValue: 'log', value: '\\log' },
+    { buttonValue: '!', value: '!' },
+  ];
+
+  const [ExpressionList, setExpressionList] = useState(['|']);
+  const [MathExpressionList, setMathExpressionList] = useState(['|']);
+  const [Expression, setExpression] = useState('');
+  const [MathExpression, setMathExpression] = useState('');
+  const [Solution, setSolution] = useState('');
   const [history, setHistory] = useState([]);
-  const [angleMode, setAngleMode] = useState('rad'); // 'rad' for radians, 'deg' for degrees
-  const [fontSize, setFontSize] = useState(20);
-  const [cursorPos, setCursorPos] = useState(0);
-  const [error, setError] = useState('');
+  const [cursorPosition, setCursorPosition] = useState(0);
+  const [pressedButtonIndex, setPressedButtonIndex] = useState(null);
+  const [switchState, setSwitchState] = useState(0);
 
   const scrollViewRef = useRef();
 
-  const updateDisplayWithCursor = (latex) => {
-    return latex.slice(0, cursorPos) + '|' + latex.slice(cursorPos);
+  const handleInput = (button) => {
+    const { value, buttonValue } = button;
+
+    // Add the new value before the cursor
+    const updatedList = [...ExpressionList];
+    const updatedMathList = [...MathExpressionList];
+    updatedList.splice(cursorPosition, 0, value);
+    updatedMathList.splice(cursorPosition, 0, buttonValue);
+    setExpressionList(updatedList);
+    setMathExpressionList(updatedMathList);
+
+    // Update the cursor position
+    setCursorPosition(cursorPosition + 1);
+
+    // Generate the math expression
+    setMathExpression(updatedMathList.join(''));
+    setExpression(updatedList.join(''));
+    consoleLogs();
   };
 
-  const handlePress = (value, jsValue) => {
-    console.log(jsExpr);
-    setError('');
-    let newLatexExpr, newJsExpr;
-  
-    // Check if the cursor is right after a function
-    if (jsExpr.endsWith('Math.sin(') || jsExpr.endsWith('Math.cos(') || jsExpr.endsWith('Math.tan(') || jsExpr.endsWith('Math.log(')) {
-      newLatexExpr = insertAtCursor(latexExpr, value);
-      newJsExpr = jsExpr + value; // Just add the value inside the function
-    } else {
-      newLatexExpr = insertAtCursor(latexExpr, value);
-      newJsExpr = insertAtJs(jsExpr, jsValue);
-    }
-  
-    setLatexExpr(newLatexExpr);
-    setJsExpr(newJsExpr);
-    setCursorPos(cursorPos + value.length);
+  const consoleLogs = () => {
+    console.log('ExpressionList: ' + ExpressionList.join(''));
+    console.log('MathExpressionList: ' + MathExpressionList.join(''));
+    console.log('Math-Expression: ' + MathExpression);
+    console.log('CursorPosition: ' + cursorPosition);
+    console.log('--------------------------------------------------');
   };
 
-  const handleClear = () => {
-    setLatexExpr('');
-    setJsExpr('');
-    setCursorPos(0);
-    setError('');
-  };
-
-  const handleDelete = () => {
-    if (cursorPos > 0) {
-      const newLatexExpr = removeAtCursor(latexExpr, cursorPos);
-      const newJsExpr = removeAtCursor(jsExpr, cursorPos);
-      const deletionLength = latexExpr.length - newLatexExpr.length;
-      setLatexExpr(newLatexExpr);
-      setJsExpr(newJsExpr);
-      setCursorPos(cursorPos - deletionLength);
-    }
-  };
-
-  const handleEqual = () => {
+  const calculateExpression = () => {
     try {
-      const exprWithAngles = jsExpr.replace(/Math\.(sin|cos|tan)\((.*?)\)/g, (match, func, angle) => {
-        if (angleMode === 'deg') {
-          return `Math.${func}((${angle}) * Math.PI / 180)`;
-        }
-        return `Math.${func}(${angle})`;
-      });
-      const result = eval(exprWithAngles);
-      const roundedResult = Math.round(result * 1000000) / 1000000;
-      setHistory([...history, { latexExpr, result: roundedResult.toString() }]);
-      setLatexExpr('');
-      setJsExpr('');
-      setCursorPos(0);
-    } catch (e) {
-      setError('Invalid Expression');
+      let result;
+      const cleanedExpression = Expression.replace('|', '');
+      const cleanedMathExpression = MathExpression.replace('|', '');
+
+      if (switchState === 0) {
+        result = math.simplify(cleanedMathExpression);
+      } else if (switchState === 1) {
+        result = math.evaluate(cleanedMathExpression);
+      } else {
+        result = math.evaluate(cleanedMathExpression);
+        result = math.format(parseInt(result), { notation: 'exponential' });
+      }
+
+      setSolution(result.toString());
+      setHistory([...history, { expression: cleanedExpression, result: result.toString() }]);
+      setExpressionList(['|']);
+      setMathExpressionList(['|']);
+      setMathExpression('|');
+      setCursorPosition(0);
+    } catch (error) {
+      setSolution('Error');
+    }
+    
+  };
+
+  const handlePress = () => {
+    setSwitchState((prev) => (prev + 1) % 3);
+  };
+
+  const getButtonStyle = () => {
+    switch (switchState) {
+      case 0:
+        return { backgroundColor: '#FAB89C' };
+      case 1:
+        return { backgroundColor: '#BAFA9B' };
+      case 2:
+        return { backgroundColor: '#9BBFFA' };
+      default:
+        return { backgroundColor: '#FAB89C' };
+    }
+  };
+
+  const getButtonText = () => {
+    switch (switchState) {
+      case 0:
+        return 'Brüche';
+      case 1:
+        return 'Dezimal';
+      case 2:
+        return 'Exponent';
+      default:
+        return 'Brüche';
+    }
+  };
+
+  const clearExpression = () => {
+    setExpressionList(['|']);
+    setMathExpressionList(['|']);
+    setMathExpression('|');
+    setCursorPosition(0);
+  };
+
+  const deleteSign = () => {
+    if (cursorPosition > 0) {
+      const updatedList = [...ExpressionList];
+      const updatedMathList = [...MathExpressionList];
+      updatedList.splice(cursorPosition - 1, 1);
+      updatedMathList.splice(cursorPosition - 1, 1);
+      setExpressionList(updatedList);
+      setMathExpressionList(updatedMathList);
+      setCursorPosition(cursorPosition - 1);
+      setMathExpression(updatedMathList.join(''));
+      setExpression(updatedList.join(''));
     }
   };
 
   const moveCursorLeft = () => {
-    if (cursorPos > 0) {
-      if (latexExpr.slice(cursorPos - 4, cursorPos) === 'sin(' || 
-          latexExpr.slice(cursorPos - 4, cursorPos) === 'cos(' || 
-          latexExpr.slice(cursorPos - 4, cursorPos) === 'tan(' || 
-          latexExpr.slice(cursorPos - 4, cursorPos) === 'log(') {
-        setCursorPos(cursorPos - 5);
-      } else if (latexExpr.slice(cursorPos - 6, cursorPos) === '\\times') {
-        setCursorPos(cursorPos - 6);
-      } else {
-        setCursorPos(cursorPos - 1);
-      }
+    if (cursorPosition > 0) {
+      const updatedList = [...ExpressionList];
+      const updatedMathList = [...MathExpressionList];
+      const temp = updatedList[cursorPosition - 1];
+      updatedList[cursorPosition - 1] = updatedList[cursorPosition];
+      updatedList[cursorPosition] = temp;
+      const tempMath = updatedMathList[cursorPosition - 1];
+      updatedMathList[cursorPosition - 1] = updatedMathList[cursorPosition];
+      updatedMathList[cursorPosition] = tempMath;
+      setExpressionList(updatedList);
+      setMathExpressionList(updatedMathList);
+      setCursorPosition(cursorPosition - 1);
+      setMathExpression(updatedMathList.join(''));
+      setExpression(updatedList.join(''));
     }
   };
-  
+
   const moveCursorRight = () => {
-    if (cursorPos < latexExpr.length) {
-      if (latexExpr.slice(cursorPos, cursorPos + 4) === 'sin(' || 
-          latexExpr.slice(cursorPos, cursorPos + 4) === 'cos(' || 
-          latexExpr.slice(cursorPos, cursorPos + 4) === 'tan(' || 
-          latexExpr.slice(cursorPos, cursorPos + 4) === 'log(') {
-        setCursorPos(cursorPos + 4);
-      } else if (latexExpr.slice(cursorPos, cursorPos + 6) === '\\times') {
-        setCursorPos(cursorPos + 6);
-      } else {
-        setCursorPos(cursorPos + 1);
-      }
-    }
-  };
-  
-  const insertAtJs = (str, value) => {
-    return str.slice(0, cursorPos) + value + str.slice(cursorPos);
-  };
-  
-  const insertAtCursor = (str, value) => {
-    return str.slice(0, cursorPos) + value + str.slice(cursorPos);
-  };
-  
-
-  const removeAtCursor = (str, pos) => {
-    if (pos >= 4 && str.slice(pos - 4, pos) === 'sin(') {
-      return str.slice(0, pos - 5) + str.slice(pos);
-    } else if (pos >= 4 && str.slice(pos - 4, pos) === 'cos(') {
-      return str.slice(0, pos - 5) + str.slice(pos);
-    } else if (pos >= 4 && str.slice(pos - 4, pos) === 'tan(') {
-      return str.slice(0, pos - 5) + str.slice(pos);
-    } else if (pos >= 4 && str.slice(pos - 4, pos) === 'log(') {
-      return str.slice(0, pos - 5) + str.slice(pos);
-    } else if (pos >= 6 && str.slice(pos - 6, pos) === '\\times') {
-      return str.slice(0, pos - 6) + str.slice(pos);
-    } else {
-      return str.slice(0, pos - 1) + str.slice(pos);
+    if (cursorPosition < ExpressionList.length - 1) {
+      const updatedList = [...ExpressionList];
+      const updatedMathList = [...MathExpressionList];
+      const temp = updatedList[cursorPosition + 1];
+      updatedList[cursorPosition + 1] = updatedList[cursorPosition];
+      updatedList[cursorPosition] = temp;
+      const tempMath = updatedMathList[cursorPosition + 1];
+      updatedMathList[cursorPosition + 1] = updatedMathList[cursorPosition];
+      updatedMathList[cursorPosition] = tempMath;
+      setExpressionList(updatedList);
+      setMathExpressionList(updatedMathList);
+      setCursorPosition(cursorPosition + 1);
+      setMathExpression(updatedMathList.join(''));
+      setExpression(updatedList.join(''));
     }
   };
 
-  const factorial = (n) => {
-    if (n < 0) return NaN;
-    if (n === 0) return 1;
-    let result = 1;
-    for (let i = 1; i <= n; i++) {
-      result *= i;
-    }
-    return result;
+  const handleTrigonometry = (button) => {
+    const { value, buttonValue } = button;
+  
+    // Add the new value before the cursor
+    const updatedList = [...ExpressionList];
+    const updatedMathList = [...MathExpressionList];
+  
+    // Add the trigonometric function and update the lists
+    updatedList.splice(cursorPosition, 0, value);
+    updatedMathList.splice(cursorPosition, 0, buttonValue);
+    setExpressionList(updatedList);
+    setMathExpressionList(updatedMathList);
+  
+    // Update the cursor position
+    setCursorPosition(cursorPosition + value.length);
+  
+    setMathExpression(updatedMathList.join(''));
+    setExpression(updatedList.join(''));
+    consoleLogs();
   };
-
-  const handleAngleModeToggle = () => {
-    setAngleMode(angleMode === 'rad' ? 'deg' : 'rad');
-  };
-
-  const increaseFontSize = () => {
-    setFontSize(fontSize + 5);
-  };
-
-  const decreaseFontSize = () => {
-    setFontSize(fontSize > 10 ? fontSize - 5 : fontSize);
-  };
-
-  const buttons = [
-    { buttonValue: 'C', value: 'C', jsValue: '', action: handleClear },
-    { buttonValue: 'dlt', value: 'dlt', jsValue: '', action: handleDelete },
-    { buttonValue: '\\leftarrow', value: '\\leftarrow', jsValue: '', action: moveCursorLeft },
-    { buttonValue: '\\rightarrow', value: '\\rightarrow', jsValue: '', action: moveCursorRight },
-    { buttonValue: '\\sin', value: '\\sin(', jsValue: 'Math.sin(', action: null },
-    { buttonValue: '\\cos', value: '\\cos(', jsValue: 'Math.cos(', action: null },
-    { buttonValue: '\\tan', value: '\\tan(', jsValue: 'Math.tan(', action: null },
-    { buttonValue: '\\pi', value: '\\pi', jsValue: 'Math.PI', action: null },
-    { buttonValue: '\\frac{\\square}{\\square}', value: '\\frac{\\square}{\\square}', jsValue: '(', action: null },
-    { buttonValue: 'x^\\square', value: 'x^\\square', jsValue: '^(', action: null },
-    { buttonValue: '\\sqrt{\\square}', value: '\\sqrt{\\square}', jsValue: ')', action: null },
-    { buttonValue: 'e', value: 'e', jsValue: 'Math.E', action: null },
-    { buttonValue: '7', value: '7', jsValue: '7', action: null },
-    { buttonValue: '8', value: '8', jsValue: '8', action: null },
-    { buttonValue: '9', value: '9', jsValue: '9', action: null },
-    { buttonValue: '/', value: '/', jsValue: '/', action: null },
-    { buttonValue: '4', value: '4', jsValue: '4', action: null },
-    { buttonValue: '5', value: '5', jsValue: '5', action: null },
-    { buttonValue: '6', value: '6', jsValue: '6', action: null },
-    { buttonValue: '\\times', value: '\\times', jsValue: '*', action: null },
-    { buttonValue: '1', value: '1', jsValue: '1', action: null },
-    { buttonValue: '2', value: '2', jsValue: '2', action: null },
-    { buttonValue: '3', value: '3', jsValue: '3', action: null },
-    { buttonValue: '-', value: '-', jsValue: '-', action: null },
-    { buttonValue: '0', value: '0', jsValue: '0', action: null },
-    { buttonValue: '.', value: '.', jsValue: '.', action: null },
-    { buttonValue: '=', value: '=', jsValue: '', action: handleEqual },
-    { buttonValue: '+', value: '+', jsValue: '+', action: null },
-    { buttonValue: '(', value: '(', jsValue: '(', action: null },
-    { buttonValue: ')', value: ')', jsValue: ')', action: null },
-    { buttonValue: 'log', value: 'log(', jsValue: 'Math.log(', action: null },
-    { buttonValue: '!', value: '!', jsValue: '!', action: null },
-  ];
   
 
-  const handleButtonPress = (button) => {
-    if (button.action) {
-      button.action();
-    } else {
-      handlePress(button.value, button.jsValue);
+  /*const handlePiAndE = (button) => {
+    const { value, buttonValue } = button;
+    
+    // Add the new value before the cursor
+    const updatedList = [...ExpressionList];
+    const updatedMathList = [...MathExpressionList];
+  
+    // Check if the previous character is a number
+    if (cursorPosition > 0 && /\d/.test(ExpressionList[cursorPosition - 1])) {
+      updatedList.splice(cursorPosition, 0, '\\times');
+      updatedMathList.splice(cursorPosition, 0, '\\*');
+      // Update the cursor position
+      setCursorPosition(cursorPosition + 1);
     }
-  };
+  
+    // Increment the cursor position before inserting pi or e
+    const newCursorPosition = cursorPosition + 1;
+  
+    updatedList.splice(newCursorPosition, 0, value);
+    updatedMathList.splice(newCursorPosition, 0, buttonValue);
+    setExpressionList(updatedList);
+    setMathExpressionList(updatedMathList);
+  
+    // Update the cursor position
+    setCursorPosition(newCursorPosition + 1);
+  
+    setMathExpression(updatedMathList.join(''));
+    setExpression(updatedList.join(''));
+    consoleLogs();
+  };*/
 
   return (
     <View style={styles.container}>
-      <View style={styles.angleModeButtonContainer}>
-        <Pressable style={styles.angleModeButton} onPress={handleAngleModeToggle}>
-          <MathView math={`\\${angleMode === 'rad' ? 'text{RAD}' : 'text{DEG}'}`} />
-        </Pressable>
-      </View>
-      <View style={styles.fontSizeButtonsContainer}>
-        <Pressable style={styles.fontSizeButton} onPress={increaseFontSize}>
-          <Text style={styles.fontSizeButtonText}>A+</Text>
-        </Pressable>
-        <Pressable style={styles.fontSizeButton} onPress={decreaseFontSize}>
-          <Text style={styles.fontSizeButtonText}>A-</Text>
-        </Pressable>
-      </View>
+
       <ScrollView
         style={styles.historyContainer}
         contentContainerStyle={styles.historyContentContainer}
@@ -218,28 +258,23 @@ export function Calculator() {
       >
         {history.map((item, index) => (
           <View key={index}>
-            <View style={styles.historyItem}>
-              <MathView
-                math={`\\large ${item.latexExpr}`}
-                style={[styles.historyExpression, { fontSize }]}
-                resizeMode="contain"
-              />
-            </View>
-            <View style={styles.historyItemResult}>
-              <MathView
-                math={`\\large = ${item.result}`}
-                style={[styles.historyResult, { fontSize }]}
-                resizeMode="contain"
-              />
-            </View>
+            <MathView math={`\\large ${item.expression}`} />
+            
+            <View style={styles.historySolution}>
+              <MathView math={`\\large = ${item.result}`} />
+            </View>  
+
+            <View style={styles.historyContentSpace}></View>
           </View>
         ))}
-        <View style={styles.placeholder}></View>
+        <View style={styles.historySpace}></View>
       </ScrollView>
+      
+
       <View style={styles.currentDisplayContainer}>
         <MathView
-          math={`\\large ${updateDisplayWithCursor(latexExpr)}`}
-          style={[styles.currentDisplay, { fontSize }]}
+          math={`\\large ${ExpressionList.join('')}`}
+          style={[styles.currentDisplay, { fontSize: 20 }]}
           resizeMode="contain"
         />
       </View>
@@ -247,14 +282,49 @@ export function Calculator() {
         {buttons.map((button, index) => (
           <Pressable
             key={index}
-            style={styles.pressable}
-            onPress={() => handleButtonPress(button)}
+            style={[
+              styles.pressable,
+              pressedButtonIndex === index && styles.pressablePressed
+            ]}
+            onPress={() => {
+              if (button.value === '\\leftarrow') {
+                moveCursorLeft();
+              } else if (button.value === '\\rightarrow') {
+                moveCursorRight();
+              } else if (button.value === 'C') {
+                clearExpression();
+              } else if (button.value === '=') {
+                calculateExpression();
+              } else if (button.value === 'dlt') {
+                deleteSign();
+              } /*else if (button.value === 'e' || button.value === '\\pi') {
+                handlePiAndE(button);
+              }*/else if (button.value === 'sin(') {
+                handleTrigonometry(button);
+              } else {
+                handleInput(button);
+              }
+            }}
+            onPressIn={() => setPressedButtonIndex(index)}
+            onPressOut={() => setPressedButtonIndex(null)}
           >
-            <MathView math={`\\large ${button.buttonValue}`} />
+            <MathView math={`\\large ${button.value}`} />
           </Pressable>
         ))}
       </View>
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      <View style={styles.subButtonsView}>
+        <Pressable style={styles.subButtons}>
+          <Text style={styles.subButtonsText}>
+            Grad
+          </Text>
+        </Pressable>
+
+        <Pressable style={[styles.subButtons, getButtonStyle()]} onPress={handlePress}>
+          <Text style={styles.subButtonsText}>
+            {getButtonText()}
+          </Text>
+        </Pressable>
+      </View>
       <StatusBar style="auto" />
     </View>
   );
@@ -276,10 +346,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#dcdcdc',
     borderRadius: 5,
   },
-  angleModeText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
   fontSizeButtonsContainer: {
     position: 'absolute',
     top: 10,
@@ -295,12 +361,6 @@ const styles = StyleSheet.create({
   fontSizeButtonText: {
     fontSize: 12,
     fontWeight: 'bold',
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 20,
-    textAlign: 'center',
-    marginBottom: 10,
   },
   currentDisplayContainer: {
     width: '80%',
@@ -327,35 +387,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'flex-end',
   },
-  historyItem: {
-    marginBottom: 10,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-  },
-  historyItemResult: {
-    marginBottom: 10,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  historyExpression: {
-    fontSize: 30,
-    textAlign: 'left',
-  },
-  historyResult: {
-    fontSize: 30,
-    color: 'green',
-    textAlign: 'right',
-  },
   placeholder: {
     height: 10,
-  },
-  displayInput: {
-    fontSize: 30,
-    textAlign: 'left',
-    width: '100%',
-    backgroundColor: '#dcdcdc',
-    padding: 10,
-    borderRadius: 7,
   },
   grid: {
     alignItems: 'center',
@@ -367,7 +400,7 @@ const styles = StyleSheet.create({
   },
   pressable: {
     width: '18%',
-    height: 50,
+    height: 45,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
@@ -375,4 +408,36 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 7,
   },
+  pressablePressed: {
+    backgroundColor: '#ECE6E2',
+  },
+  historySpace: {
+    height: 20,
+  },
+  historySolution: {
+    alignItems: 'flex-end',
+    marginVertical: 5,
+  },
+  historyContentSpace: {
+    height: 10,
+  },
+  subButtonsView: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+    flexDirection: 'row',
+  },
+  subButtons: {
+    width: '39%',
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: 'black',
+    margin: 5,
+    borderRadius: 7,
+  },
+  subButtonsText: {
+    fontSize: 30,
+  }
 });

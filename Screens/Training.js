@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 export function Training() {
   const navigation = useNavigation();
@@ -15,51 +16,72 @@ export function Training() {
   return (
     <View style={styles.container}>
       <Pressable
-        style={[styles.pressableContainer, isPressedMuster && styles.pressablePressed]}
+        style={[styles.pressableContainerLeft, isPressedMuster && styles.pressablePressed]}
         onPress={() => {
           setIsPressedMuster(true);
           setIsPressedAuto(false);
           handleButtonPress('TrainingManu');
         }}
         onPressOut={() => setIsPressedMuster(false)}>
-        <Text>
-          Musterübungen
-        </Text>
+        <View style={{marginVertical: 40}}></View>
+        <View style={styles.textContainer}>
+          <Text style={styles.verticalText}>M</Text>
+          <Text style={styles.verticalText}>A</Text>
+          <Text style={styles.verticalText}>N</Text>
+          <Text style={styles.verticalText}>U</Text>
+        </View>
       </Pressable>
       <Pressable
-        style={[styles.pressableContainer, isPressedAuto && styles.pressablePressed]}
+        style={[styles.pressableContainerRight, isPressedAuto && styles.pressablePressed]}
         onPress={() => {
           setIsPressedAuto(true);
           setIsPressedMuster(false);
           handleButtonPress('TrainingAuto');
         }}
         onPressOut={() => setIsPressedAuto(false)}>
-        <Text>
-          Autoübungen
-        </Text>
+        <View style={{marginVertical: 40}}></View>
+        <View style={styles.textContainer}>
+          <Text style={styles.verticalText}>A</Text>
+          <Text style={styles.verticalText}>U</Text>
+          <Text style={styles.verticalText}>T</Text>
+          <Text style={styles.verticalText}>O</Text>
+        </View>
       </Pressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  pressableContainer: {
-    width: 300,
-    height: 280,
-    justifyContent: 'center',
+  pressableContainerLeft: {
+    width: scale(200),
+    height: verticalScale(650),
     alignItems: 'center',
-    backgroundColor: 'grey',
-    marginVertical: 10,
+    backgroundColor: '#C0B8DE',
+    marginHorizontal: scale(7),
+  },
+  pressableContainerRight: {
+    width: scale(200),
+    height: verticalScale(650),
+    alignItems: 'center',
+    backgroundColor: '#E5CBC6',
+    marginHorizontal: scale(7),
   },
   pressablePressed: {
-    backgroundColor: 'darkgrey', // dunklere Farbe beim Drücken
+    backgroundColor: 'darkgrey',
   },
   container: {
     flex: 1,
-    margin: 20,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'row',
+  },
+  textContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  verticalText: {
+    fontSize: moderateScale(70),
   },
 });
 
-
+export default Training;

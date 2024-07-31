@@ -1,251 +1,135 @@
-import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView, Animated} from 'react-native';
-import React, { useState, useEffect, useRef} from 'react';
-import MathJax from 'react-native-mathjax';
-import Slider from '@react-native-community/slider';
+import { StyleSheet, Text, View, Pressable, Switch } from 'react-native';
+import React, { useState } from 'react';
+import * as math from 'mathjs';
+import { ScaledSheet, moderateScale, verticalScale, scale } from 'react-native-size-matters';
+import MathView from 'react-native-math-view';
 
 export function MengenoperationenUebung() {
-  const divStyle = "font-size: 30px; background-color: 'white'; border: none; font-family: Arial";
 
-  const [ExpressionSets, setExpressionSets] = useState('');
-  const [Expression, setExpression] = useState('');
+  const mathMid = '\\Large';
+  const math = '\\Huge';
+
+  const [set1, setSet1] = useState([]);
+  const [set2, setSet2] = useState([]);
+  const [Operation, setOperation] = useState('');
   const [Solution, setSolution] = useState('');
-  
 
-  const getRandomNumber = (min, max, value) => {
-    
-    if (value === 'positiv') {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    } else if ( value === 'negativ') {
-      return -1 * (Math.floor(Math.random() * (max - min + 1)) + min);
-    } else  {
-      if (Math.random() > 0.5) {
-        return (Math.floor(Math.random() * (max - min + 1)) + min);
-      } else {
-        return 1 * (Math.floor(Math.random() * (max - min + 1)) + min);
-      }
-    }
+  const getRandomNumber = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
-  const rewriteSet = (set) => {
-    let rewrittenSet = [];
-
-    for (let i = 0; i < set.length; i++) {
-      if (isNaN(set[i])) {
-        rewrittenSet[i] = `$\\mathbb{${set[i]}} = \\{`;
-      } else if (!isNaN(set[i])) {  
-        if (i + 1 === set.length) {
-          rewrittenSet[i] = `${set[i]}`;
-        } else {
-          rewrittenSet[i] = `${set[i]}, `;
-        }
-      };
-    };
-
-    rewrittenSet.push('\\}$ <br><br>')
-
-    return rewrittenSet.join('');
-
-  };
-  
-  const rewriteExpression = (expression, operations) => {
-    let rewrittenExpression = ['$'];
-    for (let i = 0; i < expression.length; i++) {
-      if (operations.includes(expression[i])) {
-        if (expression[i] === operations[0]) {
-          rewrittenExpression.push('\\cap')
-        } else if (expression[i] === operations[1])  {
-          rewrittenExpression.push('\\cup')
-        } else if (expression[i] === operations[2]) {
-          rewrittenExpression.push('\\backslash')
-        }
-      } else {
-        rewrittenExpression.push(expression[i])
-      }
-    }
-    rewrittenExpression.push('$');
-
-    return rewrittenExpression;
-
+  const createExpression = () => {
+    setSolution('');
+    setSet1(sortNumbers(createSet()));
+    setSet2(sortNumbers(createSet()));
+    setOperation(getOperation());
   }
-  
-
-
-  const createSets = () => {
-    let sets = [];
-    let setsVisual = [];
-    const setAmount = 4;
-    const setNames = ['A', 'B', 'C', 'D'];
-    function isDuplicate(set, num) {
-        return set.includes(num);
-    }
-
-    function isDuplicateSet(set, letter) {
-      for (let i = 0; i < set.length; i++) {
-          if (set[i][0] === letter) {
-              return true;
-          }
-      }
-      return false;
-  }
-
-    for (let i = 0; i < setAmount; i++) {
-        sets.push([]);
-
-        let randomSet;
-        do {
-            randomSet = setNames[getRandomNumber(0, setNames.length - 1)];
-        } while (isDuplicateSet(sets, randomSet));
-
-        sets[i].push(randomSet);
-
-        const setElements = getRandomNumber(1, 4);
-
-        for (let j = 0; j < setElements; j++) {
-            let randomNumber;
-            do {
-                randomNumber = getRandomNumber(1, 15);
-            } while (isDuplicate(sets[i], randomNumber));
-            sets[i].push(randomNumber);
-        }
-        setsVisual[i] = rewriteSet(sets[i]);
-    }
-
-    setExpressionSets(setsVisual.join(''));
-
-    console.log(sets);
-
-    createExpression(sets)
-  };
-
-  const getRandomOperation = (operations) => {
-    return operations[Math.floor(Math.random() * operations.length)];
-  }
-
-  const createExpression = (sets) => {
-    const operations = ['Schnittmenge', 'Vereinigungsmenge', 'Restmenge']
-    let expressionParts = [];
-    let rewrittenExpression = [];
-
-    for (let i = 0 ; i < sets.length; i++) {
-      if (i !== 0) {
-        expressionParts.push(getRandomOperation(operations));
-      };
-
-      expressionParts.push(sets[i][0] )
-    }
-
-    console.log(expressionParts)
-
-    rewrittenExpression = rewriteExpression(expressionParts, operations)
-
-    setExpression(rewrittenExpression.join(' '));
-  }
-
 
   const solveExpression = () => {
+    let result = [];
 
+    if (Operation === '\\cup') {
+      result = [...new Set([...set1, ...set2])];
+    } else if (Operation === '\\cap') {
+      result = set1.filter(value => set2.includes(value));
+    } else if (Operation === '\\backslash') {
+      result = set1.filter(value => !set2.includes(value));
+    }
+
+    result = sortNumbers(result);
+    console.log(result);
+    setSolution(`\\{ ${(result.join(', '))} \\}`);
   }
 
+  const sortNumbers = (set) => {
+    return set.sort((a, b) => a - b);
+  }
 
+  const getOperation = () => {
+    const operations = ['\\cap', '\\cup', '\\backslash'];
+    return operations[getRandomNumber(0, operations.length - 1)];
+  }
+
+  const createSet = () => {
+    const minLength = 3;
+    const maxLength = 5;
+    const length = getRandomNumber(minLength, maxLength);
+    const elementMin = -9;
+    const elementMax = 9;
+    const set = [];
   
-
+    while (set.length < length) {
+      let randomNum = getRandomNumber(elementMin, elementMax);
+      while (set.includes(randomNum)) {
+        randomNum = getRandomNumber(elementMin, elementMax);
+      }
+      set.push(randomNum);
+    }
+  
+    return set;
+  };
 
   return (
-    <View>
-      <MathJax
-        html={
-          `<div style='${divStyle}'>
-            ${ExpressionSets}
-          </div>`
-        }
-      />
-
-      <MathJax
-        html={
-          `<div style='${divStyle}'>
-            ${Expression}
-          </div>`
-        }
-      />
-
-      <View style={styles.container}>
-
-        <Slider
-          style={{width: 200, height: 40}}
-          minimumValue={1}
-          maximumValue={4}
-          minimumTrackTintColor="pink"
-          maximumTrackTintColor="grey"
-          step={1}
-          renderStepNumber='true'
-
-        />
-      
-    
-
-        <View style={styles.containerExpression}>
-          <Text style={{ textAlign: 'center', fontSize: 30 }}>
-          </Text>
-        </View>
-    
-        
-        <View style={styles.button1}>
-          <Pressable onPress={solveExpression}>
-            <Text style={{ textAlign: 'center', fontSize: 30 }}>
-              {Solution ? Solution : 'Lösung anzeigen'}
-            </Text>
-          </Pressable>
-        </View>
-
-        <View style={styles.button2}>
-          <Pressable onPress={createSets}>
-            <Text style={{ textAlign: 'center', fontSize: 30 }}>
-              Ausdruck erstellen
-            </Text>
-          </Pressable>
-        </View>
+    <View style={styles.container}>
+      <View style={styles.containerSet1}>
+        <MathView math={`${mathMid} \\mathbb{A} = \\{ ${set1.join(', ')} \\}`} />
       </View>
 
+      <View style={styles.containerSet2}>
+        <MathView math={`${mathMid} \\mathbb{B} = \\{ ${set2.join(', ')} \\}`} />
+      </View>
 
+      <View style={styles.containerExpression}>
+        <MathView math={`${math} \\mathbb{A} ${math} ${Operation} ${math} \\mathbb{B}`} />
+      </View>
+
+      <View style={styles.containerSolution}>
+        <Pressable onPress={solveExpression}>
+          <Text style={styles.text}>
+            {Solution ? <MathView math={`${mathMid} ${Solution}`} /> : 'Lösung anzeigen'}
+          </Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.containerButtonCreate}>
+        <Pressable onPress={createExpression}>
+          <Text style={styles.text}>
+            Ausdruck erstellen
+          </Text>
+        </Pressable>
+      </View>
     </View>
-    
-    
   );
-  
-  
-
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
-    flex: .8,
+    flex: 1,
     alignItems: 'center',
     flexDirection: 'column',
+    backgroundColor: 'white',
   },
   containerExpression: {
-    padding: 40,
-    marginVertical: 60,
-    position: 'absolute',
-    top: '10%',
+    padding: 20,
+    marginVertical: verticalScale(20),
   },
-  containerExpressionSets: {
-    padding: 40,
-    marginVertical: 60,
-    position: 'absolute',
-    top: '-10%',
+  containerSet1: {
+    paddingTop: 40,
   },
-  containerButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 50,
-    
+  containerSet2: {
+    marginTop: 40,
   },
-  button1: {
-    position: 'absolute',
-    top: 100,
+  containerButtonCreate: {
+    marginTop: 60,
   },
-  button2: {
-    position: 'absolute',
-    top: 200,   
+  text: {
+    fontSize: 30,
+  },
+});
+
+const stylesScaled = ScaledSheet.create({
+  text: {
+    textAlign: 'center',
+    fontSize: moderateScale(32),
   },
 });

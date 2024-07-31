@@ -1,10 +1,9 @@
 import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView } from 'react-native';
 import stylesTheorie from '../StylesTheorie';
-import MathJax from 'react-native-mathjax';
 import { useNavigation } from '@react-navigation/native';
+import MathView from 'react-native-math-view';
 
 export function MehrfachesAusklammern() {
-  const divStyle = "font-size: 20px; background-color: 'white'; border: none; font-family: Arial";
   const navigation = useNavigation();
 
   const nextPage = () => {
@@ -13,37 +12,94 @@ export function MehrfachesAusklammern() {
     );
   }
 
+  const math = '\\huge'
+  const mathSmall = '\\large'
+  const mathMid = '\\Large'
+
   return (
     <SafeAreaView>
       <ScrollView>
         <View style={stylesTheorie.container}>
           <Text style={stylesTheorie.header}>
-            Mehrfaches Ausklam-mern
+            Mehrfaches Ausklammern
           </Text>
 
-          <MathJax
-            html={`<div style='${divStyle}'> Bei einem Term mit mindestens 4 Gliedern kann manchmal mehrfach ausgeklammert werden. <br><br>
-            $ax + ay + bx + by$ <br><br>
-            $=a(x + y) + b(x + y)$ <br><br>
-            $=(x + y)(a + b)$ <br><br>
-            Hier wurde erst a und b ausgeklammert und danach wurde die Klammer (x + y) ausgeklammert, da sie in beiden Gliedern vorkommt. <br><br>
-            Manchmal scheinen die Terme auf den ersten Blick nicht faktorisierbar, doch mit umstellen ergibt sich manchmal doch eine Möglichkeit. <br><br>
-            $36 + 20a - 9x + 5ax$ <br><br>
-            $= 5ax + 20a - 9x + 36$ <br><br>
-            $= 5a \\cdot (x + 4) - 9 \\cdot (x + 4)$ <br><br>
-            $= (5a - 9)(x + 4)$ <br><br>
-            In diesem Beispiel wurden die Glieder im Term erst übersichtlicher geordnet, um dann einfacher ausklammern zu können.
-            </div>`}      
-          />
-          <View style={stylesTheorie.conainerMid}>
+          <View style={stylesTheorie.paragraphContainer}>
+            <Text style={stylesTheorie.text}>
+              Bei einem Term mit mindestens 4 Gliedern kann manchmal mehrfach ausgeklammert werden.
+            </Text>
+          </View>
+
+          <View style={stylesTheorie.mathExpression}>
+            <MathView
+              math={`${mathMid} ax + ay + bx + by`}
+            />
+          </View>
+
+          <View style={stylesTheorie.mathExpression}>
+            <MathView
+              math={`${mathMid} =a(x + y) + b(x + y)`}
+            />
+          </View>
+
+          <View style={stylesTheorie.mathExpression}>
+            <MathView
+              math={`${mathMid}=(x + y)(a + b)`}
+            />
+          </View>
+
+          <View style={stylesTheorie.paragraphContainer}>
+            <Text style={stylesTheorie.textMid}>
+              Hier wurde erst a und b ausgeklammert und danach wurde die Klammer (x + y) ausgeklammert, da sie in beiden Gliedern vorkommt.
+            </Text>
+          </View>
+
+          <View style={stylesTheorie.paragraphContainer}>
+            <Text style={stylesTheorie.text}>
+              Manchmal scheinen die Terme auf den ersten Blick nicht faktorisierbar, doch mit Umstellen ergibt sich manchmal doch eine Möglichkeit:
+            </Text>
+          </View>
+
+          <View style={stylesTheorie.mathExpression}>
+            <MathView
+              math={`${mathMid}36 + 20a - 9x + 5ax`}
+            />
+          </View>
+
+          <View style={stylesTheorie.mathExpression}>
+            <MathView
+              math={`${mathMid}= 5ax + 20a - 9x + 36`}
+            />
+          </View>
+
+          <View style={stylesTheorie.mathExpression}>
+            <MathView
+              math={`${mathMid}= 5a \\cdot (x + 4) - 9 \\cdot (x + 4)`}
+            />
+          </View>
+
+          <View style={stylesTheorie.mathExpression}>
+            <MathView
+              math={`${mathMid}= (5a - 9)(x + 4)`}
+            />
+          </View>
+
+          <View style={stylesTheorie.paragraphContainer}>
+            <Text style={stylesTheorie.textMid}>
+              In diesem Beispiel wurden die Glieder im Term erst übersichtlicher geordnet, um dann einfacher ausklammern zu können.
+            </Text>
+          </View>
+
+          <View style={stylesTheorie.containerMid}>
             <Pressable onPress={nextPage}>
               <Text style={stylesTheorie.link}>Nächstes Kapitel!</Text>
             </Pressable>
+
+            <View style={stylesTheorie.space}>
+            </View>
           </View>
-          
-
         </View>
-
+        
       </ScrollView>
     </SafeAreaView>
   )

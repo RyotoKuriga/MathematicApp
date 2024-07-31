@@ -1,197 +1,183 @@
-import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView } from 'react-native';
-import React, { useState } from 'react';
-import MathJax from 'react-native-mathjax';
-import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import MathView from 'react-native-math-view';
 
 export function MengenZeichen() {
-  const divStyle = "font-size: 45px; background-color: 'white'; border: none; font-family: Arial; text-align: center; text-justify: center;";
-  const divStyleButtons = "font-size: 40px; background-color: 'grey'; border: none; font-family: Arial; text-align: center; text-justify: center;";
-  const [Expression, setExpression] = useState('');
+  const [number, setNumber] = useState('');
+  const [set, setSet] = useState('');
+  const [solution, setSolution] = useState(null);
+  const [correct, setCorrect] = useState('');
+  const [chosenSymbol, setChosenSymbol] = useState('');
 
-  function formatNumber(number) {
+  const math = '\\Huge';
+
+  const getRandomNumberNum = (min, max) => {
+    const decimalChance = Math.random();
+    const endlessChance = Math.random();
     
-    return parseFloat(number.toFixed(3));
-  } 
-
-  function generateRandomNumber() {
-    let type = Math.floor(Math.random() * 2);
-    let randomCase = Math.floor(Math.random() * 6) + 1;
-    let randomNumber1 = Math.floor(Math.random() * 51);
-    let randomNumber2 = Math.floor(Math.random() * 20);
-    let tempNum;
-    let number; 
-    let set;
-
-    switch (randomCase) {
-      case 1:
-          randomNumber1 = formatNumber(randomNumber1);
-          set = ['N'];
-          break;
-      case 2:
-          randomNumber1 = formatNumber(randomNumber1 * -1);
-          set = ['N', 'Z'];
-          break;
-      case 3:
-          tempNum = Math.random() * 51 / (10 * randomNumber2);
-          randomNumber1 = formatNumber(tempNum);
-          set = ['N', 'Z', 'Q'];
-          break;
-      case 4:
-          tempNum = randomNumber1 / (Math.random() * 51 / -randomNumber2);
-          randomNumber1 = formatNumber(tempNum);
-          set = ['N', 'Z', 'Q'];
-          break;
-      case 5:
-          tempNum = Math.random() * 51 / (10 * randomNumber2);
-          randomNumber1 = `${formatNumber(tempNum)}...`;
-          set = ['N', 'Z', 'Q', 'R'];
-      case 6:
-          tempNum = Math.random() * 51 / (10 * randomNumber2);
-          randomNumber1 = `${formatNumber(tempNum)}...`;
-          set = ['N', 'Z', 'Q', 'R'];
-  }
-
+    let num = (Math.random() * (max - min + 1) + min).toFixed(3);
     
-
-    
-
-    if ( type ) {
-      number = `\\{${randomNumber1}\\}`;
-
+    if (decimalChance < 0.25) {
+      num = parseFloat(num).toFixed(3);
+    } else if (endlessChance < 0.25 && !Number.isInteger(parseFloat(num))) {
+      num = `${num}...`;
     } else {
-      number = randomNumber1;
+      num = Math.floor(num).toString();
+    }
+
+    return num.toString();
+  };
+
+  const getRandomNumber = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
+  const createExpression = () => {
+    let number = getRandomNumberNum(-20, 20);
+    if (Math.random() < 0.5) {
+      number = `\\{${number}\\}`;
+    }
+    setNumber(number);
+    setChosenSymbol('');  // Reset chosen symbol
+
+    const selectedSet = getSet();
+    setSet(selectedSet);
+
+    const generatedSolution = getSolution(number, selectedSet);
+    setSolution(generatedSolution);
+  };
+
+  const getSet = () => {
+    const sets = ['\\mathbb{N}', '\\mathbb{Z}', '\\mathbb{Q}', '\\mathbb{R}'];
+    return sets[getRandomNumber(0, sets.length - 1)];
+  };
+
+  const isInteger = (num) => {
+    return typeof num === 'number' && isFinite(num) && Math.floor(num) === num;
+  };
+
+  const isPositive = (num) => {
+    return num >= 0;
+  };
+
+  const isFakeEndless = (numStr) => {
+    return numStr.includes('...');
+  };
+
+  const getSolution = (number, selectedSet) => {
+    const hasBraces = number.includes('{') && number.includes('}');
+    const parsedNumber = parseFloat(number.replace(/[{}...]/g, ''));
+
+    if (hasBraces) {
+      return (selectedSet === '\\mathbb{N}' || selectedSet === '\\mathbb{Z}' || selectedSet === '\\mathbb{Q}' || selectedSet === '\\mathbb{R}') ? '\\not\\subset' : '\\subset';
+    }
+
+    const isElementOfSet = (num, set) => {
+      switch (set) {
+        case '\\mathbb{N}':
+          return isPositive(num) && isInteger(num);
+        case '\\mathbb{Z}':
+          return isInteger(num);
+        case '\\mathbb{Q}':
+          return !isNaN(num) && isFinite(num);
+        case '\\mathbb{R}':
+          return !isNaN(num);
+        default:
+          return false;
+      }
     };
 
-    return { number, set};
-  }
+    if (isFakeEndless(number)) {
+      return (selectedSet === '\\mathbb{R}') ? '\\in' : '\\notin';
+    } else {
+      return isElementOfSet(parsedNumber, selectedSet) ? '\\in' : '\\notin';
+    }
+  };
 
-  function generateRandomZahlenmenge() {
-    let type = Math.floor(Math.random() * 4) + 1;
+  const buttonPressed = (button) => {
+    if (button === solution) {
+      setCorrect('Richtig!');
+    } else {
+      setCorrect('Falsch!');
+    }
+    setChosenSymbol(button);  // Set chosen symbol
+    setTimeout(() => {
+      createExpression();
+    }, 1000);
+  };
 
-    switch (type) {
-      case 1:
-        return 'N';
-      case 2:
-        return 'Z';
-      case 3:
-        return 'Q';
-      case 4:
-        return 'R'
-    };
-
-
-  }
-
-  function createExpression() {
-    let menge = generateRandomZahlenmenge();
-    let num = generateRandomNumber();
-
-
-    setExpression(`$${num.number} \\quad \\square \\quad \\mathbb{${menge}}$`);
-
-    return num;
-  }
-
-  function solveExpression(sign) {
-    let num = createExpression();
-    let bool = checkIfCorrect(sign, num);
-  }
-
-  function checkIfCorrect(sign, num) {
-
-  }
-
+  useEffect(() => {
+    createExpression();
+  }, []);
 
   return (
-    <View>
-      <View>
-        <MathJax
-          html={`<div style='${divStyle}'>
-                    <div style='text-align: center;'> <br><br><br>
-                      ${Expression}
-                    </div>
-                  </div>`}
-        />
+    <View style={styles.container}>
+      <View style={styles.containerCorrect}>
+        <Text style={styles.textCorrect}>
+          {correct}
+        </Text>
       </View>
-      
-      <View style={styles.container}>
-        <View style={styles.row}>
 
-          <Pressable style={styles.button} onPress={() => solveExpression('\\subset')}>
-          
-            <MathJax
-            html={`
-            <div style='${divStyleButtons}; display: flex; align-items: center; justify-content: center; height: 100%;'>
-              <div style='text-align: center;'>$\\subset$</div>
-            </div>
-          `}      
-            />
+      <View style={styles.expression}>
+        <MathView math={`${math} ${number} \\quad ${chosenSymbol ? chosenSymbol : '\\square'} \\quad ${set}`} />
+      </View>
+
+      <View style={styles.buttonGrid}>
+        <View style={styles.buttons}>
+          <Pressable onPress={() => buttonPressed('\\in')} style={({ pressed }) => [{ backgroundColor: pressed ? '#d3d3d3' : 'grey' }]}>
+            <MathView math={`${math} \\in`} />
           </Pressable>
+        </View>
 
-          <Pressable style={styles.button} onPress={() => solveExpression('\\in')}>
-            <MathJax
-              html={`
-              <div style='${divStyleButtons}; display: flex; align-items: center; justify-content: center; height: 100%;'>
-                <div style='text-align: center;'>$\\in$</div>
-              </div>
-            `}      
-              />     
-              
+        <View style={styles.buttons}>
+          <Pressable onPress={() => buttonPressed('\\notin')} style={({ pressed }) => [{ backgroundColor: pressed ? '#d3d3d3' : 'grey' }]}>
+            <MathView math={`${math} \\notin`} />
           </Pressable>
+        </View>
 
-          <Pressable style={styles.button} onPress={() => solveExpression('\\not\\subset')}>
-            <MathJax
-              html={`
-              <div style='${divStyleButtons}; display: flex; align-items: center; justify-content: center; height: 100%;'>
-                <div style='text-align: center;'>$\\not\\subset$</div>
-              </div>
-            `}      
-              />
+        <View style={styles.buttons}>
+          <Pressable onPress={() => buttonPressed('\\subset')} style={({ pressed }) => [{ backgroundColor: pressed ? '#d3d3d3' : 'grey' }]}>
+            <MathView math={`${math} \\subset`} />
           </Pressable>
+        </View>
 
-          <Pressable style={styles.button} onPress={() => solveExpression('\\notin')}>
-            <MathJax
-              html={`
-              <div style='${divStyleButtons}; display: flex; align-items: center; justify-content: center; height: 100%;'>
-                <div style='text-align: center;'>$\\notin$</div>
-              </div>
-            `}      
-              />
+        <View style={styles.buttons}>
+          <Pressable onPress={() => buttonPressed('\\not\\subset')} style={({ pressed }) => [{ backgroundColor: pressed ? '#d3d3d3' : 'grey' }]}>
+            <MathView math={`${math} \\not\\subset`} />
           </Pressable>
-
         </View>
       </View>
-
-      
-
-      
-
     </View>
-    
-
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: 'white',
     alignItems: 'center',
   },
-  centered: {
-    alignItems: 'center',
+  expression: {
+    paddingVertical: 100,
   },
-  button: {
-    backgroundColor: 'grey',
-    width: 120,
-    height: 120,
-    margin: 20
-  },
-  row: {
-    justifyContent: 'center',
-    alignItems: 'center', 
+  buttonGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'center',
+    width: '80%',
+  },
+  buttons: {
+    justifyContent: 'center',
+    backgroundColor: 'grey',
+    margin: 10,
+    width: '40%',
+    padding: 10,
+    alignItems: 'center',
+  },
+  containerCorrect: {
+    marginTop: 20,
+  },
+  textCorrect: {
+    fontSize: 30,
   }
 });
-

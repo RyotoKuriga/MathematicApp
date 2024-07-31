@@ -110,9 +110,7 @@ export function SettingsScreen() {
             </Animated.View>
           </Pressable>
           <Animated.Text style={[styles.infoText, { opacity: textOpacity, fontSize: textSize }]}>
-            Danke, dass Du die App heruntergeladen hast! Ich hoffe, dass sie Dir in irgendeiner Art und Weise helfen kann. Die App befindet sich momentan in der Testphase, somit ist mit vielen Fehlern zu rechnen. Falls Du in irgendeiner Form Wünsche, Kritik oder Anregungen hast, würde ich mich über eine E-Mail freuen. Empfiehl die App gerne Deinen Freunden weiter!{"\n"}{"\n"}
-            Freundliche Grüsse{"\n"}{"\n"}
-            Der Entwickler Tristan J. W. Götzenberger
+            Hast du einen Fehler entdeckt oder eine Rückmeldung? Dann schreib mir doch eine E-Mail!
           </Animated.Text>
         </View>
       ) : (

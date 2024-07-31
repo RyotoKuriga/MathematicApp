@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Pressable, TextInput, Keyboard } from 'react-na
 import React, { useState, useEffect } from 'react';
 import MathView from 'react-native-math-view';
 import { Animated } from 'react-native';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 export function QuickTraining() {
   const [Expression, setExpression] = useState('');
@@ -11,7 +12,7 @@ export function QuickTraining() {
   const [countdown, setCountdown] = useState(0);
   const [showCountdown, setShowCountdown] = useState(false);
   const [challengeActive, setChallengeActive] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(5); // Set to 5 for testing, change to 60 for real use
+  const [timeRemaining, setTimeRemaining] = useState(60); // Set to 5 for testing, change to 60 for real use
   const [correctCount, setCorrectCount] = useState(0);
   const [progress] = useState(new Animated.Value(1));
   const [showResultBox, setShowResultBox] = useState(false);
@@ -224,80 +225,78 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   containerExpression: {
-    padding: 20,
-    marginVertical: 0,
-    marginTop: 20,
+
   },
   input: {
-    borderWidth: 2,
-    padding: 10,
-    marginVertical: 20,
-    width: '80%',
-    fontSize: 24,
+    borderWidth: moderateScale(2),
+    padding: moderateScale(10),
+    marginVertical: verticalScale(20),
+    width: scale(250),
+    fontSize: moderateScale(24),
     textAlign: 'center',
-    borderRadius: 10,
+    borderRadius: moderateScale(10),
     backgroundColor: 'white',
-    height: 50,
+    height: verticalScale(50),
     justifyContent: 'center',
   },
   inputText: {
-    fontSize: 24,
+    fontSize: moderateScale(24),
     color: 'black',
     textAlign: 'center',
   },
   placeholderText: {
-    fontSize: 24,
+    fontSize: moderateScale(24),
     color: 'gray',
     textAlign: 'center',
   },
   inputCorrect: {
-    borderWidth: 2,
+    borderWidth: moderateScale(2),
     borderColor: '#3DF43E',
-    padding: 10,
-    marginVertical: 20,
-    width: '80%',
-    fontSize: 24,
+    padding: moderateScale(10),
+    marginVertical: verticalScale(10),
+    width: scale(80),
+    fontSize: moderateScale(24),
     textAlign: 'center',
-    borderRadius: 10,
+    borderRadius: moderateScale(10),
     backgroundColor: '#2CF570',
-    height: 50,
+    height: verticalScale(50),
     justifyContent: 'center',
   },
   keypad: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    width: '80%',
+    width: scale(300),
   },
   key: {
-    borderWidth: 2,
+    borderWidth: moderateScale(2),
     borderColor: 'black',
-    height: 80,
-    width: 80,
+    height: moderateScale(70),
+    width: scale(70),
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 5,
-    borderRadius: 5,
+    margin: moderateScale(5),
+    borderRadius: moderateScale(5),
   },
   keyText: {
-    fontSize: 24,
+    fontSize: moderateScale(24),
   },
   expressionText: {
-    fontSize: 30,
+    fontSize: moderateScale(30),
   },
   startChallenge: {
-    height: 40,
-    width: '75%',
+    height: verticalScale(40),
+    width: scale(75),
     backgroundColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 5,
-    marginTop: 15,
-    borderRadius: 7,
+    margin: moderateScale(5),
+    marginTop: verticalScale(15),
+    borderRadius: moderateScale(7),
   },
   startChallengeText: {
-    fontSize: 20,
-    color: 'white'
+    fontSize: moderateScale(20),
+    color: 'white',
   },
   countdownOverlay: {
     position: 'absolute',
@@ -311,25 +310,25 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   countdownText: {
-    fontSize: 100,
+    fontSize: moderateScale(100),
     color: 'white',
   },
   progressBarContainer: {
-    height: 40,
-    width: '75%',
+    height: verticalScale(40),
+    width: scale(75),
     backgroundColor: 'white',
-    borderWidth: 2,
+    borderWidth: moderateScale(2),
     borderColor: 'black',
-    margin: 5,
-    marginTop: 15,
-    borderRadius: 7,
+    margin: moderateScale(5),
+    marginTop: verticalScale(15),
+    borderRadius: moderateScale(7),
     overflow: 'hidden',
   },
   progressBar: {
     height: '104%',
     width: '104%',
     backgroundColor: 'black',
-    borderRadius: 4,
+    borderRadius: moderateScale(4),
   },
   resultBox: {
     position: 'absolute',
@@ -337,24 +336,25 @@ const styles = StyleSheet.create({
     left: '10%',
     right: '10%',
     backgroundColor: 'white',
-    borderWidth: 2,
+    borderWidth: moderateScale(2),
     borderColor: 'black',
-    padding: 20,
-    borderRadius: 10,
+    padding: moderateScale(20),
+    borderRadius: moderateScale(10),
     alignItems: 'center',
     zIndex: 2,
   },
   closeButton: {
     position: 'absolute',
-    top: 10,
-    right: 10,
+    top: verticalScale(10),
+    right: verticalScale(10),
   },
   closeButtonText: {
-    fontSize: 24,
+    fontSize: moderateScale(24),
     color: 'black',
   },
   resultText: {
-    fontSize: 24,
+    fontSize: moderateScale(24),
     textAlign: 'center',
   },
 });
+

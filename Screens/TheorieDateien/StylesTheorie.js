@@ -1,11 +1,9 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import MathJax from 'react-native-mathjax';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
-
-
 
 const stylesTheorie = StyleSheet.create({
   container: {
@@ -15,69 +13,68 @@ const stylesTheorie = StyleSheet.create({
     marginRight: 0,
     backgroundColor: 'white',
     alignItems: 'center'
-  
   },
   imageContainer: {
     alignItems: 'center'
   },
   text: {
-    fontSize: 24,
-    lineHeight: 36,
+    fontSize: scale(20),
+    lineHeight: verticalScale(30),
+    textAlign: 'left',
   },
   header: {
-    fontSize: windowWidth/12,
+    fontSize: scale(24),
     fontWeight: 'bold',
     color: 'black',
-    padding: 20,
-    marginBottom: -20,
+    padding: moderateScale(10),
+    marginBottom: scale(-10),
     textAlign: 'center',
-    
   },
   mathExpression: {
-    paddingBottom: 20,
+    paddingBottom: moderateScale(10),
   },
   paragraphContainer: {
-    marginLeft: 20,
-    marginRight: 20,
-    paddingBottom: 30,
+    marginLeft: scale(10),
+    marginRight: scale(10),
+    paddingBottom: moderateScale(20),
+    textAlign: 'left',
   },
   link: {
-    fontSize: 20,
+    fontSize: scale(20),
     fontWeight: 'normal',
-    color: 'black',
     fontFamily: 'Arial',
-    lineHeight: 30,
-    margin: 20,
+    lineHeight: verticalScale(32),
+    margin: moderateScale(10),
     backgroundColor: 'white',
     color: 'blue',
   },
   conainerMid: {
     alignItems: 'center',
-    marginHorizontal: 35,
+    marginHorizontal: moderateScale(35),
   },
   textMid: {
-    fontSize: 24,
+    fontSize: scale(24),
     fontStyle: 'italic',
     fontWeight: '300',
-    paddingBottom: 20,
+    paddingBottom: moderateScale(10),
     textAlign: 'center',
+    paddingHorizontal: moderateScale(10),
   },
   subHeader: {
-    fontSize: 28,
+    fontSize: scale(28),
     fontWeight: '600',
     color: 'black',
-    marginTop: 20,
-    marginBottom: 20,
+    margin: moderateScale(10),
     textAlign: 'center',
   },
   marked: {
-    fontSize: 24,
-    lineHeight: 36,
+    fontSize: scale(20),
+    lineHeight: verticalScale(30),
     fontWeight: '500',
   },
   space: {
-    height: 100,
-    width: 200
+    height: verticalScale(100),
+    width: scale(200),
   }
 });
 

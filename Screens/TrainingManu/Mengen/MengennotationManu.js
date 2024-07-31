@@ -1,138 +1,137 @@
 import React, { useState } from 'react';
-import { View, SafeAreaView, ScrollView, Pressable, Text, StyleSheet } from 'react-native';
-import MathJax from 'react-native-mathjax';
-import stylesTheorie from '../../TheorieDateien/StylesTheorie';
+import { View, SafeAreaView, ScrollView, Pressable, Text } from 'react-native';
+import MathView from 'react-native-math-view';
+import stylesUebungen from '../StylesUebungen';
 
 export function MengenNotationManu() {
-  const divStyle = "font-size: 20px; background-color: 'white'; border: none; font-family: Arial";
+  const mathMid = '\\normalsize';
 
   const AufgabenUndLoesungen = [
     {
       titel: "Notiere die Menge in aufzählender Form:",
-      aufgabe: "a) $\\{x \\in  \\mathbb{N} | x < 7  \\}$",
-      loesung: " $x \\in \\{1, 2, 3, 4, 5, 6\\}$",
+      aufgabe: "a)\\ \\{x \\in  \\mathbb{N} \\mid x < 7  \\}",
+      loesung: " x \\in \\{1, 2, 3, 4, 5, 6\\}",
     },
     {
-      aufgabe: "b) $\\{q \\in  \\mathbb{N} | q$ ist ungerade und $ \\leq 9  \\}$",
-      loesung: "$q \\in \\{1, 3, 5, 7, 9\\}$",
+      aufgabe: "b)\\ \\{q \\in  \\mathbb{N} \\mid q \\text{ ist ungerade und } \\leq 9  \\}",
+      loesung: "q \\in \\{1, 3, 5, 7, 9\\}",
     },
     {
-      aufgabe: "c) $\\{u \\in  \\mathbb{Z} | -10 < u \\leq -5  \\}$",
-      loesung: "$x \\in \\{ -9, -8, -7, -6, -5\\}$",
+      aufgabe: "c)\\ \\{u \\in  \\mathbb{Z} \\mid -10 < u \\leq -5  \\}",
+      loesung: "u \\in \\{ -9, -8, -7, -6, -5\\}",
     },
     {
-      aufgabe: "d) $\\{z \\in \\mathbb{N}_0\\ | z < 3\\}$",
-      loesung: "$z \\in \\{0, 1, 2\\}$",
+      aufgabe: "d)\\ \\{z \\in \\mathbb{N}_0 \\mid z < 3\\}",
+      loesung: "z \\in \\{0, 1, 2\\}",
     },
     {
-      aufgabe: "e) $\\{i \\in \\mathbb{N} | $Menge aller Teiler von 30$\\}$",
-      loesung: "$i \\in \\{1, 2, 3, 4, 5, 6, 10, 15, 30\\}$",
+      aufgabe: "e)\\ \\{i \\in \\mathbb{N} \\mid \\text{Menge aller Teiler von } 30\\}",
+      loesung: "i \\in \\{1, 2, 3, 5, 6, 10, 15, 30\\}",
     },
     {
-      aufgabe: "f) $\\{t \\in \\mathbb{Q}|t$ ist eine Primzahl und $< 9\\}$",
-      loesung: "$t \\in \\{2, 3, 5, 7\\}$",
+      aufgabe: "f)\\ \\{t \\in \\mathbb{P} \\mid t \\text{ ist eine Primzahl und } < 9\\}",
+      loesung: "t \\in \\{2, 3, 5, 7\\}",
     },
     {
       titel: "Notiere die Menge in beschreibender Form:",
-      aufgabe: "a) $n \\in \\{1, 3, 5, 7, ...\\}$",
-      loesung: "$\\{n \\in \\mathbb{N} | n$ ist ungerade$\\}$",
+      aufgabe: "a)\\ n \\in \\{1, 3, 5, 7, ...\\}",
+      loesung: "\\{n \\in \\mathbb{N} \\mid n \\text{ ist ungerade}\\}",
     }, 
     {
-      aufgabe: "b) $z \\in \\{2, 4, 6, 8, 10\\}$",
-      loesung: "$\\{z \\in \\mathbb{N} | z$ ist gerade und $\\leq 10\\}$",
+      aufgabe: "b)\\ z \\in \\{2, 4, 6, 8, 10\\}",
+      loesung: "\\{z \\in \\mathbb{N} \\mid z \\text{ ist gerade und } \\leq 10\\}",
     },
     {
-      aufgabe: "c) $x \\in \\{4, 8, 12, 16, 20\\}$",
-      loesung: "$\\{x \\in \\mathbb{N} | x$ ist ein vielfaches von 4 und $\\leq 20\\}$",
+      aufgabe: "c)\\ x \\in \\{4, 8, 12, 16, 20\\}",
+      loesung: "\\{x \\in \\mathbb{N} \\mid x \\text{ ist ein Vielfaches von 4 und } \\leq 20\\}",
     },
     {
-      aufgabe: "d) $u \\in \\{1, 4, 9, 16, 25, 36\\}$",
-      loesung: "$\\{u \\in \\mathbb{N} | u$ ist eine Quadratzahl und $\\leq 36\\}$",
+      aufgabe: "d)\\ u \\in \\{1, 4, 9, 16, 25, 36\\}",
+      loesung: "\\{u \\in \\mathbb{N} \\mid u \\text{ ist eine Quadratzahl und } \\leq 36\\}",
     },
     {
       titel: "Sind die Mengen identisch?",
-      aufgabe: "a) $\\mathbb{A} = \\{12, 6, 2\\}$,  $\\mathbb{B} = \\{6, 2, 12\\}$",
-      loesung: "Ja, $\\mathbb{A} = \\mathbb{B}$"
+      aufgabe: "a) \\mathbb{A} = \\{12, 6, 2\\},  \\mathbb{B} = \\{6, 2, 12\\}",
+      loesung: "Ja, \\mathbb{A} = \\mathbb{B}"
     },
     {
-      aufgabe: "b) $\\mathbb{O} = \\{1, 2, 4\\}$, $\\mathbb{P} = \\{1, 4\\}$",
-      loesung: "Nein, $\\mathbb{O} \\neq \\mathbb{P}$",
+      aufgabe: "b) \\mathbb{O} = \\{1, 2, 4\\}, \\mathbb{P} = \\{1, 4\\}",
+      loesung: "Nein, \\mathbb{O} \\neq \\mathbb{P}",
     },
     {
       titel: "Setze das richtige Zeichen ein:",
-      aufgabe: "a) $\\{5\\} \\; \\square \\; \\{5, 10\\}$",
-      loesung: "$\\subset$, da die erste Menge mit dem Element 5 eine Teilmenge der zweiten Menge ist.",
+      aufgabe: "a) \\{5\\} \\; \\square \\; \\{5, 10\\}",
+      loesung: "\\subset",
     },
     {
-      aufgabe: "b) $5 \\; \\square \\; \\{5, 10\\}$",
-      loesung: "$\\in$, da 5 ein Element von der Menge $\\{5, 10\\}$ ist.",
+      aufgabe: "b) 5 \\; \\square \\; \\{5, 10\\}",
+      loesung: "\\in",
     },
     {
-      aufgabe: "c) $3 \\; \\square \\; \\{3\\}$",
-      loesung: "$\\in$"
+      aufgabe: "c) 3 \\; \\square \\; \\{3\\}",
+      loesung: "\\in"
     },
     {
-      aufgabe: "d) $\\{6\\} \\; \\square \\; \\{0,1,3\\}$",
-      loesung: "$\\not\\subset$",
+      aufgabe: "d) \\{6\\} \\; \\square \\; \\{0, 1, 3\\}",
+      loesung: "\\not\\subset",
     },
     {
-      aufgabe: "e) $\\{3, 4\\} \\; \\square \\; \\{4, 5, 6 \\}$",
-      loesung: "$\\not\\subset$"
+      aufgabe: "e) \\{3, 4\\} \\; \\square \\; \\{4, 5, 6\\}",
+      loesung: "\\not\\subset"
     },
     {
-      aufgabe: "f) $0 \\; \\square \\; \\{\\}$",
-      loesung: "$\\not\\in$"
+      aufgabe: "f) 0 \\; \\square \\; \\{\\}",
+      loesung: "\\not\\in"
     },
     {
-      aufgabe: "g) $3 \\; \\square \\; \\{1, 2, 3\\}$",
-      loesung: "$\\in$"
+      aufgabe: "g) 3 \\; \\square \\; \\{1, 2, 3\\}",
+      loesung: "\\in"
     },
     {
       titel: "Notiere alle Teilmengen:",
-      aufgabe: "a) $\\{0, 1\\}$",
-      loesung: "$\\{\\}, \\{0\\}, \\{1\\}, \\{0, 1\\}$"
+      aufgabe: "a) \\{0, 1\\}",
+      loesung: "\\{\\}, \\{0\\}, \\{1\\}, \\{0, 1\\}"
     },
     {
-      aufgabe: "b) $\\{3, 5, 7\\}$",
-      loesung: "$\\{\\}, \\{3\\}, \\{5\\}, \\{7\\}, \\{3, 5\\}, \\{5, 7\\}, \\{3, 7\\},$ <br>$ \\{3, 5, 7\\}$"
+      aufgabe: "b) \\{3, 5, 7\\}",
+      loesung: "\\{\\}, \\{3\\}, \\{5\\}, \\{7\\}, \\{3, 5\\}, \\{5, 7\\}, \\{3, 7\\}, \\{3, 5, 7\\}"
     },
     {
-      aufgabe: "c) Wie lautet die Formel, mit der man die Anzahl Teilmengen einer Menge anhand ihrer Anzahl Elemente berechnen kann?",
-      loesung: "$2^n, n =$ Mächtigkeit der Menge"
+      aufgabe: "c)",
+      aufgabeText: "Wie lautet die Formel, mit der man die Anzahl der Teilmengen einer Menge anhand ihrer Anzahl der Elemente berechnen kann?",
+      loesung: "2^n, \\text{ wobei n die Mächtigkeit der Menge ist}",
+      loesungText: ""
+    },  
+    {
+      titel: "Überlege:",
+      aufgabe: "a)",
+      aufgabeText: "Gibt es eine Teilmenge einer leeren Menge?",
+      loesung: "",
+      loesungText: "Ja, denn eine Menge ist immer auch eine Teilmenge von sich selbst. So ist die einzige Teilmenge einer leeren Menge ebenfalls eine leere Menge."
     },
     {
-      titel: "Berechne:",
-      aufgabe: "a) $\\mathbb{T} = \\{1, 3, 5, 7, 9\\}, $<br>$ \\; \\; \\; \\, \\mathbb{S} = \\{2, 3, 4, 5\\}$ <br> $\\; \\; \\; \\, \\mathbb{S} \\; \\cup \\; \\mathbb{T}$",
-      loesung: "$\\underline{\\mathbb{S} \\; \\cup \\; \\mathbb{T} = \\{1, 2, 3, 5, 6, 7, 9\\}}$"
+      aufgabe: "b)",
+      aufgabeText: "In welcher Menge sind die irrationalen Zahlen enthalten?",
+      loesung: "",
+      loesungText: "In der Menge der reellen Zahlen."
     },
     {
-      aufgabe: "b) $\\mathbb{P} = \\{1, 3, 5, 7, 9\\}, $<br>$ \\; \\; \\; \\mathbb{U} = \\{2, 3, 4, 5\\}$ <br> $\\; \\; \\; \\mathbb{P} \\; \\cap \\; \\mathbb{U}$",
-      loesung: "$\\underline{\\mathbb{P} \\; \\cap \\; \\mathbb{U} = \\{3, 5\\}} $"  
+      aufgabe: "c)",
+      aufgabeText: "Ist 3.666... eine irrationale Zahl?",
+      loesung: "",
+      loesungText: "Nein, ist sie nicht, denn sie wiederholt sich ab der ersten Nachkommastelle. Somit kann man sie als Bruch schreiben, was bedeutet, dass sie nicht irrational ist."
     },
     {
-      aufgabe: "c) $\\mathbb{P} = \\{1, 3, 5, 7, 9\\}, $<br>$ \\; \\; \\; \\mathbb{U} = \\{2, 3, 4, 5\\}, $<br>$ \\; \\; \\; \\mathbb{H} = \\{2, 3, 7, 8\\}$ <br> $\\; \\; \\; (\\mathbb{P} \\; \\cap \\; \\mathbb{U}) \\; \\backslash \\; \\mathbb{H} $  ",
-      loesung: "$\\underline{(\\mathbb{P} \\; \\cap \\; \\mathbb{U}) \\; \\backslash \\; \\mathbb{H} = \\{5\\}}$"  
+      aufgabe: "d)",
+      aufgabeText: "Wenn A eine Teilmenge von B ist und B eine Teilmenge von A, ist A dann gleich B?",
+      loesung: "",
+      loesungText: "Ja, denn alle Elemente, die in A sind, sind auch in B und umgekehrt."
     },
     {
-      titel: "Verständnis",
-      aufgabe: "a) Gibt es eine Teilmenge von einer leeren Menge?",
-      loesung: "Ja, denn eine Menge ist immer auch eine Teilmenge von sich selbst. So ist die einzige Teilmenge von einer leeren Menge, auch eine leere Menge."
-    },
-    {
-      aufgabe: "b) In welcher Menge sind die irrationalen Zahlen enthalten",
-      loesung: "In der Menge der reelen Zahlen."
-    },
-    {
-      aufgabe: "c) Ist 3.$\\overline{6}$ eine irrationale Zahl?.",
-      loesung: "Nein, ist sie nicht, denn sie wiederholt sich ab der ersten Kommastelle. Somit kann man sie als Bruch schreiben, was bedeutet, dass sie nicht irrational ist."
-    },
-    {
-      aufgabe: "d) Wenn $\\mathbb{A} \\subset \\mathbb{B}$ und $\\mathbb{B} \\subset \\mathbb{A}$, ist dann $\\mathbb{A} = \\mathbb{B}$?",
-      loesung: "Ja, denn alle Elemente die in $\\mathbb{A}$ enthalten sind, sind in $\\mathbb{B}$ enthalten und so auch umgekehrt."
-    },
-    {
-      aufgabe: "e) Wenn man eine endlose Menge in der aufzählenden Form notiert, wie z.B. {1, 2, 3, ...}, ist diese Menge dann eindeutig?",
-      loesung: "Nein ist sie nicht. Man nimmt an, dass das nächste Element 4 ist, jedoch kann es eine beliebige Zahl sein. Es gibt unendlich viele Folgen, die mit 1, 2 und 3 beginnen. Aus diesem Grund notiert man endlose Mengen in der beschreibenden Form."
+      aufgabe: "e)",
+      aufgabeText: "Wenn man eine unendliche Menge in aufzählender Form notiert wie z.B. M = {1, 2, 3,...}, ist diese Menge dann eindeutig bestimmt?",
+      loesung: "",
+      loesungText: "Nein, ist sie nicht. Man nimmt an, dass das nächste Element 4 ist, jedoch kann es eine beliebige Zahl sein. Es gibt unendlich viele Folgen, die mit 1, 2 und 3 beginnen. Aus diesem Grund notiert man unendliche Mengen in beschreibender Form.",
     },
   ];
 
@@ -150,32 +149,47 @@ export function MengenNotationManu() {
   };
 
   return (
-    <View>
+    <View style={{backgroundColor: 'white'}}>
       <SafeAreaView>
         <ScrollView>
-          <View  style={stylesTheorie.container}>
-          {AufgabenUndLoesungen.map((item, index) => (
-            <View key={index}>
-              {item.titel && <Text style={styles.title}>{item.titel}</Text>}
-              <Pressable onPress={() => toggleLoesung(index)}>
-                <MathJax html={`<div style='${divStyle}'>${item.aufgabe}</div>`} />
-              </Pressable>
-              {selectedLoesungen.includes(index) && (
-                <MathJax html={`<div style='${divStyle}'>${item.loesung}</div>`} />
-              )}
-            </View>
-          ))}
-          </View>        
+          <View style={stylesUebungen.container}>
+            {AufgabenUndLoesungen.map((item, index) => (
+              <View key={index}>
+                {item.titel && (
+                  <View style={stylesUebungen.titleContainer}>
+                    <Text style={stylesUebungen.title}>{item.titel}</Text>
+                  </View>
+                )}
+
+                <View style={stylesUebungen.taskContainer}>
+                  <Pressable onPress={() => toggleLoesung(index)}>
+                    <MathView
+                      math={`${mathMid} ${item.aufgabe}`}
+                      style={stylesUebungen.mathText}
+                    />
+                    {item.aufgabeText && (
+                      <Text style={stylesUebungen.taskText}>{item.aufgabeText}</Text>
+                    )}
+                  </Pressable>
+                </View>
+                
+                {selectedLoesungen.includes(index) && (
+                  <View style={stylesUebungen.solutionContainer}>
+                    <MathView
+                      math={item.loesung}
+                      style={stylesUebungen.mathText}
+                    />
+                    {item.loesungText && (
+                      <Text style={stylesUebungen.solutionText}>{item.loesungText}</Text>
+                    )}
+                  </View>
+                )}             
+              </View>           
+            ))}           
+          </View>  
+          <View style={{height: 200, backgroundColor: 'white'}}></View>  
         </ScrollView>
       </SafeAreaView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-});

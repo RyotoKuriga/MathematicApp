@@ -1,25 +1,26 @@
-import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView, Animated} from 'react-native';
-import React, { useState, useEffect, useRef} from 'react';
-import MathJax from 'react-native-mathjax';
-import Slider from '@react-native-community/slider';
+import { StyleSheet, Text, View, Pressable, Switch } from 'react-native';
+import React, { useState } from 'react';
+import * as math from 'mathjs';
+import { ScaledSheet, moderateScale, verticalScale, scale } from 'react-native-size-matters';
 
 export function AdditionUndSubtraktionAutoUebung() {
-  const divStyle = "font-size: 30px; background-color: 'white'; border: none; font-family: Arial; text-align: center; text-justify: center;";
-
   const [Expression, setExpression] = useState('');
   const [Solution, setSolution] = useState('');
-  const [SliderStateParts, setSliderStateParts] = useState('');
+  const [isEnabled, setIsEnabled] = useState(false);
 
+  const toggleSwitch = () => {
+    setIsEnabled(previousState => {
+      createExpression(!previousState);
+      return !previousState;
+    });
+  };
 
-
-  // Function for random number
   const getRandomNumber = (min, max, value) => {
-    
     if (value === 'positiv') {
       return Math.floor(Math.random() * (max - min + 1)) + min;
-    } else if ( value === 'negativ') {
+    } else if (value === 'negativ') {
       return -1 * (Math.floor(Math.random() * (max - min + 1)) + min);
-    } else  {
+    } else {
       if (Math.random() > 0.5) {
         return (Math.floor(Math.random() * (max - min + 1)) + min);
       } else {
@@ -28,53 +29,47 @@ export function AdditionUndSubtraktionAutoUebung() {
     }
   };
 
-  // Function for random operation
   const getRandomOperation = () => {
     const operations = ['+', '-'];
     return operations[getRandomNumber(0, 1, 'positiv')];
   };
 
-  // Function for creation
-  const createExpression = () => {
-    setSolution(0);
-    let type = getRandomNumber(1, 8, 'positiv');
-    if (type < 2) {
-      createExpressionWithoutBrackets();
+  const createExpression = (useVariables) => {
+    setSolution('');
+    if (useVariables) {
+      createExpressionWithVars();
     } else {
-      createExpressionWithBrackets();
-    };
+      createExpressionWithoutVars();
+    }
   };
 
   const rewriteExpression = () => {
-    const sign = Expression.split('')
+    const sign = Expression.split('');
 
     for (let i = 0; i <= Expression.length; i++) {
       if (sign[i] === '(') {
         if (sign[i - 2] === '-') {
-          i++
+          i++;
           if (sign[i] !== NaN) {
             sign[i - 3] = '-';
           } else if (sign[i] === NaN) {
-            sign[i - 3] = '+'
-          } 
+            sign[i - 3] = '+';
+          }
           while (sign[i] !== ')') {
             if (sign[i] === '+') {
-              sign[i] = '-';             
+              sign[i] = '-';
             } else if (sign[i] === '-') {
-              sign[i] = '+';            
-            } 
+              sign[i] = '+';
+            }
             i++;
-          };                                
-        };
-      };
-    };
+          }
+        }
+      }
+    }
 
-    
-
-    return(sign.join(""));
+    return sign.join("");
   };
 
-  // Function, to solve
   const solveExpression = () => {
     let newExpression = rewriteExpression();
     let result = {};
@@ -82,10 +77,19 @@ export function AdditionUndSubtraktionAutoUebung() {
     let currentVariable = '';
     let currentSign = 1;
     let currentCoefficientList = [];
-  
     const variables = ['x', 'y', 'z'];
     const parts = newExpression.split(' ');
-  
+
+    if (!isEnabled) {
+      try {
+        setSolution(math.evaluate(Expression));
+      } catch (error) {
+        console.error("Error evaluating expression: ", error);
+        setSolution("Invalid Expression");
+      }
+      return;
+    }
+
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i];
       const sign = part.split('');
@@ -115,10 +119,10 @@ export function AdditionUndSubtraktionAutoUebung() {
               result[currentVariable] = currentSign;
             }
           }
-        }        
+        }
       }
     }
-  
+
     const simplifiedExpression = Object.entries(result)
       .map(([variable, coefficient]) => {
         if (variable === '_constant') {
@@ -129,10 +133,8 @@ export function AdditionUndSubtraktionAutoUebung() {
         }
       })
       .join(' + ');
-  
-  
-    newExpression = correctSolution(simplifiedExpression);
 
+    newExpression = correctSolution(simplifiedExpression);
     setSolution(newExpression);
   };
 
@@ -140,212 +142,182 @@ export function AdditionUndSubtraktionAutoUebung() {
     let parts = simplifiedExpression.split('');
     let correctedParts = [...parts];
     let count = 0;
-  
+
     for (let i = 0; i <= simplifiedExpression.length; i++) {
       if (parts[i] === '-' && parts[i - 2] === '+') {
         correctedParts.splice(i - 2 - count, 2);
         correctedParts.splice(i - 1 - count, 0, ' ');
         count++;
       }
-    } 
+    }
     return correctedParts.join("");
-  }
+  };
 
-
-
-  
-  
-
-  const createExpressionWithBrackets = () => {
-    const min = 3
-    const max = 5
-    const variables = ['x', 'y', 'z']; // Definiere die Variablen
+  const createExpressionWithVars = () => {
+    const min = 2;
+    const max = 5;
+    const variables = ['x', 'y', 'z'];
     const expressionParts = [];
-    const numberOfParts = getRandomNumber(min, max, 'positiv'); // Anzahl der Teile im Ausdruck
-    
-  
+    const numberOfParts = getRandomNumber(min, max, 'positiv');
+
     for (let i = 0; i < numberOfParts; i++) {
       if (i !== 0) {
         expressionParts.push(getRandomOperation());
-      };
-  
+      }
+
       if (getRandomNumber(0, 1, 'positiv') === 1 && i > 0) {
-        // Zufällig Klammern hinzufügen
-        const numNumbersInBrackets = getRandomNumber(min, max - 2, 'positiv'); // zufällige Anzahl von Zahlen in den Klammern
+        const numNumbersInBrackets = getRandomNumber(min, max - 2, 'positiv');
         const bracketExpression = [];
-  
+
         for (let j = 0; j < numNumbersInBrackets; j++) {
           bracketExpression.push(`${getRandomNumber(1, 100)}${variables[Math.floor(Math.random() * variables.length)]}`);
           if (j !== numNumbersInBrackets - 1) {
             bracketExpression.push(getRandomOperation());
           }
         }
-  
+
         expressionParts.push(`(${bracketExpression.join(' ')})`);
       } else {
         expressionParts.push(`${getRandomNumber(1, 100)}${variables[Math.floor(Math.random() * variables.length)]}`);
       }
     }
-  
+
     const expression = expressionParts.join(' ');
     setExpression(expression);
   };
 
-
-  const createExpressionWithoutBrackets = () => {
-    const min = SliderStateParts;
-    const max = SliderStateParts;
-    const variables = ['x', 'y', 'z']; // variabeln
+  const createExpressionWithoutVars = () => {
+    const min = 2;
+    const max = 5;
     const expressionParts = [];
-    const numberOfParts = getRandomNumber(min, max, 'positiv'); //anzahl ausdrücke
-  
+    const numberOfParts = getRandomNumber(min, max, 'positiv');
+
     for (let i = 0; i < numberOfParts; i++) {
-        expressionParts.push(`${getRandomNumber(1, 100)}${variables[Math.floor(Math.random() * variables.length)]}`);
-        if (i + 1 < numberOfParts) {
-          expressionParts.push(`${getRandomOperation()}`)
+      if (i !== 0) {
+        expressionParts.push(getRandomOperation());
+      }
+
+      if (getRandomNumber(0, 1, 'positiv') === 1 && i > 0) {
+        const numNumbersInBrackets = getRandomNumber(min, max - 2, 'positiv');
+        const bracketExpression = [];
+
+        for (let j = 0; j < numNumbersInBrackets; j++) {
+          bracketExpression.push(`${getRandomNumber(1, 100)}`);
+          if (j !== numNumbersInBrackets - 1) {
+            bracketExpression.push(getRandomOperation());
+          }
         }
-        
+
+        expressionParts.push(`(${bracketExpression.join(' ')})`);
+      } else {
+        expressionParts.push(`${getRandomNumber(1, 100)}`);
+      }
     }
-  
+
     const expression = expressionParts.join(' ');
     setExpression(expression);
   };
-    
-  
-  
-
 
   return (
     <View style={styles.container}>
       <View style={styles.containerExpression}>
-        <Text style={{ textAlign: 'center', fontSize: 30 }}>
-          {Expression ? Expression : createExpression()}
+        <Text style={stylesScaled.text}>
+          {Expression ? Expression : createExpression(isEnabled)}
         </Text>
       </View>
-  
-      
+
       <View style={styles.button1}>
         <Pressable onPress={solveExpression}>
-          <Text style={{ textAlign: 'center', fontSize: 30 }}>
+          <Text style={stylesScaled.text}>
             {Solution ? Solution : 'Lösung anzeigen'}
           </Text>
         </Pressable>
       </View>
 
       <View style={styles.button2}>
-        <Pressable onPress={createExpression}>
-          <Text style={{ textAlign: 'center', fontSize: 30 }}>
+        <Pressable onPress={() => createExpression(isEnabled)}>
+          <Text style={stylesScaled.text}>
             Ausdruck erstellen
           </Text>
         </Pressable>
       </View>
 
-      <View style={styles.containerSliders}>
-
-        <View style={styles.innerContainerSliders}>
-          <Slider
-            style={{width: 200, height: 40}}
-            minimumValue={1}
-            maximumValue={4}
-            minimumTrackTintColor="white"
-            maximumTrackTintColor="grey"
-            step={1}
-            inverted='true'
-          />
-
+      <View style={styles.toggleContainer}>
+        <View>
+          <Text style={styles.toggleText}>
+            Variabeln
+          </Text>
         </View>
 
-        <View style={styles.innerContainerSliders}>
-          <Slider
-            style={{width: 200, height: 40}}
-            minimumValue={1}
-            maximumValue={4}
-            minimumTrackTintColor="white"
-            maximumTrackTintColor="grey"
-            step={1}
-            inverted='true'
+        <View style={styles.switchContainer}>
+          <Switch
+          trackColor={{ false: '#767577', true: '#81b0ff' }}
+          thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch}
+          value={isEnabled}
+          style={styles.switch}
           />
-
         </View>
-
-        <View style={styles.innerContainerSliders}>
-          <Slider
-            style={{width: 200, height: 40}}
-            minimumValue={1}
-            maximumValue={4}
-            minimumTrackTintColor="white"
-            maximumTrackTintColor="grey"
-            step={1}
-            inverted='true'
-          />
-
-        </View>
-
-        <View style={styles.innerContainerSliders}>
-          <Slider
-            style={{width: 200, height: 40}}
-            minimumValue={1}
-            maximumValue={4}
-            minimumTrackTintColor="white"
-            maximumTrackTintColor="grey"
-            step={1}
-            inverted='true'
-          />
-
-        </View>
-
-        
-        
-      </View>      
+      </View>
+      
     </View>
-    
   );
-  
-  
-
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     flexDirection: 'column',
+    backgroundColor: 'white',
   },
   containerExpression: {
-    padding: 40,
-    marginVertical: 60,
-  },
-  containerButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 50,
-    
-  },
-  containerSliders: {
-    position: 'absolute',
-    flexDirection: 'row',
-    justifyContent: 'center', // Zentrieren des Containers horizontal
-    paddingHorizontal: 20, // Horizontaler Abstand zum Rand
-    bottom: '25%',
-  },
-  innerContainerSliders: {
-    transform: [{rotateZ: '90deg'}],
-    marginHorizontal: 15,
-    height: 50,
-    width: 50,
+    padding: verticalScale(20),
+    marginVertical: verticalScale(20),
   },
   button1: {
     position: 'absolute',
-    top: '35%',
+    top: verticalScale(170),
   },
   button2: {
     position: 'absolute',
-    top: '50%',
-    
+    top: verticalScale(240),
   },
-  slider: {
-    width: 200,
-    height: 30,
-    paddingHorizontal: 50, 
+  text: {
+    fontSize: scale(40),
+  },
+  vars: {
+    position: 'absolute',
+    fontSize: scale(20),
+    marginTop: verticalScale(310),
+  },
+  switchContainer: {
+    position: 'absolute',
+    top: '60%',
+  },
+  toggleContainer:{
+    alignItems: 'center',
+    borderColor: 'black',
+    height: 100,
+    width: 300,
+    borderWidth: 4,
+    position: 'absolute',
+    marginTop: verticalScale(320),
+    backgroundColor: '',
+    borderRadius: 20,
+  },
+  toggleText: {
+    fontSize: 30,
+  },
+  switch: {
+
   }
+});
+
+const stylesScaled = ScaledSheet.create({
+  text: {
+    textAlign: 'center',
+    fontSize: moderateScale(32),
+  },
 });

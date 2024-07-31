@@ -1,75 +1,158 @@
 import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView, Image } from 'react-native';
 import stylesTheorie from '../StylesTheorie';
-import MathJax from 'react-native-mathjax';
 import { useNavigation } from '@react-navigation/native';
+import MathView from 'react-native-math-view';
 
 export function LineareFunktionen2() {
-  const divStyle = "font-size: 20px; background-color: 'white'; border: none; font-family: Arial";
   const navigation = useNavigation();
 
   const nextPage = () => {
-    return (
-      navigation.navigate('Lineare Funktionen III')
-    );
-  }
+    return navigation.navigate('Lineare Funktionen III');
+  };
+
+  const math = '\\huge';
+  const mathSmall = '\\large';
+  const mathMid = '\\large';
 
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <View style={stylesTheorie.container}>
-          <Text style={stylesTheorie.header}>
-            Lineare Funktionen II
+    <ScrollView>
+      <View style={stylesTheorie.container}>
+        <Text style={stylesTheorie.header}>
+          Lineare Funktionen II
+        </Text>
+
+        <View style={stylesTheorie.paragraphContainer}>
+          <Text style={stylesTheorie.text}>
+            Kennt man die Koordinaten zweier Punkte, lässt sich die Geradengleichung der Geraden bestimmen, welche durch beide Punkte geht. Man geht hier mit einem Algorithmus vor.
           </Text>
-
-          <MathJax
-            html={`<div style='${divStyle}'> Kennt man die Koordinaten zweier Punkte, lässt sich die Geradengleichung von der Geraden bestimmen, welche durch beide Punkte geht. Man geht hier mit einem Algorithmus vor. <br><br> 
-            <b> 1. $\\textbf{m}$ bestimmen</b> <br><br>
-            Man kennt zwei Punkte mit den Koordinaten $P_1(-2; 2)$ und $P_2(4; -2)$. Um den Lösungsansatz verstehen zu können, zeichnet man die Punkte in ein Koordinatensystem ein.
-            </div>`}      
-          />
-
-          {/* <View style={stylesTheorie.imageContainer}> 
-            <Image source={require('./img/LineareFunktionen4.png')} style={{width: 335, height: 335}}/>
-            </View> */}
-
-          <MathJax
-            html={`<div style='${divStyle}'> Man sucht die Funktion zur pinken Geraden $p(x) = mx + q$. $m$ ist die Steigung in Prozent, d.h. wieviel die Gerade nach unten geht, wenn sie eine bestimmte Distanz zurücklegt. Man kennt $a$ und $b$ und die Steigung ist als $\\frac{b}{a}$ definiert, es ist also sehr einfach die Steigung zu berechnen. Die Distanz $a$ ist die x-Koordinate vom Punkt $P_2$ minus der x-Koordinate vom Punkt $P_1$: <br><br>
-            $a =  x_2 - x_1 = \\Delta x$<br><br>
-            $a = 4 - (-2) = 4 + 2 = 6$ <br><br>
-            Analog ist die Distanz $b$, gleich der y-Koordinaten vom Punkt $P_2$ minus der vom Punkt $P_1$. <br><br>
-            $b = y_2 - y_1 = \\Delta y$ <br><br>
-            $b = (-2) - 2 = -4$ <br><br>
-            Das Dreieckssymbol bezeichnen wir als delta. Es gibt an, dass es sich um eine Differenz handelt. Demnach wäre $\\Delta u$ gleich $u_2 - u_1$. Um nun $m$ auszurechnen nehmen teilt man $\\Delta y$ bzw. die Strecke $b$ durch $\\Delta x$ bzw. der Strecke $a$. <br><br>
-            $m = \\dfrac{\\Delta y}{\\Delta x} = \\dfrac{b}{a} = \\dfrac{-4}{6}  = -\\dfrac{2}{3}$ <br><br>
-            Da man nun das m kennt, kann man nun $q$ ausrechnen. Um $q$ auszurechnen setzt man die Koordinaten eines Punktes in die Funktionsgleichung ein. Welchen Punkt man einsetzt, ist irrellevant. <br><br>
-            $y = - \\dfrac{2}{3} x + q \\qquad \\huge \\vert$ $P_1$ einsetzen. <br><br>
-            $2 = -\\dfrac{2}{3} \\cdot -2 + q \\quad \\huge \\vert$Vereinfachen <br><br>
-            $2 = \\dfrac{4}{3} + q \\quad \\huge \\vert$$ -\\dfrac{4}{3}$ <br><br>
-            $2 - \\dfrac{4}{3} = q \\quad \\huge \\vert$ Erweitern <br><br>
-            $\\dfrac{6}{3} - \\dfrac{4}{3} = q \\quad \\huge \\vert$ Vereinfachen <br><br>
-            $\\dfrac{2}{3} = q$ <br><br>
-            Die Funktionsgleichung lautet demnach: <br><br>
-            $f(x) = -\\dfrac{2}{3} x + \\dfrac{2}{3}$
-
-            </div>`}      
-          />
-
-
-
-
-
-
-
-          <View style={stylesTheorie.conainerMid}>
-            <Pressable onPress={nextPage}>
-              <Text style={stylesTheorie.link}>Nächstes Kapitel!</Text>
-            </Pressable>
-          </View>
-          
-
         </View>
 
-      </ScrollView>
-    </SafeAreaView>
-  )
+        <View style={stylesTheorie.subHeaderContainer}>
+          <Text style={stylesTheorie.subHeader}>
+            1. m bestimmen
+          </Text>
+        </View>
+
+        <View style={stylesTheorie.paragraphContainer}>
+          <Text style={stylesTheorie.text}>
+            Man kennt zwei Punkte mit den Koordinaten P1(-2; 2) und P2(4; -2). Um den Lösungsansatz verstehen zu können, zeichnet man die Punkte in ein Koordinatensystem ein.
+          </Text>
+        </View>
+
+        <View style={stylesTheorie.imageContainer}>
+          <Image source={require('./img/LineareFunktionen4.png')} style={{ width: 290, height: 290 }} />
+        </View>
+
+        <View style={stylesTheorie.paragraphContainer}>
+          <Text style={stylesTheorie.text}>
+            Man sucht die Funktion zur pinken Geraden p(x) = mx + q. m ist die Steigung, das heißt, wie viel die Gerade nach unten geht, wenn sie eine bestimmte Distanz zurücklegt. Man kennt a und b und die Steigung ist als <MathView math={`\\large \\frac{b}{a}`} /> definiert. Es ist also sehr einfach, die Steigung zu berechnen. Die Distanz a ist die x-Koordinate vom Punkt P2 minus der x-Koordinate vom Punkt P1:
+          </Text>
+        </View>
+
+        <View style={stylesTheorie.mathExpression}>
+          <MathView
+            math={`${mathMid} a = x_2 - x_1 = \\Delta x`}
+          />
+        </View>
+
+        <View style={stylesTheorie.mathExpression}>
+          <MathView
+            math={`${mathMid} a = 4 - (-2) = 4 + 2 = 6`}
+          />
+        </View>
+
+        <View style={stylesTheorie.paragraphContainer}>
+          <Text style={stylesTheorie.text}>
+            Analog ist die Distanz b gleich der y-Koordinate vom Punkt P2 minus der y-Koordinate vom Punkt P1.
+          </Text>
+        </View>
+
+        <View style={stylesTheorie.mathExpression}>
+          <MathView
+            math={`${mathMid} b = y_2 - y_1 = \\Delta y`}
+          />
+        </View>
+
+        <View style={stylesTheorie.mathExpression}>
+          <MathView
+            math={`${mathMid} b = (-2) - 2 = -4`}
+          />
+        </View>
+
+        <View style={stylesTheorie.paragraphContainer}>
+          <Text style={stylesTheorie.text}>
+            Das Dreieckssymbol bezeichnen wir als Delta. Es gibt an, dass es sich um eine Differenz handelt. Demnach wäre Delta-y gleich y2 - y1. Um nun m auszurechnen, teilt man Delta-y bzw. die Strecke b durch Delta-x bzw. die Strecke a.
+          </Text>
+        </View>
+
+        <View style={stylesTheorie.mathExpression}>
+          <MathView
+            math={`${mathMid} m = \\dfrac{\\Delta y}{\\Delta x} = \\dfrac{b}{a} = \\dfrac{-4}{6} = -\\dfrac{2}{3}`}
+          />
+        </View>
+
+        <View style={stylesTheorie.paragraphContainer}>
+          <Text style={stylesTheorie.text}>
+            Da man nun das m kennt, kann man nun q ausrechnen. Um q auszurechnen, setzt man die Koordinaten eines Punktes in die Funktionsgleichung ein. Man setzt den x-Wert des Punktes in x ein und den y-Wert des Punktes in y. Welchen Punkt man einsetzt, ist irrelevant.
+          </Text>
+        </View>
+
+        <View style={stylesTheorie.mathExpression}>
+          <MathView
+            math={`${mathMid} y = -\\dfrac{2}{3} x + q \\quad \\text{(P}_1\\text{ einsetzen)}`}
+          />
+        </View>
+
+        <View style={stylesTheorie.mathExpression}>
+          <MathView
+            math={`${mathMid} 2 = -\\dfrac{2}{3} \\cdot -2 + q`}
+          />
+        </View>
+
+        <View style={stylesTheorie.mathExpression}>
+          <MathView
+            math={`${mathMid} 2 = \\dfrac{4}{3} + q \\quad -\\dfrac{4}{3}`}
+          />
+        </View>
+
+        <View style={stylesTheorie.mathExpression}>
+          <MathView
+            math={`${mathMid} 2 - \\dfrac{4}{3} = q \\quad \\text{Erweitern}`}
+          />
+        </View>
+
+        <View style={stylesTheorie.mathExpression}>
+          <MathView
+            math={`${mathMid} \\dfrac{6}{3} - \\dfrac{4}{3} = q \\quad \\text{Vereinfachen}`}
+          />
+        </View>
+
+        <View style={stylesTheorie.mathExpression}>
+          <MathView
+            math={`${mathMid} \\dfrac{2}{3} = q`}
+          />
+        </View>
+
+        <View style={stylesTheorie.paragraphContainer}>
+          <Text style={stylesTheorie.text}>
+            Die Funktionsgleichung lautet demnach:
+          </Text>
+        </View>
+
+        <View style={stylesTheorie.mathExpression}>
+          <MathView
+            math={`${mathMid} f(x) = -\\dfrac{2}{3} x + \\dfrac{2}{3}`}
+          />
+        </View>
+
+        <View style={stylesTheorie.containerMid}>
+          <Pressable onPress={nextPage}>
+            <Text style={stylesTheorie.link}>Nächstes Kapitel!</Text>
+          </Pressable>
+        </View>
+
+        <View style={stylesTheorie.space}></View>
+      </View>
+    </ScrollView>
+  );
 }
