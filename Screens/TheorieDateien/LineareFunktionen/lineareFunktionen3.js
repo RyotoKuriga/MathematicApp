@@ -111,11 +111,6 @@ export function LineareFunktionen3() {
           </Text>
         </View>
 
-        <View style={stylesTheorie.containerMid}>
-          <Pressable onPress={nextPage}>
-            <Text style={stylesTheorie.link}>Nächstes Kapitel!</Text>
-          </Pressable>
-        </View>
 
         <View style={stylesTheorie.space}></View>
       </View>

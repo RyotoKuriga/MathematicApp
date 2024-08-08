@@ -1,10 +1,12 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { TouchableOpacity, View, Animated } from 'react-native';
-
+import { TouchableOpacity, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { StyleSheet } from 'react-native';
+
+import { DarkModeProvider, DarkModeContext, DarkMode } from './Screens/DarkModeContext';
 
 import { Theorie } from './Screens/Theorie';
 import { SettingsScreen } from './Screens/Settings/Settings';
@@ -18,9 +20,9 @@ import { Mengenoperationen } from './Screens/TheorieDateien/Mengenlehre/Mengenop
 
 import { WasIstEinBruch } from './Screens/TheorieDateien/Bruchrechnen/WasIstEinBruch';
 import { KuerzenUndErweitern } from './Screens/TheorieDateien/Bruchrechnen/KuerzenUndErweitern';
-import { AdditionUndSubtraktionVonBrüchen } from './Screens/TheorieDateien/Bruchrechnen/AdditionUndSubtraktionVonBrüchen';
-import { MultiplikationUndDivisionVonBrüchen } from './Screens/TheorieDateien/Bruchrechnen/MultiplikationUndDivisionVonBrüchen';
-import { Doppelbrüche } from './Screens/TheorieDateien/Bruchrechnen/Doppelbrüche';
+import { AdditionUndSubtraktionVonBruechen } from './Screens/TheorieDateien/Bruchrechnen/AdditionUndSubtraktionVonBruechen';
+import { MultiplikationUndDivisionVonBruechen } from './Screens/TheorieDateien/Bruchrechnen/MultiplikationUndDivisionVonBruechen';
+import { Doppelbrueche } from './Screens/TheorieDateien/Bruchrechnen/Doppelbrueche';
 
 import { Ausklammern } from './Screens/TheorieDateien/Faktorisieren/Ausklammern';
 import { MehrfachesAusklammern } from './Screens/TheorieDateien/Faktorisieren/MehrfachesAusklammern';
@@ -38,7 +40,7 @@ import { LineareFunktionen1 } from './Screens/TheorieDateien/LineareFunktionen/l
 import { LineareFunktionen2 } from './Screens/TheorieDateien/LineareFunktionen/lineareFunktionen2';
 import { LineareFunktionen3 } from './Screens/TheorieDateien/LineareFunktionen/lineareFunktionen3';
 
-import { GleichungssystemeLoesen } from './Screens/TheorieDateien/Gleichungssysteme/GleichungssystemeLösen';
+import { GleichungssystemeLoesen } from './Screens/TheorieDateien/Gleichungssysteme/GleichungssystemeLoesen';
 
 import { Wahrscheinlichkeit } from './Screens/TheorieDateien/Stochastik/Wahrscheinlichkeit';
 
@@ -76,10 +78,8 @@ import { GleichungssystemeManu } from './Screens/TrainingManu/Gleichungssysteme/
 import { LineareFunktionenManu } from './Screens/TrainingManu/LineareFunktionen/LineareFunktionenManu';
 import { Grundoperationen } from './Screens/TrainingManu/Grundoperationen/Grundoperationen';
 import { Potenzrechnen } from './Screens/TrainingManu/Grundoperationen/Potenzrechnen';
-import { composition } from 'mathjs';
 import { Betragsaufgaben } from './Screens/TrainingManu/Grundoperationen/Betragsaufgaben';
 import { Bruchrechnen } from './Screens/TrainingManu/Brueche/Bruchrechnen';
-
 
 const Tab = createBottomTabNavigator();
 const ScreenStack = createNativeStackNavigator();
@@ -92,9 +92,9 @@ function TheorieStackScreen() {
 
     { name: 'Was ist ein Bruch?', component: WasIstEinBruch},
     { name: 'Kürzen & Erweitern', component: KuerzenUndErweitern},
-    { name: 'Addition & Subtraktion von Brüchen', component: AdditionUndSubtraktionVonBrüchen},
-    { name: 'Multiplikation & Division von Brüchen', component: MultiplikationUndDivisionVonBrüchen},
-    { name: 'Doppelbrüche', component: Doppelbrüche},
+    { name: 'Addition & Subtraktion von Brüchen', component: AdditionUndSubtraktionVonBruechen},
+    { name: 'Multiplikation & Division von Brüchen', component: MultiplikationUndDivisionVonBruechen},
+    { name: 'Doppelbrüche', component: Doppelbrueche},
 
     { name: 'Ausklammern', component: Ausklammern},
     { name: 'Mehrfaches Ausklammern', component: MehrfachesAusklammern},
@@ -220,78 +220,76 @@ function SettingsStackScreen() {
       }}      
     >
       <ScreenStack.Screen name="Settings" component={SettingsScreen} />
-
     </ScreenStack.Navigator>
   );
 }
 
 export default function App() {
+  const theme = useContext(DarkModeContext);
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        shifting={false}
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-            let iconSize = focused ? 35 : 28;
-            switch (route.name) {
-              case 'Theorie':
-                iconName = focused ? 'book' : 'book-outline';
-                break;
-              case 'Settings':
-                iconName = focused ? 'settings' : 'settings-outline';
-                break;
-              case 'Calculator':
-                iconName = focused ? 'calculator' : 'calculator-outline';
-                break;
-              case 'Training':
-                iconName = focused ? 'barbell' : 'barbell-outline';
-                break;
-              case 'QuickTraining':
-                iconName = focused ? 'flash' : 'flash-outline';
-                break;
-            }
-            return <Ionicons name={iconName} color={'black'} size={iconSize}/>;
-          },
-          tabBarShowLabel: false,
-          tabBarStyle: {
-            backgroundColor: 'white', // Vordergrundfarbe der TabBar
-            position: 'absolute',
-            left: 20,
-            right: 20,
-            bottom: 30,
-            height: 60,
-            borderRadius: 30,
-            shadowColor: '#000',
-            shadowOpacity: 0.1,
-            shadowRadius: 10,
-            shadowOffset: { width: 0, height: -5 },
-            elevation: 10,
-            borderTopWidth: 0,
-            justifyContent: 'center',
-            paddingTop: 10,
-            paddingBottom: 10,
-            zIndex: 1
-          },
-        })}
-        tabBarBackground={() => (
-          <View style={{
-            position: 'relative',
-            left: 0,
-            right: 10,
-            bottom: 10,
-            height: 100,
-            backgroundColor: 'black',
-            zIndex: 0
-          }} />
-        )}
-      >
-        <Tab.Screen name="Theorie" component={TheorieStackScreen} options={{ headerShown: false }} />
-        <Tab.Screen name="Training" component={TrainingChoice} options={{ headerShown: false }} />
-        <Tab.Screen name="QuickTraining" component={QuickTraining} options={{ headerShown: false }} />
-        <Tab.Screen name="Calculator" component={Calculator} options={{ headerShown: false }} />
-        <Tab.Screen name="Settings" component={SettingsStackScreen} options={{ headerShown: false }} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <DarkModeProvider>
+      <NavigationContainer>
+        <Tab.Navigator
+          shifting={false}
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused }) => {
+              let iconName;
+              let iconSize = focused ? 35 : 28;
+              switch (route.name) {
+                case 'Theorie':
+                  iconName = focused ? 'book' : 'book-outline';
+                  break;
+                case 'Settings':
+                  iconName = focused ? 'settings' : 'settings-outline';
+                  break;
+                case 'Calculator':
+                  iconName = focused ? 'calculator' : 'calculator-outline';
+                  break;
+                case 'Training':
+                  iconName = focused ? 'barbell' : 'barbell-outline';
+                  break;
+                case 'QuickTraining':
+                  iconName = focused ? 'flash' : 'flash-outline';
+                  break;
+                default:
+                  iconName = 'question'; // Fallback Icon
+                  break;
+              }
+              return <Ionicons name={iconName} color={theme === 'dark' ? '#D0D1D5' : 'black'} size={iconSize} />;
+            },
+            tabBarShowLabel: false,
+            tabBarStyle: theme === 'light' ? styles.tabBarStyleLight : styles.tabBarStyleDark,
+          })}
+        >
+          <Tab.Screen name="Theorie" component={TheorieStackScreen} options={{ headerShown: false }} />
+          <Tab.Screen name="Training" component={TrainingChoice} options={{ headerShown: false }} />
+          <Tab.Screen name="QuickTraining" component={QuickTraining} options={{ headerShown: false }} />
+          <Tab.Screen name="Calculator" component={Calculator} options={{ headerShown: false }} />
+          <Tab.Screen name="Settings" component={SettingsStackScreen} options={{ headerShown: false }} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </DarkModeProvider>
   );
 }
+
+const styles = StyleSheet.create ({
+  tabBarStyleLight: {
+    backgroundColor: 'red',
+    position: 'absolute',
+    left: 20,
+    right: 20,
+    bottom: 30,
+    height: 60,
+    borderRadius: 30,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: -5 },
+    elevation: 10,
+    borderTopWidth: 0,
+    justifyContent: 'center',
+    paddingTop: 10,
+    paddingBottom: 10,
+    zIndex: 1
+  },
+})

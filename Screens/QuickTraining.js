@@ -12,7 +12,7 @@ export function QuickTraining() {
   const [countdown, setCountdown] = useState(0);
   const [showCountdown, setShowCountdown] = useState(false);
   const [challengeActive, setChallengeActive] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(60); // Set to 5 for testing, change to 60 for real use
+  const [timeRemaining, setTimeRemaining] = useState(30); // Set to 5 for testing, change to 60 for real use
   const [correctCount, setCorrectCount] = useState(0);
   const [progress] = useState(new Animated.Value(1));
   const [showResultBox, setShowResultBox] = useState(false);
@@ -114,12 +114,12 @@ export function QuickTraining() {
     } else if (countdown === 0 && showCountdown) {
       setShowCountdown(false);
       setChallengeActive(true);
-      setTimeRemaining(20);
+      setTimeRemaining(30);
       setCorrectCount(0);
       progress.setValue(1);
       Animated.timing(progress, {
         toValue: 0,
-        duration: 20000,
+        duration: 30000,
         useNativeDriver: false,
       }).start();
     }
@@ -159,7 +159,7 @@ export function QuickTraining() {
           <Pressable style={styles.closeButton} onPress={() => setShowResultBox(false)}>
             <Text style={styles.closeButtonText}>✖</Text>
           </Pressable>
-          <Text style={styles.resultText}>Du hast {correctCount} Aufgaben in einer Minute richtig gelöst!</Text>
+          <Text style={styles.resultText}>Du hast {correctCount} Aufgaben in einer halben Minute richtig gelöst!</Text>
         </View>
       )}
       
@@ -220,8 +220,9 @@ export function QuickTraining() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    paddingBottom: verticalScale(40),
     justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'white',
   },
   containerExpression: {
@@ -232,20 +233,21 @@ const styles = StyleSheet.create({
     padding: moderateScale(10),
     marginVertical: verticalScale(20),
     width: scale(250),
+    maxHeight: verticalScale(50),
     fontSize: moderateScale(24),
     textAlign: 'center',
     borderRadius: moderateScale(10),
     backgroundColor: 'white',
-    height: verticalScale(50),
     justifyContent: 'center',
+    alignItems: 'center',
   },
   inputText: {
-    fontSize: moderateScale(24),
+    fontSize: moderateScale(20),
     color: 'black',
     textAlign: 'center',
   },
   placeholderText: {
-    fontSize: moderateScale(24),
+    fontSize: moderateScale(20),
     color: 'gray',
     textAlign: 'center',
   },
@@ -254,7 +256,7 @@ const styles = StyleSheet.create({
     borderColor: '#3DF43E',
     padding: moderateScale(10),
     marginVertical: verticalScale(10),
-    width: scale(80),
+    width: scale(240),
     fontSize: moderateScale(24),
     textAlign: 'center',
     borderRadius: moderateScale(10),
@@ -286,7 +288,7 @@ const styles = StyleSheet.create({
   },
   startChallenge: {
     height: verticalScale(40),
-    width: scale(75),
+    width: scale(300),
     backgroundColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
@@ -315,7 +317,7 @@ const styles = StyleSheet.create({
   },
   progressBarContainer: {
     height: verticalScale(40),
-    width: scale(75),
+    width: scale(200),
     backgroundColor: 'white',
     borderWidth: moderateScale(2),
     borderColor: 'black',

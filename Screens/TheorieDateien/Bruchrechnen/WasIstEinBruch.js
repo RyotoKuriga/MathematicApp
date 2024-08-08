@@ -99,6 +99,28 @@ export function WasIstEinBruch() {
           </View>
 
           <Text style={stylesTheorie.subHeader}>
+            Wieso Brüche, wenn man doch die Division nutzen kann?
+          </Text>
+
+          <View style={stylesTheorie.paragraphContainer}>
+              <Text style={stylesTheorie.text}>
+                  Brüche bringen den wesentlichen Vorteil, dass sie eindeutig und leicht leserlich sind. Die Division führt oft zu Dezimalstellen und es ist anstrengend, mit ihr zu rechnen – der Bruch hingegen bleibt exakt. Ein Drittel, geschrieben als
+              </Text>
+          </View>
+
+          <View style={stylesTheorie.mathExpression}>
+              <MathView
+                  math={`${math} \\dfrac{1}{3}`}
+              />
+          </View>
+
+          <View style={stylesTheorie.paragraphContainer}>
+              <Text style={stylesTheorie.text}>
+                  , ist eindeutig und unveränderlich. Es bleibt ein Drittel und zeigt klar, dass es sich um einen Teil von drei gleich großen Teilen handelt. Ausserdem ist es wesentlich einfacher, mit Brüchen zu rechnen, wie die folgenden Kapitel zeigen.
+              </Text>
+          </View>
+
+          <Text style={stylesTheorie.subHeader}>
             Addition & Subtraktion von Brüchen
           </Text>
 

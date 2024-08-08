@@ -3,7 +3,7 @@ import stylesTheorie from '../StylesTheorie';
 import { useNavigation } from '@react-navigation/native';
 import MathView from 'react-native-math-view';
 
-export function Doppelbrüche() {
+export function Doppelbrueche() {
   const navigation = useNavigation();
 
   const nextPage = () => {

@@ -3,7 +3,7 @@ import stylesTheorie from '../StylesTheorie';
 import { useNavigation } from '@react-navigation/native';
 import MathView from 'react-native-math-view';
 
-export function AdditionUndSubtraktionVonBrüchen() {
+export function AdditionUndSubtraktionVonBruechen() {
   const divStyle = "font-size: 20px; background-color: 'white'; border: none; font-family: Arial";
   const navigation = useNavigation();
 

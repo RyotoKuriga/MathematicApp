@@ -1,5 +1,4 @@
 import { StyleSheet, Dimensions } from 'react-native';
-import MathJax from 'react-native-mathjax';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const windowWidth = Dimensions.get('window').width;

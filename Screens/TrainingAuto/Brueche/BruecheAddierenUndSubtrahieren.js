@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Pressable } from 'react-native';
 import React, { useState } from 'react';
 import * as math from 'mathjs';
 import MathView from 'react-native-math-view';
+import MathViewFallback from 'react-native-math-view/src/fallback';
 import { ScaledSheet, moderateScale, verticalScale, scale } from 'react-native-size-matters';
 import Slider from '@react-native-community/slider';
 
@@ -104,13 +105,13 @@ export function BruecheAdditionUndSubtraktionAuto() {
     <View style={styles.container}>
       <View style={styles.containerExpression}>
         <Text style={stylesScaled.text}>
-          {Expression1 ? <MathView math={`\\Large ${Expression1}`}/> : createExpression}
+          {Expression1 ? <MathViewFallback math={`\\Large ${Expression1}`}/> : createExpression}
         </Text>
       </View>
 
       <View style={styles.containerExpression2}>
         <Text style={stylesScaled.text}>
-          {Expression2 ? <MathView math={`\\Large ${Expression2}`}/> : createExpression}
+          {Expression2 ? <MathViewFallback math={`\\Large ${Expression2}`}/> : createExpression}
         </Text>
       </View>
 

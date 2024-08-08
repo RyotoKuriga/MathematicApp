@@ -3,7 +3,7 @@ import stylesTheorie from '../StylesTheorie';
 import { useNavigation } from '@react-navigation/native';
 import MathView from 'react-native-math-view';
 
-export function MultiplikationUndDivisionVonBrüchen() {
+export function MultiplikationUndDivisionVonBruechen() {
   const navigation = useNavigation();
 
   const math = '\\huge';
