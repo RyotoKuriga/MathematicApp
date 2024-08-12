@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View, Pressable, TextInput, Keyboard } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import MathView from 'react-native-math-view';
 import { Animated } from 'react-native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import MathViewFallback from 'react-native-math-view/src/fallback';
+
 
 export function QuickTraining() {
   const [Expression, setExpression] = useState('');
@@ -193,7 +194,7 @@ export function QuickTraining() {
           onPressIn={() => handlePressIn('backspace')}
           onPressOut={() => handlePressOut('backspace')}
         >
-          <MathView
+          <MathViewFallback
             math={'\\huge \\leftarrow'}
           />
         </Pressable>

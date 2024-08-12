@@ -230,6 +230,7 @@ export default function App() {
     <DarkModeProvider>
       <NavigationContainer>
         <Tab.Navigator
+          initialRouteName="QuickTraining"
           shifting={false}
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused }) => {

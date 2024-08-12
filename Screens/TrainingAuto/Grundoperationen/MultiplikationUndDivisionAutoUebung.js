@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Pressable } from 'react-native';
 import React, { useState } from 'react';
 import * as math from 'mathjs';
 import { ScaledSheet, moderateScale, verticalScale, scale } from 'react-native-size-matters';
-import MathView from 'react-native-math-view';
+import MathViewFallback from 'react-native-math-view/src/fallback';
 import Slider from '@react-native-community/slider';
 
 export function MultiplikationUndDivisionAutoUebung() {
@@ -98,14 +98,14 @@ export function MultiplikationUndDivisionAutoUebung() {
     <View style={styles.container}>
       <View style={styles.containerExpression}>
         <Text style={stylesScaled.text}>
-          {Expression ? <MathView math={`${mathText} ${Expression}`}/> : createExpression(isEnabled)}
+          {Expression ? <MathViewFallback math={`${mathText} ${Expression}`}/> : createExpression(isEnabled)}
         </Text>
       </View>
 
       <View style={styles.button1}>
         <Pressable onPress={solveExpression}>
           <Text style={stylesScaled.text}>
-            {Solution ? <MathView math={`${mathText} ${Solution}`}/> : 'Lösung anzeigen'}
+            {Solution ? <MathViewFallback math={`${mathText} ${Solution}`}/> : 'Lösung anzeigen'}
           </Text>
         </Pressable>
       </View>

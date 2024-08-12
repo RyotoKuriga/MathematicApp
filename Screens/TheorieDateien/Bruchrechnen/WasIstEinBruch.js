@@ -1,8 +1,7 @@
 import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView } from 'react-native';
 import stylesTheorie from '../StylesTheorie';
-import MathJax from 'react-native-mathjax';
 import { useNavigation } from '@react-navigation/native';
-import MathView from 'react-native-math-view';
+import MathViewFallback from 'react-native-math-view/src/fallback';
 
 export function WasIstEinBruch() {
   const divStyle = "font-size: 20px; background-color: 'white'; border: none; font-family: Arial";
@@ -39,7 +38,7 @@ export function WasIstEinBruch() {
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-              <MathView
+              <MathViewFallback
                 math={`${mathSmall} Dividend : Divisor = \\dfrac{Zaehler}{Nenner}`}
               />
           </View>
@@ -51,7 +50,7 @@ export function WasIstEinBruch() {
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-              <MathView
+              <MathViewFallback
                 math={`${math} 20 : 10 = 2 = \\dfrac{20}{10}`}
               />
           </View>
@@ -63,7 +62,7 @@ export function WasIstEinBruch() {
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-              <MathView
+              <MathViewFallback
                 math={`${mathMid} -6 = \\dfrac{-6}{1}\\quad 1 = \\dfrac{1}{1}\\quad \\pi = \\dfrac{\\pi}{1}`}
               />
           </View>
@@ -75,7 +74,7 @@ export function WasIstEinBruch() {
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-              <MathView
+              <MathViewFallback
                 math={`${mathMid} \\dfrac{x}{0} = unmöglich`}
               />
           </View>
@@ -87,13 +86,13 @@ export function WasIstEinBruch() {
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-              <MathView
+              <MathViewFallback
                 math={`${math} \\dfrac{a}{b} \\longrightarrow \\dfrac{b}{a}`}
               />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-              <MathView
+              <MathViewFallback
                 math={`${math} \\dfrac{10}{3} \\longrightarrow \\dfrac{3}{10}`}
               />
           </View>
@@ -109,7 +108,7 @@ export function WasIstEinBruch() {
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-              <MathView
+              <MathViewFallback
                   math={`${math} \\dfrac{1}{3}`}
               />
           </View>
@@ -131,13 +130,13 @@ export function WasIstEinBruch() {
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-              <MathView
+              <MathViewFallback
                 math={`${mathMid} \\dfrac{1}{5} + \\dfrac{1}{5} = \\dfrac{2}{5} = 2 : 5 = 0.4`}
               />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-              <MathView
+              <MathViewFallback
                 math={`${mathMid} \\dfrac{3}{2} + \\dfrac{7}{2} = \\dfrac{10}{2} = 10 : 2 = 5`}
               />
           </View>
@@ -149,7 +148,7 @@ export function WasIstEinBruch() {
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-              <MathView
+              <MathViewFallback
                 math={`${mathMid} \\dfrac{a}{b} + \\dfrac{c}{b} = \\dfrac{a+c}{b}`}
               />
           </View>
