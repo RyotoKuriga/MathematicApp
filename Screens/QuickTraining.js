@@ -1,11 +1,17 @@
 import { StyleSheet, Text, View, Pressable, TextInput, Keyboard } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Animated } from 'react-native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import MathViewFallback from 'react-native-math-view/src/fallback';
+import { colors } from '../theme';
+import { ThemeContext } from '../Context/themeContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 export function QuickTraining() {
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
   const [Expression, setExpression] = useState('');
   const [Solution, setSolution] = useState('');
   const [userInput, setUserInput] = useState('');
@@ -13,12 +19,13 @@ export function QuickTraining() {
   const [countdown, setCountdown] = useState(0);
   const [showCountdown, setShowCountdown] = useState(false);
   const [challengeActive, setChallengeActive] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(30); // Set to 5 for testing, change to 60 for real use
+  const [timeRemaining, setTimeRemaining] = useState(30);
   const [correctCount, setCorrectCount] = useState(0);
   const [progress] = useState(new Animated.Value(1));
   const [showResultBox, setShowResultBox] = useState(false);
   const [buttonColor, setButtonColor] = useState('white');
   const [keyColors, setKeyColors] = useState({});
+
 
   // Function for random number
   const getRandomNumber = (min, max, value) => {
@@ -78,7 +85,7 @@ export function QuickTraining() {
 
   // Function to handle user input
   const handleInput = (value) => {
-    setButtonColor(buttonColor === 'blue' ? 'red' : 'blue'); // Ändert die Farbe bei jedem Drücken
+    setButtonColor(buttonColor === 'blue' ? 'red' : 'blue');
     const newInput = userInput + value;
     setUserInput(newInput);
 
@@ -149,72 +156,77 @@ export function QuickTraining() {
   };
 
   return (
-    <View style={styles.container} onTouchStart={Keyboard.dismiss}>
+    <SafeAreaView  style={[styles.container, {backgroundColor: activeColors.background}]} onTouchStart={Keyboard.dismiss}>
       {showCountdown && (
-        <View style={styles.countdownOverlay}>
-          <Text style={styles.countdownText}>{countdown}</Text>
+          <View style={styles.countdownOverlay}>
+            <Text style={styles.countdownText}>{countdown}</Text>
+          </View>
+        )}
+      <View style={{alignItems: 'center'}}>
+        
+        {showResultBox && (
+          <View style={[styles.resultBox, {backgroundColor: activeColors.secondary, borderColor: activeColors.accent}]}>
+            <Pressable style={styles.closeButton} onPress={() => setShowResultBox(false)}>
+              <Text style={styles.closeButtonText}>✖</Text>
+            </Pressable>
+            <Text style={[styles.resultText, {color: activeColors.text}]}>Du hast {correctCount} Aufgaben in 30 Sekunden richtig gelöst!</Text>
+          </View>
+        )}
+        
+        <View style={styles.containerExpression}>
+          <Text style={[styles.expressionText, {color: activeColors.text}]}>
+            {Expression}
+          </Text>
         </View>
-      )}
-      {showResultBox && (
-        <View style={styles.resultBox}>
-          <Pressable style={styles.closeButton} onPress={() => setShowResultBox(false)}>
-            <Text style={styles.closeButtonText}>✖</Text>
-          </Pressable>
-          <Text style={styles.resultText}>Du hast {correctCount} Aufgaben in einer halben Minute richtig gelöst!</Text>
-        </View>
-      )}
-      
-      <View style={styles.containerExpression}>
-        <Text style={styles.expressionText}>
-          {Expression}
-        </Text>
-      </View>
 
-      <Pressable style={inputStyle} onPress={Keyboard.dismiss}>
-        <Text style={userInput ? styles.inputText : styles.placeholderText}>
-          {userInput || "Antwort eingeben!"}
-        </Text>
-      </Pressable>
-
-      <View style={styles.keypad}>
-        {[7, 8, 9, 4, 5, 6, 1, 2, 3, '-', 0].map((num) => (
-          <Pressable
-            key={num}
-            style={[styles.key, {backgroundColor: keyColors[num] || 'white'}]}
-            onPress={() => handleInput(num.toString())}
-            onPressIn={() => handlePressIn(num)}
-            onPressOut={() => handlePressOut(num)}
-          >
-            <Text style={styles.keyText}>{num}</Text>
-          </Pressable>
-        ))}
-        <Pressable
-          style={[styles.key, {backgroundColor: keyColors['backspace'] || 'white'}]}
-          onPress={handleBackspace}
-          onPressIn={() => handlePressIn('backspace')}
-          onPressOut={() => handlePressOut('backspace')}
-        >
-          <MathViewFallback
-            math={'\\huge \\leftarrow'}
-          />
-        </Pressable>
-      </View>
-      {!challengeActive && (
-        <Pressable style={styles.startChallenge} onPress={handleStartChallenge}>
-          <Text style={styles.startChallengeText}>
-            Starte die Herausforderung!
+        <Pressable style={[inputStyle, {backgroundColor: userInput === 'Richtig!' ? 'green' : activeColors.secondary}, {borderColor: theme.mode === 'dark' ? activeColors.accent : activeColors.text}]} onPress={Keyboard.dismiss}>
+          <Text style={userInput ? [styles.inputText, {color: activeColors.text}] : [styles.placeholderText, {color: activeColors.text}]}>
+            {userInput || "Antwort eingeben!"}
           </Text>
         </Pressable>
-      )}
-      {challengeActive && (
-        <View style={styles.progressBarContainer}>
-          <Animated.View style={[styles.progressBar, { width: progress.interpolate({
-            inputRange: [0, 1],
-            outputRange: ['100%', '0%']
-          }) }]} />
+
+        <View style={[styles.keypad, {borderColor: activeColors.text}]}>
+          {[7, 8, 9, 4, 5, 6, 1, 2, 3, '-', 0].map((num) => (
+            <Pressable
+              key={num}
+              style={[styles.key, {backgroundColor: activeColors.background}, {borderColor: theme.mode === 'dark' ? activeColors.secondary : activeColors.text}]}
+              onPress={() => handleInput(num.toString())}
+              onPressIn={() => handlePressIn(num)}
+              onPressOut={() => handlePressOut(num)}
+            >
+              <Text style={[styles.keyText, {color: activeColors.text}]}>{num}</Text>
+            </Pressable>
+          ))}
+          <Pressable
+            style={[styles.key, {backgroundColor: activeColors.backgroundColor}, {borderColor: theme.mode === 'dark' ? activeColors.secondary : activeColors.text}]}
+            onPress={handleBackspace}
+            onPressIn={() => handlePressIn('backspace')}
+            onPressOut={() => handlePressOut('backspace')}
+          >
+            <MathViewFallback
+              math={`\\huge \\textcolor{${activeColors.text}}{\\leftarrow}`}
+            />
+          </Pressable>
         </View>
-      )}
-    </View>
+        {!challengeActive && (
+          <Pressable style={[styles.startChallenge, {backgroundColor: activeColors.secondary}]} onPress={handleStartChallenge}>
+            <Text style={[styles.startChallengeText, {color: activeColors.text}]}>
+              Starte die Herausforderung!
+            </Text>
+          </Pressable>
+        )}
+        {challengeActive && (
+          <View style={styles.progressBarContainer}>
+            <Animated.View style={[styles.progressBar, {backgroundColor: activeColors.accent, borderColor: activeColors.text}, { width: progress.interpolate({
+              inputRange: [0, 1],
+              outputRange: ['100%', '0%']
+            }) }]} />
+          </View>
+        )}
+      </View>
+
+    </SafeAreaView>
+    
   );
 }
 
@@ -254,27 +266,27 @@ const styles = StyleSheet.create({
   },
   inputCorrect: {
     borderWidth: moderateScale(2),
-    borderColor: '#3DF43E',
     padding: moderateScale(10),
-    marginVertical: verticalScale(10),
-    width: scale(240),
+    marginVertical: verticalScale(20),
+    width: scale(250),
+    maxHeight: verticalScale(50),
     fontSize: moderateScale(24),
     textAlign: 'center',
     borderRadius: moderateScale(10),
-    backgroundColor: '#2CF570',
-    height: verticalScale(50),
     justifyContent: 'center',
+    alignItems: 'center',
   },
   keypad: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     width: scale(300),
+    height: '60%'
   },
   key: {
     borderWidth: moderateScale(2),
     borderColor: 'black',
-    height: moderateScale(70),
+    height: verticalScale(70),
     width: scale(70),
     justifyContent: 'center',
     alignItems: 'center',
@@ -330,7 +342,6 @@ const styles = StyleSheet.create({
   progressBar: {
     height: '104%',
     width: '104%',
-    backgroundColor: 'black',
     borderRadius: moderateScale(4),
   },
   resultBox: {

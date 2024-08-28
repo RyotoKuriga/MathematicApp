@@ -1,18 +1,21 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View, useColorScheme, Appearance} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet } from 'react-native';
+import { themeContext } from './Context/themeContext';
 
-import { DarkModeProvider, DarkModeContext, DarkMode } from './Screens/DarkModeContext';
+import { colors } from './theme';
 
 import { Theorie } from './Screens/Theorie';
 import { SettingsScreen } from './Screens/Settings/Settings';
 import { Training } from './Screens/Training';
 import { QuickTraining } from './Screens/QuickTraining';
 import { Calculator } from './Screens/Calculator';
+
+import { AppInfoScreen } from './Screens/Settings/AppInfoScreen';
 
 import { Zahlenmengen } from './Screens/TheorieDateien/Mengenlehre/Zahlenmengen';
 import { WasSindMengen } from './Screens/TheorieDateien/Mengenlehre/WasSindMengen';
@@ -80,6 +83,7 @@ import { Grundoperationen } from './Screens/TrainingManu/Grundoperationen/Grundo
 import { Potenzrechnen } from './Screens/TrainingManu/Grundoperationen/Potenzrechnen';
 import { Betragsaufgaben } from './Screens/TrainingManu/Grundoperationen/Betragsaufgaben';
 import { Bruchrechnen } from './Screens/TrainingManu/Brueche/Bruchrechnen';
+import { ThemeContext } from './Context/themeContext';
 
 const Tab = createBottomTabNavigator();
 const ScreenStack = createNativeStackNavigator();
@@ -117,13 +121,21 @@ function TheorieStackScreen() {
     { name: 'Wahrscheinlichkeit', component: Wahrscheinlichkeit},
   ];
 
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
   return (
+    
     <ScreenStack.Navigator>
       <ScreenStack.Screen 
         name='Theorie' 
         component={Theorie}
         options={{
           headerShown: true, // Navigationsleiste
+          headerStyle: {
+            backgroundColor: activeColors.background,
+          },
+          headerTintColor: activeColors.text,
         }}
       />
       {screens.map(({ name, component }) => (
@@ -134,9 +146,13 @@ function TheorieStackScreen() {
           options={({ navigation }) => ({
             headerLeft: () => (
               <TouchableOpacity onPress={() => navigation.navigate('Theorie')}>
-                <Ionicons name="arrow-back" size={24} color="black" style={{ marginLeft: 10 }} />
+                <Ionicons name="arrow-back" size={24} color={activeColors.text} style={{ marginLeft: 10 }} />
               </TouchableOpacity>
             ),
+            headerStyle: {
+              backgroundColor: activeColors.background,
+            },
+            headerTintColor: activeColors.text,
           })}
         />
       ))}
@@ -184,14 +200,20 @@ function TrainingChoice() {
 
   ];
 
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
   return (
     <ScreenStack.Navigator>
-      <ScreenStack.Screen 
+      <ScreenStack.Screen
         name='Training' 
         component={Training}
-        
         options={{
           headerShown: true,
+          headerStyle: {
+            backgroundColor: activeColors.background,
+          },
+          headerTintColor: activeColors.text,
         }}
       />
       {screens.map(({ name, component }) => (
@@ -200,9 +222,13 @@ function TrainingChoice() {
           name={name} 
           component={component}
           options={({ navigation }) => ({
+            headerStyle: {
+              backgroundColor: activeColors.background,
+            },
+            headerTintColor: activeColors.text,
             headerLeft: () => (
               <TouchableOpacity onPress={() => navigation.goBack()}>
-                <Ionicons name="arrow-back" size={24} color="black" style={{ marginLeft: 10 }} />
+                <Ionicons name="arrow-back" size={24} color={activeColors.text} style={{ marginLeft: 10 }} />
               </TouchableOpacity>
             ),
           })}
@@ -213,21 +239,63 @@ function TrainingChoice() {
 }
 
 function SettingsStackScreen() {
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+  
   return (
     <ScreenStack.Navigator
       screenOptions={{
-        headerTitle: 'Einstellungen',
-      }}      
+        headerStyle: {
+          backgroundColor: activeColors.background,
+        },
+        headerTintColor: activeColors.text,
+      }}
     >
-      <ScreenStack.Screen name="Settings" component={SettingsScreen} />
+      <ScreenStack.Screen 
+        name="Settings" 
+        component={SettingsScreen} 
+        options={{ headerTitle: 'Einstellungen' }} 
+      />
+      <ScreenStack.Screen 
+        name="AppInfo" 
+        component={AppInfoScreen} 
+        options={{ headerTitle: 'App Info' }} 
+      />
     </ScreenStack.Navigator>
   );
 }
 
+
 export default function App() {
-  const theme = useContext(DarkModeContext);
+  const [theme, setTheme] = useState({mode: "light"});
+  let activeColors = colors[theme.mode];
+
+  const updateTheme = (newTheme) => {
+    let mode;
+    if (!newTheme) {
+      mode = theme.mode === 'dark' ? 'light' : 'dark';
+      newTheme = {mode};
+    } else {
+      if (newTheme.system) {
+        const systemColorScheme =  Appearance.getColorScheme();
+        mode = systemColorScheme === 'dark' ? 'dark' : 'light';
+
+        newTheme = {...newTheme, mode};
+      }
+    }
+    setTheme(newTheme);
+  };
+
+  // monitor system for theme change
+
+  if (theme.sytem) {
+    Appearance.addChangeListener(({ colorScheme }) => {
+      updateTheme({ system: true, mode: colorScheme });
+    });
+  }
+
   return (
-    <DarkModeProvider>
+    <ThemeContext.Provider value={{ theme, updateTheme}}>
       <NavigationContainer>
         <Tab.Navigator
           initialRouteName="QuickTraining"
@@ -256,20 +324,39 @@ export default function App() {
                   iconName = 'question'; // Fallback Icon
                   break;
               }
-              return <Ionicons name={iconName} color={theme === 'dark' ? '#D0D1D5' : 'black'} size={iconSize} />;
+              return <Ionicons name={iconName} color={activeColors.text} size={iconSize} />;
             },
             tabBarShowLabel: false,
-            tabBarStyle: theme === 'light' ? styles.tabBarStyleLight : styles.tabBarStyleDark,
+            tabBarStyle: {
+              backgroundColor: activeColors.secondary,
+              position: 'absolute',
+              left: 20,
+              right: 20,
+              bottom: 30,
+              height: 60,
+              borderRadius: 30,
+              shadowColor: '#000',
+              shadowOpacity: 0.1,
+              shadowRadius: 10,
+              shadowOffset: { width: 0, height: -5 },
+              elevation: 10,
+              borderTopWidth: 0,
+              justifyContent: 'center',
+              paddingTop: 10,
+              paddingBottom: 10,
+              zIndex: 1
+            },
           })}
         >
           <Tab.Screen name="Theorie" component={TheorieStackScreen} options={{ headerShown: false }} />
           <Tab.Screen name="Training" component={TrainingChoice} options={{ headerShown: false }} />
           <Tab.Screen name="QuickTraining" component={QuickTraining} options={{ headerShown: false }} />
-          <Tab.Screen name="Calculator" component={Calculator} options={{ headerShown: false }} />
+          <Tab.Screen name="Calculator" component={Calculator} options={{ headerShown: false}} />
           <Tab.Screen name="Settings" component={SettingsStackScreen} options={{ headerShown: false }} />
         </Tab.Navigator>
       </NavigationContainer>
-    </DarkModeProvider>
+    </ThemeContext.Provider>
+    
   );
 }
 

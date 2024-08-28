@@ -2,6 +2,10 @@ import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView } from 'rea
 import stylesTheorie from '../StylesTheorie';
 import { useNavigation } from '@react-navigation/native';
 import MathView from 'react-native-math-view';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
+import useStyles from '../StylesTheorie';
 
 export function Doppelbrueche() {
   const navigation = useNavigation();
@@ -12,14 +16,19 @@ export function Doppelbrueche() {
     );
   };
 
-  const math = '\\huge';
-  const mathSmall = '\\large';
-  const mathMid = '\\Large';
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const math = `\\huge \\textcolor{${activeColors.text}}{ `;
+  const mathSmall = `\\large \\textcolor{${activeColors.text}}{ `;
+  const mathMid = `\\Large \\textcolor{${activeColors.text}}{ `;
+
+  const stylesTheorie = useStyles();
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: activeColors.background}}>
       <ScrollView>
-        <View style={stylesTheorie.container}>
+        <View style={[stylesTheorie.container, {backgroundColor: activeColors.background}]}>
           <Text style={stylesTheorie.header}>
             Doppelbrüche
           </Text>
@@ -32,13 +41,13 @@ export function Doppelbrueche() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} \\dfrac{\\dfrac{2}{15}}{\\dfrac{5}{9}} = \\dfrac{2}{15} : \\dfrac{5}{9} `}
+              math={`${mathMid} \\dfrac{\\dfrac{2}{15}}{\\dfrac{5}{9}} = \\dfrac{2}{15} : \\dfrac{5}{9}} `}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} = \\dfrac{2}{15} \\cdot \\dfrac{9}{5} = \\dfrac{18}{75}`}
+              math={`${mathMid} = \\dfrac{2}{15} \\cdot \\dfrac{9}{5} = \\dfrac{18}{75}}`}
             />
           </View>
           <View style={stylesTheorie.paragraphContainer}>
@@ -49,7 +58,7 @@ export function Doppelbrueche() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${math} \\dfrac{\\dfrac{a}{b}}{\\dfrac{c}{d}} = \\dfrac{a \\cdot d}{b \\cdot c}`}
+              math={`${math} \\dfrac{\\dfrac{a}{b}}{\\dfrac{c}{d}} = \\dfrac{a \\cdot d}{b \\cdot c}}`}
             />
           </View>
 

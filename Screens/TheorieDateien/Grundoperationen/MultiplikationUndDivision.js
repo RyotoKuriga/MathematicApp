@@ -3,14 +3,23 @@ import stylesTheorie from '../StylesTheorie';
 import MathJax from 'react-native-mathjax';
 import { useNavigation } from '@react-navigation/native';
 import MathView from 'react-native-math-view';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
+import useStyles from '../StylesTheorie';
 
 export function MultiplikationUndDivision() {
   const divStyle = "font-size: 20px; background-color: 'white'; border: none; font-family: Arial";
+
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const math = `\\huge \\textcolor{${activeColors.text}}{ `;
+  const mathSmall = `\\large \\textcolor{${activeColors.text}}{ `;
+  const mathMid = `\\Large \\textcolor{${activeColors.text}}{ `;
   const navigation = useNavigation();
 
-  const math = '\\huge'
-  const mathSmall = '\\large'
-  const mathMid = '\\Large'
+  const stylesTheorie = useStyles();
 
   const nextPage = () => {
     return (
@@ -25,9 +34,9 @@ export function MultiplikationUndDivision() {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: activeColors.background}}>
       <ScrollView>
-        <View style={stylesTheorie.container}>
+        <View style={[stylesTheorie.container, {backgroundColor: activeColors.background}]}>
           <Text style={stylesTheorie.header}>
             Multiplikation und Division
           </Text>
@@ -46,7 +55,7 @@ export function MultiplikationUndDivision() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} x \\cdot y = z`}
+                math={`${math} x \\cdot y = z}`}
               />
           </View>
 
@@ -58,7 +67,7 @@ export function MultiplikationUndDivision() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} x : y = z`}
+                math={`${math} x : y = z}`}
               />
           </View>
 
@@ -88,7 +97,7 @@ export function MultiplikationUndDivision() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} 8 \\cdot 3 = 3 \\cdot 8 = 24`}
+                math={`${math} 8 \\cdot 3 = 3 \\cdot 8 = 24}`}
               />
           </View>
 
@@ -100,7 +109,7 @@ export function MultiplikationUndDivision() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} a \\cdot b = b \\cdot a`}
+                math={`${math} a \\cdot b = b \\cdot a}`}
               />
           </View>
 
@@ -112,7 +121,7 @@ export function MultiplikationUndDivision() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} 10 : 2 \\neq 2 : 10`}
+                math={`${math} 10 : 2 \\neq 2 : 10}`}
               />
           </View>
 
@@ -124,7 +133,7 @@ export function MultiplikationUndDivision() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} a : b \\neq b : a`}
+                math={`${math} a : b \\neq b : a}`}
               />
           </View>
 
@@ -142,7 +151,7 @@ export function MultiplikationUndDivision() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathMid} (8 \\cdot 3) \\cdot 4 = 8 \\cdot (3 \\cdot 4) = 96`}
+                math={`${mathMid} (8 \\cdot 3) \\cdot 4 = 8 \\cdot (3 \\cdot 4) = 96}`}
               />
           </View>
 
@@ -154,13 +163,13 @@ export function MultiplikationUndDivision() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathMid} (a \\cdot b) \\cdot c = a \\cdot (b \\cdot c)`}
+                math={`${mathMid} (a \\cdot b) \\cdot c = a \\cdot (b \\cdot c)}`}
               />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathMid} = a \\cdot b \\cdot c`}
+                math={`${mathMid} = a \\cdot b \\cdot c}`}
               />
           </View>
 
@@ -172,7 +181,7 @@ export function MultiplikationUndDivision() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathMid} (a : b) : c \\neq a : (b : c)`}
+                math={`${mathMid} (a : b) : c \\neq a : (b : c)}`}
               />
           </View>
 
@@ -190,13 +199,13 @@ export function MultiplikationUndDivision() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathMid} 8 \\cdot (4 + 3) = 8 \\cdot 4 + 8 \\cdot 3`}
+                math={`${mathMid} 8 \\cdot (4 + 3) = 8 \\cdot 4 + 8 \\cdot 3}`}
               />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathMid} = 32 + 24 = 56`}
+                math={`${mathMid} = 32 + 24 = 56}`}
               />
           </View>
 
@@ -208,7 +217,7 @@ export function MultiplikationUndDivision() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathMid} a \\cdot (b + c) = a \\cdot b + a \\cdot c`}
+                math={`${mathMid} a \\cdot (b + c) = a \\cdot b + a \\cdot c}`}
               />
           </View>
 
@@ -220,7 +229,7 @@ export function MultiplikationUndDivision() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathMid} a : (b + c) \\neq a : b + a : c`}
+                math={`${mathMid} a : (b + c) \\neq a : b + a : c}`}
               />
           </View>
 

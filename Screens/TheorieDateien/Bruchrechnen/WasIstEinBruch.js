@@ -2,14 +2,23 @@ import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView } from 'rea
 import stylesTheorie from '../StylesTheorie';
 import { useNavigation } from '@react-navigation/native';
 import MathViewFallback from 'react-native-math-view/src/fallback';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
+import useStyles from '../StylesTheorie';
 
 export function WasIstEinBruch() {
   const divStyle = "font-size: 20px; background-color: 'white'; border: none; font-family: Arial";
   const navigation = useNavigation();
 
-  const math = '\\huge'
-  const mathSmall= '\\large'
-  const mathMid = '\\Large'
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const math = `\\huge \\textcolor{${activeColors.text}}{ `;
+  const mathSmall = `\\large \\textcolor{${activeColors.text}}{ `;
+  const mathMid = `\\Large \\textcolor{${activeColors.text}}{ `;
+
+  const stylesTheorie = useStyles();
 
   const nextPage = () => {
     return (
@@ -18,9 +27,9 @@ export function WasIstEinBruch() {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: activeColors.background}}>
       <ScrollView>
-        <View style={stylesTheorie.container}>
+        <View style={[stylesTheorie.container, {backgroundColor: activeColors.background}]}>
           <Text style={stylesTheorie.header}>
             Was ist ein Bruch?
           </Text>
@@ -33,13 +42,13 @@ export function WasIstEinBruch() {
 
           <View style={stylesTheorie.paragraphContainer}>
             <Text style={stylesTheorie.text}>
-            Ein Bruch ist eine verbesserte Darstellung der Division. Der Divident wird im Bruch Zähler gennant, den Divisor nennt man Nenner. Anstatt eines Doppelpunkts schreibt man einen Bruchstrich:
+            Ein Bruch ist eine verbesserte Darstellung der Division. Der Divident wird im Bruch Zähler genannt, den Divisor nennt man Nenner. Anstatt eines Doppelpunkts schreibt man einen Bruchstrich:
             </Text>
           </View>
 
           <View style={stylesTheorie.mathExpression}>
               <MathViewFallback
-                math={`${mathSmall} Dividend : Divisor = \\dfrac{Zaehler}{Nenner}`}
+                math={`${mathSmall} \\text{Dividend} : \\text{Divisor} = \\dfrac{\\text{Z\\"ahler}}{\\text{Nenner}}}`}
               />
           </View>
 
@@ -51,7 +60,7 @@ export function WasIstEinBruch() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathViewFallback
-                math={`${math} 20 : 10 = 2 = \\dfrac{20}{10}`}
+                math={`${math} 20 : 10 = 2 = \\dfrac{20}{10}}`}
               />
           </View>
 
@@ -63,7 +72,7 @@ export function WasIstEinBruch() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathViewFallback
-                math={`${mathMid} -6 = \\dfrac{-6}{1}\\quad 1 = \\dfrac{1}{1}\\quad \\pi = \\dfrac{\\pi}{1}`}
+                math={`${mathMid} -6 = \\dfrac{-6}{1}\\quad 1 = \\dfrac{1}{1}\\quad \\pi = \\dfrac{\\pi}{1}}`}
               />
           </View>
 
@@ -75,7 +84,7 @@ export function WasIstEinBruch() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathViewFallback
-                math={`${mathMid} \\dfrac{x}{0} = unmöglich`}
+                math={`${mathMid} \\dfrac{x}{0} = unmöglich}`}
               />
           </View>
 
@@ -87,13 +96,13 @@ export function WasIstEinBruch() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathViewFallback
-                math={`${math} \\dfrac{a}{b} \\longrightarrow \\dfrac{b}{a}`}
+                math={`${math} \\dfrac{a}{b} \\longrightarrow \\dfrac{b}{a}}`}
               />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
               <MathViewFallback
-                math={`${math} \\dfrac{10}{3} \\longrightarrow \\dfrac{3}{10}`}
+                math={`${math} \\dfrac{10}{3} \\longrightarrow \\dfrac{3}{10}}`}
               />
           </View>
 
@@ -109,13 +118,13 @@ export function WasIstEinBruch() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathViewFallback
-                  math={`${math} \\dfrac{1}{3}`}
+                  math={`${math} \\dfrac{1}{3}}`}
               />
           </View>
 
           <View style={stylesTheorie.paragraphContainer}>
               <Text style={stylesTheorie.text}>
-                  , ist eindeutig und unveränderlich. Es bleibt ein Drittel und zeigt klar, dass es sich um einen Teil von drei gleich großen Teilen handelt. Ausserdem ist es wesentlich einfacher, mit Brüchen zu rechnen, wie die folgenden Kapitel zeigen.
+                  ist eindeutig und unveränderlich. Es bleibt ein Drittel und zeigt klar, dass es sich um einen Teil von drei gleich großen Teilen handelt. Ausserdem ist es wesentlich einfacher, mit Brüchen zu rechnen, wie die folgenden Kapitel zeigen.
               </Text>
           </View>
 
@@ -131,13 +140,15 @@ export function WasIstEinBruch() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathViewFallback
-                math={`${mathMid} \\dfrac{1}{5} + \\dfrac{1}{5} = \\dfrac{2}{5} = 2 : 5 = 0.4`}
+                math={`${mathMid} \\dfrac{1}{5} + \\dfrac{1}{5} = \\dfrac{2}{5} = 2 : 5 = 0.4}`}
               />
           </View>
 
+          <View style={{height: 20}}></View>
+
           <View style={stylesTheorie.mathExpression}>
               <MathViewFallback
-                math={`${mathMid} \\dfrac{3}{2} + \\dfrac{7}{2} = \\dfrac{10}{2} = 10 : 2 = 5`}
+                math={`${mathMid} \\dfrac{3}{2} + \\dfrac{7}{2} = \\dfrac{10}{2} = 10 : 2 = 5}`}
               />
           </View>
 
@@ -149,7 +160,7 @@ export function WasIstEinBruch() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathViewFallback
-                math={`${mathMid} \\dfrac{a}{b} + \\dfrac{c}{b} = \\dfrac{a+c}{b}`}
+                math={`${mathMid} \\dfrac{a}{b} + \\dfrac{c}{b} = \\dfrac{a+c}{b}}`}
               />
           </View>
 

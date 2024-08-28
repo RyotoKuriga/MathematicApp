@@ -1,16 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { View, Pressable, ScrollView, Text, Appearance, StyleSheet } from 'react-native';
 //import MathView from 'react-native-math-view';
 import * as math from 'mathjs';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import MathViewFallback from 'react-native-math-view/src/fallback';
+import { colors } from '../theme';
+import { ThemeContext } from '../Context/themeContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function Calculator() {
-  const [theme, setTheme] = useState(Appearance.getColorScheme());
-  Appearance.addChangeListener((scheme) => {
-    setTheme(scheme.colorScheme);
-  });
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
 
   const buttons = [
     { buttonValue: 'C', value: 'C' },
@@ -61,27 +62,33 @@ export function Calculator() {
   const [pressedButtonIndex, setPressedButtonIndex] = useState(null);
   const [switchState, setSwitchState] = useState(0);
   const [gradSwitchState, setGradSwitchState] = useState(0);
-  const [lastTrigButton, setLastTrigButton] = useState(null);
-  const [trigClickCount, setTrigClickCount] = useState(0);
 
   const scrollViewRef = useRef();
 
   const handleInput = (button) => {
     const { value, buttonValue } = button;
-
     const updatedList = [...ExpressionList];
     const updatedMathList = [...MathExpressionList];
+    let curs = 0;
+
     updatedList.splice(cursorPosition, 0, value);
     updatedMathList.splice(cursorPosition, 0, buttonValue);
     setExpressionList(updatedList);
     setMathExpressionList(updatedMathList);
 
-    setCursorPosition(cursorPosition + 1);
+    if (MathExpression === '|' && history.length > 0 && isNaN(buttonValue) && (buttonValue === ('*') || buttonValue === ('/') || buttonValue === ('-') || buttonValue === ('+') || buttonValue == ('!')))   {
+      updatedList.splice(cursorPosition, 0, 'ans');
+      updatedMathList.splice(cursorPosition, 0, history[history.length - 1].mathExpression);
+      curs += 1;
+    }
+
+    setCursorPosition(cursorPosition + curs + 1);
 
     setMathExpression(updatedMathList.join(''));
     setExpression(updatedList.join(''));
     consoleLogs();
   };
+
 
   const consoleLogs = () => {
     console.log('ExpressionList: ' + ExpressionList.join(''));
@@ -94,8 +101,21 @@ export function Calculator() {
   const calculateExpression = () => {
     try {
       let result;
-      const cleanedExpression = Expression.replace('|', '');
-      let cleanedMathExpression = MathExpression.replace('|', '');
+      let height;
+      let cleanedExpression;
+      let cleanedMathExpression;
+
+      if (MathExpression === '|' && history.length > 0) {
+        const lastMathHistoryEntry = history[history.length - 1];
+        const lastHistoryEntry = history[history.length - 1];
+        cleanedMathExpression = lastMathHistoryEntry.mathExpression;
+        cleanedExpression = lastHistoryEntry.result;
+        cleanedMathExpression = cleanedMathExpression.replace(/ |\|/g, '');
+        
+      } else {
+        cleanedExpression = Expression.replace('|', '');
+        cleanedMathExpression = MathExpression.replace('|', '');
+      }
 
       cleanedMathExpression = cleanedMathExpression.replace(/ sin\(/g, ' math.sin(');
       cleanedMathExpression = cleanedMathExpression.replace(/asin\(/g, 'math.asin(');
@@ -116,8 +136,6 @@ export function Calculator() {
         cleanedMathExpression = cleanedMathExpression.replace(/math\.atan\((.*?)\)/g, (_, angle) => `math.atan(${toRadians(angle)})`);
       }
 
-      console.log('Cleaned MathExpression:', cleanedMathExpression);
-
       const specialCases = {
         'math.sin(math.pi)': 0,
         'math.sin(0)': 0,
@@ -127,20 +145,32 @@ export function Calculator() {
         'math.log(1)': 0,
       };
 
+      console.log(cleanedMathExpression);
+
       if (specialCases[cleanedMathExpression] !== undefined) {
         result = specialCases[cleanedMathExpression];
       } else {
-        if (switchState === 0) {
-          result = math.simplify(cleanedMathExpression);
-          result = math.format(result, { notation: 'fixed' });
-          result = getFraction(result);
-        } else if (switchState === 1) {
-          result = math.simplify(cleanedMathExpression);
-          result = math.evaluate(`${result}`);
-        } else {
+        height = math.evaluate(`${result}`);
+        console.log('height: ' + height)
+
+        if (switchState === 2 || height  >= 1000) {
           result = math.simplify(cleanedMathExpression);
           result = math.evaluate(`${result}`);
           result = math.format(result, { notation: 'exponential' });
+          result = math.round(result, 10);
+          result = math.format(result, {precision: 12});
+          console.log(result)
+          
+        } else if (switchState === 1) {
+          result = math.simplify(cleanedMathExpression);
+          result = math.evaluate(`${result}`);
+          result = math.round(result, 10);
+          result = math.format(result, {precision: 12});
+          
+        } else {
+          result = math.simplify(cleanedMathExpression);
+          result = math.format(result, { notation: 'fixed' });
+          result = getFraction(result);
         }
 
         if (result >= 1000000000000 || result <= -1000000000000) {
@@ -148,17 +178,19 @@ export function Calculator() {
         }
       }
 
-      if (Math.abs(result) < 1e-10) result = 0;
+      result = result.replace('"', '');
+      result = result.replace('"', '');
+
 
       setSolution(result.toString());
-      setHistory([...history, { expression: cleanedExpression, result: result.toString() }]);
       setExpressionList(['|']);
       setMathExpressionList(['|']);
       setMathExpression('|');
+      setHistory([...history, { expression: cleanedExpression, result: result.toString(), mathExpression: cleanedMathExpression, mathExpressionList: MathExpressionList[MathExpressionList.length - 1], expressionList: ExpressionList}]);
       setCursorPosition(0);
     } catch (error) {
-      console.log('Error:', error);
-      setSolution('Error');
+      const button = {value: '\\textcolor{red}{\\leftarrow Error}', buttonValue: 'Error'};
+      handleInput(button);
     }
   };
 
@@ -341,7 +373,7 @@ export function Calculator() {
     if (cursorPosition === 0) return;
 
     const prevChar = MathExpressionList[cursorPosition - 1];
-    if (!prevChar.match(/[0-9\}i]/)) return;
+    if (!prevChar.match(/[0-9\}i)s]/)) return;
 
     const updatedExpressionList = [...ExpressionList];
     const updatedMathExpressionList = [...MathExpressionList];
@@ -398,90 +430,104 @@ export function Calculator() {
     consoleLogs();
   };
 
+  const handleHistoryInput = (value, buttonValue) => {
+    let button = {buttonValue: buttonValue, value: value}
+
+    handleInput(button);
+  }
+
   return (
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.historyContainer}
-        contentContainerStyle={styles.historyContentContainer}
-        ref={scrollViewRef}
-        onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
-      >
-        {history.map((item, index) => (
-          <View key={index}>
-            <MathViewFallback math={`\\large ${item.expression}`} />
+    <SafeAreaView style={[styles.container, {backgroundColor: activeColors.background}]}>
+      <View style={{height: '90%'}}>
+        <View style={[styles.historyContainer, {backgroundColor: activeColors.secondary}]}>
+          <ScrollView
+            style={[styles.historyScrollView, {backgroundColor: activeColors.secondary}]}
+            contentContainerStyle={styles.historyContentContainer}
+            ref={scrollViewRef}
+            onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
+          >
+            {history.map((item, index) => (
+              <View key={index}>
+                <Pressable onPress={() => handleHistoryInput(item.expression, item.mathExpression)}>
+                  <MathViewFallback math={`\\large \\textcolor{${activeColors.text}}{${item.expression}}`} />
+                </Pressable>
+                
+                <Pressable onPress={() => handleHistoryInput(item.result, item.mathExpression)}>
+                  <View style={styles.historySolution}>
+                    <MathViewFallback math={`\\large \\textcolor{${activeColors.text}}{= ${item.result}}`} />
+                  </View>
+                </Pressable>
 
-            <View style={styles.historySolution}>
-              <MathViewFallback math={`\\large = ${item.result}`} />
-            </View>
+                <View style={styles.historyContentSpace}></View>
+              </View>
+            ))}
+            <View style={styles.historySpace}></View>
+          </ScrollView>
+        </View>
+        
 
-            <View style={styles.historyContentSpace}></View>
-          </View>
-        ))}
-        <View style={styles.historySpace}></View>
-      </ScrollView>
-
-      <View style={styles.currentDisplayContainer}>
-        <MathViewFallback
-          math={`\\large ${ExpressionList.join('')}`}
-          style={[styles.currentDisplay, { fontSize: moderateScale(20) }]}
-          resizeMode="contain"
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <View style={styles.grid}>
-          {buttons.map((button, index) => (
-            <Pressable
-              key={index}
-              style={[
-                styles.pressable,
-                pressedButtonIndex === index && styles.pressablePressed
-              ]}
-              onPress={() => {
-                if (button.value === '\\leftarrow') {
-                  moveCursorLeft();
-                } else if (button.value === '\\rightarrow') {
-                  moveCursorRight();
-                } else if (button.value === 'C') {
-                  clearExpression();
-                } else if (button.value === '=') {
-                  calculateExpression();
-                } else if (button.value === 'dlt') {
-                  deleteSign();
-                } else if (button.value === '\\frac{\\square}{\\square}') {
-                  handleFraction();
-                } else if (button.value === 'x^\\square') {
-                  handleExponent();
-                } else if (button.value === '\\sqrt{\\square}') {
-                  handleSquareRoot();
-                }
-                else {
-                  handleInput(button);
-                }
-              }}
-              onPressIn={() => setPressedButtonIndex(index)}
-              onPressOut={() => setPressedButtonIndex(null)}
-            >
-              <MathViewFallback math={`\\normalsize ${button.value}`} />
+        <View style={[styles.currentDisplayContainer, {backgroundColor: activeColors.secondary}]}>
+          <MathViewFallback
+            math={`\\large \\textcolor{${activeColors.text}}{${ExpressionList.join('')}}`}
+            style={[styles.currentDisplay, { fontSize: moderateScale(20) }]}
+            resizeMode="contain"
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <View style={styles.grid}>
+            {buttons.map((button, index) => (
+              <Pressable
+                key={index}
+                style={[
+                  styles.pressable,
+                  pressedButtonIndex === index && styles.pressablePressed,
+                  {borderColor: theme.mode === 'dark' ? activeColors.secondary : activeColors.text},
+                ]}
+                onPress={() => {
+                  if (button.value === '\\leftarrow') {
+                    moveCursorLeft();
+                  } else if (button.value === '\\rightarrow') {
+                    moveCursorRight();
+                  } else if (button.value === 'C') {
+                    clearExpression();
+                  } else if (button.value === '=') {
+                    calculateExpression();
+                  } else if (button.value === 'dlt') {
+                    deleteSign();
+                  } else if (button.value === '\\frac{\\square}{\\square}') {
+                    handleFraction();
+                  } else if (button.value === 'x^\\square') {
+                    handleExponent();
+                  } else if (button.value === '\\sqrt{\\square}') {
+                    handleSquareRoot();
+                  }
+                  else {
+                    handleInput(button);
+                  }
+                }}
+                onPressIn={() => setPressedButtonIndex(index)}
+                onPressOut={() => setPressedButtonIndex(null)}
+              >
+                <MathViewFallback math={`\\normalsize \\textcolor{${activeColors.text}}{${button.value}}`} />
+              </Pressable>
+            ))}
+            <Pressable style={[styles.subButtons, getGradButtonStyle()]} onPress={handleGradPress}>
+              <Text style={styles.subButtonsText}>
+                {getGradButtonText()}
+              </Text>
             </Pressable>
-          ))}
+            <Pressable style={[styles.subButtons, getButtonStyle()]} onPress={handlePress}>
+              <Text style={styles.subButtonsText}>
+                {getButtonText()}
+              </Text>
+            </Pressable>
+          </View>
         </View>
-        <View style={styles.subButtonsView}>
-          <Pressable style={[styles.subButtons, getGradButtonStyle()]} onPress={handleGradPress}>
-            <Text style={styles.subButtonsText}>
-              {getGradButtonText()}
-            </Text>
-          </Pressable>
-
-          <Pressable style={[styles.subButtons, getButtonStyle()]} onPress={handlePress}>
-            <Text style={styles.subButtonsText}>
-              {getButtonText()}
-            </Text>
-          </Pressable>
-        </View>
+        
+        <StatusBar style="auto" />
       </View>
-      
-      <StatusBar style="auto" />
-    </View>
+    </SafeAreaView>
+    
   );
 }
 
@@ -490,55 +536,39 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: verticalScale(50),
-  },
-  angleModeButtonContainer: {
-    position: 'absolute',
-    top: verticalScale(10),
-    left: scale(10),
-  },
-  angleModeButton: {
-    padding: moderateScale(5),
-    backgroundColor: '#dcdcdc',
-    borderRadius: scale(5),
-  },
-  fontSizeButtonsContainer: {
-    position: 'absolute',
-    top: verticalScale(10),
-    right: scale(10),
-    flexDirection: 'row',
-  },
-  fontSizeButton: {
-    padding: moderateScale(5),
-    backgroundColor: '#dcdcdc',
-    borderRadius: scale(5),
-    marginLeft: scale(5),
-  },
-  fontSizeButtonText: {
-    fontSize: moderateScale(12),
-    fontWeight: 'bold',
+    paddingTop: 0,
   },
   currentDisplayContainer: {
+    borderRadius: 10,
     width: '80%',
     alignSelf: 'center',
     marginBottom: verticalScale(10),
     backgroundColor: '#f0f0f0',
     padding: moderateScale(10),
-    height: verticalScale(50), // Basierend auf einem ursprünglichen Verhältnis von 10% der Bildschirmhöhe
+    height: verticalScale(50),
     justifyContent: 'center',
   },
   currentDisplay: {
     fontSize: moderateScale(40),
   },
   historyContainer: {
+    borderRadius: 10,
     width: '80%',
     alignSelf: 'center',
     flexGrow: 1,
-    maxHeight: verticalScale(100), // Basierend auf einem ursprünglichen Verhältnis von 10% der Bildschirmhöhe
+    height: '15%',
+    backgroundColor: '#f0f0f0',
+    marginBottom: verticalScale(10),
+  },
+  historyScrollView: {
+    borderRadius: 10,
+    width: '100%',
+    alignSelf: 'center',
+    flexGrow: 1,
+    height: '15%',
     backgroundColor: '#f0f0f0',
     padding: moderateScale(10),
-    marginBottom: verticalScale(10),
-    marginTop: -20,
+    marginTop: 0,
   },
   historyContentContainer: {
     flexGrow: 1,
@@ -555,7 +585,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
     width: '80%',
-    height: '70%',
+    height: '75%',
   },
   pressable: {
     width: scale(60), // Beispiel: 18% der Bildschirmbreite
@@ -589,15 +619,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   subButtons: {
-    width: scale(130), // Beispiel: 39% der Bildschirmbreite
-    height: verticalScale(45),
+    width: scale(125),
+    height: verticalScale(40),
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: 'black',
     margin: scale(5),
-    marginTop: verticalScale(50),
+    marginVertical: verticalScale(0),
     borderRadius: scale(7),
+    marginTop: verticalScale(0)
   },
   subButtonsText: {
     fontSize: moderateScale(24),

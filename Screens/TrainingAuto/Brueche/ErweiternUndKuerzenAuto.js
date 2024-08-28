@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import MathView from 'react-native-math-view';
 import * as math from 'mathjs';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
 
 export function ErweiternUndKuerzenAuto() {
 
@@ -10,7 +13,10 @@ export function ErweiternUndKuerzenAuto() {
   const [Solution, setSolution] = useState('');
   const [Result, setResult] = useState('');
 
-  const mathText = '\\LARGE';
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const mathText = `\\LARGE \\textcolor{${activeColors.text}}{`;
 
 
   const getRandomNumber = (min, max) => {
@@ -68,14 +74,18 @@ export function ErweiternUndKuerzenAuto() {
 
     const expr = `(${num1} * ${var1}^${varPotenzOben}) / (${num2} * ${var1}^${varPotenzUnten})`;
 
-    const simplified = math.simplify(expr, { num1, num2, var1, varPotenzOben, varPotenzUnten });
+    let simplified = math.simplify(expr, { num1, num2, var1, varPotenzOben, varPotenzUnten });
 
     console.log('---------------')
     console.log(simplified.toString());
 
+    simplified = getFraction(simplified.toString())
+
+    simplified = simplified.replace('*', '');
+
 
     
-    setResult(getFraction(simplified.toString()));
+    setResult(simplified);
   };
 
   const createExpressionWithoutVars = () => {
@@ -141,24 +151,24 @@ export function ErweiternUndKuerzenAuto() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: activeColors.background}]}>
       <View style={styles.containerExpression}>
-        <Text style={{ textAlign: 'center', fontSize: 30 }}>
-          {Expression ? <MathView math={`${mathText} ${Expression}`}/>  : 'Erstelle einen Ausdruck'}
+        <Text style={{ textAlign: 'center', fontSize: 30, color: activeColors.text}}>
+          {Expression ? <MathView math={`${mathText} ${Expression}}`}/>  : createExpression()}
         </Text>
       </View>
 
       <View style={styles.button1}>
         <Pressable onPress={solveExpression}>
-          <Text style={{ textAlign: 'center', fontSize: 30 }}>
-            {Solution ? <MathView math={`${mathText} ${Solution}`}/> : 'Lösung anzeigen'}
+          <Text style={{ textAlign: 'center', fontSize: 30, color: activeColors.text }}>
+            {Solution ? <MathView math={`${mathText} ${Solution}}`}/> : 'Lösung anzeigen'}
           </Text>
         </Pressable>
       </View>
 
       <View style={styles.button2}>
         <Pressable onPress={createExpression}>
-          <Text style={{ textAlign: 'center', fontSize: 30 }}>
+          <Text style={{ textAlign: 'center', fontSize: 30, color: activeColors.text }}>
             Ausdruck erstellen
           </Text>
         </Pressable>

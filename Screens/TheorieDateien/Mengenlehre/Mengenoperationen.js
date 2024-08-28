@@ -1,26 +1,35 @@
 import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView, Image, Dimensions } from 'react-native';
-import stylesTheorie from '../StylesTheorie';
 import { useNavigation } from '@react-navigation/native';
 import MathView from 'react-native-math-view';
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
+import useStyles from '../StylesTheorie';
 
 export function Mengenoperationen() {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
 
+  
+
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const math = `\\huge \\textcolor{${activeColors.text}}{ `;
+  const mathSmall = `\\large \\textcolor{${activeColors.text}}{ `;
+  const mathMid = `\\Large \\textcolor{${activeColors.text}}{ `;
   const navigation = useNavigation();
-  const math = '\\huge';
-  const mathSmall = '\\large';
-  const mathMid = '\\Large';
+
+  const stylesTheorie = useStyles();
 
   const nextPage = () => {
     return navigation.navigate('');
   };
-
+ 
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <View style={stylesTheorie.container}>
+    <SafeAreaView style={{backgroundColor: activeColors.background}}>
+      <ScrollView >
+        <View style={[stylesTheorie.container, {backgroundColor: activeColors.background}]}>
           <Text style={stylesTheorie.header}>
             Mengenoperationen
           </Text>
@@ -39,7 +48,7 @@ export function Mengenoperationen() {
 
           <View>
             <Text style={stylesTheorie.subHeader}>
-              Schnittmenge <MathView math={`${mathMid} \\bigcap`} />
+              Schnittmenge <MathView math={`${mathMid} \\bigcap}`} />
             </Text>
           </View>
 
@@ -50,11 +59,11 @@ export function Mengenoperationen() {
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-            <MathView math={`${mathMid} \\mathbb{A} = \\{1, 6, 12, 16, 18\\}`} />
+            <MathView math={`${mathMid} \\mathbb{A} = \\{1, 6, 12, 16, 18\\}}`} />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-            <MathView math={`${mathMid} \\mathbb{B} = \\{5, 6, 9, 12, 18\\}`} />
+            <MathView math={`${mathMid} \\mathbb{B} = \\{5, 6, 9, 12, 18\\}}`} />
           </View>
 
           <View style={stylesTheorie.containerMid}>
@@ -64,11 +73,11 @@ export function Mengenoperationen() {
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-            <MathView math={`${mathMid} \\mathbb{C} = \\mathbb{A} \\cap \\mathbb{B} = \\{6, 12, 18\\}`} />
+            <MathView math={`${mathMid} \\mathbb{C} = \\mathbb{A} \\cap \\mathbb{B} = \\{6, 12, 18\\}}`} />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-            <MathView math={`${mathMid} \\mathbb{C} = \\{6, 12, 18\\}`} />
+            <MathView math={`${mathMid} \\mathbb{C} = \\{6, 12, 18\\}}`} />
           </View>
 
           <View style={stylesTheorie.paragraphContainer}>
@@ -78,16 +87,16 @@ export function Mengenoperationen() {
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-            <MathView math={`${math} \\mathbb{A} \\cap \\mathbb{B} = \\mathbb{B} \\cap \\mathbb{A}`} />
+            <MathView math={`${math} \\mathbb{A} \\cap \\mathbb{B} = \\mathbb{B} \\cap \\mathbb{A}}`} />
           </View>
 
           <View style={stylesTheorie.imageContainer}>
-            <Image source={require('./img/Schnittmenge.png')} style={{ width: 330, height: 250 }} />
+            <Image source={theme.mode === 'dark' ? require('./img/Schnittmenge-dark.png') : require('./img/Schnittmenge.png')} style={{ width: 330, height: 250 }} />
           </View>
 
           <View>
             <Text style={stylesTheorie.subHeader}>
-              Vereinigungsmenge <MathView math={`${mathMid} \\bigcup`} />
+              Vereinigungsmenge <MathView math={`${mathMid} \\bigcup}`} />
             </Text>
           </View>
 
@@ -99,11 +108,11 @@ export function Mengenoperationen() {
 
           <View style={{ alignItems: 'flex-start' }}>
             <View style={stylesTheorie.mathExpression}>
-              <MathView math={`${mathMid} \\mathbb{A} = \\{-2, -1, 0\\}`} />
+              <MathView math={`${mathMid} \\mathbb{A} = \\{-2, -1, 0\\}}`} />
             </View>
 
             <View style={stylesTheorie.mathExpression}>
-              <MathView math={`${mathMid} \\mathbb{B} = \\{1, 2\\}`} />
+              <MathView math={`${mathMid} \\mathbb{B} = \\{1, 2\\}}`} />
             </View>
           </View>
 
@@ -114,11 +123,11 @@ export function Mengenoperationen() {
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-            <MathView math={`${mathSmall} \\mathbb{C} = \\mathbb{A} \\cup \\mathbb{B} = \\{-2, -1, 0, 1, 2\\}`} />
+            <MathView math={`${mathSmall} \\mathbb{C} = \\mathbb{A} \\cup \\mathbb{B} = \\{-2, -1, 0, 1, 2\\}}`} />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-            <MathView math={`${mathSmall} \\mathbb{C} = \\{-2, -1, 0, 1, 2\\}`} />
+            <MathView math={`${mathSmall} \\mathbb{C} = \\{-2, -1, 0, 1, 2\\}}`} />
           </View>
 
           <View style={stylesTheorie.paragraphContainer}>
@@ -129,16 +138,16 @@ export function Mengenoperationen() {
 
           <View style={{ alignItems: 'flex-start' }}>
             <View style={stylesTheorie.mathExpression}>
-              <MathView math={`${mathMid} \\mathbb{A} = \\{1, 2\\}`} />
+              <MathView math={`${mathMid} \\mathbb{A} = \\{1, 2\\}}`} />
             </View>
 
             <View style={stylesTheorie.mathExpression}>
-              <MathView math={`${mathMid} \\mathbb{B} = \\{2, 3\\}`} />
+              <MathView math={`${mathMid} \\mathbb{B} = \\{2, 3\\}}`} />
             </View>
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-            <MathView math={`${mathMid} \\mathbb{A} \\cup \\mathbb{B} = \\{1, 2, 3\\}`} />
+            <MathView math={`${mathMid} \\mathbb{A} \\cup \\mathbb{B} = \\{1, 2, 3\\}}`} />
           </View>
 
           <View style={stylesTheorie.containerMid}>
@@ -148,7 +157,7 @@ export function Mengenoperationen() {
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-            <MathView math={`${mathMid} \\mathbb{A} \\cup \\mathbb{B} = \\{1, 2, 2, 3\\}`} />
+            <MathView math={`${mathMid} \\mathbb{A} \\cup \\mathbb{B} = \\{1, 2, 2, 3\\}}`} />
           </View>
 
           <View style={stylesTheorie.paragraphContainer}>
@@ -158,12 +167,12 @@ export function Mengenoperationen() {
           </View>
 
           <View style={stylesTheorie.imageContainer}>
-            <Image source={require('./img/Vereinigungsmenge.png')} style={{ width: 330, height: 250 }} />
+            <Image source={theme.mode === 'dark' ? require('./img/Vereinigungsmenge-dark.png') : require('./img/Vereinigungsmenge.png')} style={{ width: 330, height: 250 }} />
           </View>
 
           <View>
             <Text style={stylesTheorie.subHeader}>
-              Differenzmenge <MathView math={`${mathMid} \\setminus`} />
+              Differenzmenge <MathView math={`${mathMid} \\setminus}`} />
             </Text>
           </View>
 
@@ -174,11 +183,11 @@ export function Mengenoperationen() {
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-            <MathView math={`${math} \\mathbb{A} = \\{1, 2, 3, 4, 5\\}`} />
+            <MathView math={`${math} \\mathbb{A} = \\{1, 2, 3, 4, 5\\}}`} />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-            <MathView math={`${math} \\mathbb{B} = \\{2, 4\\}`} />
+            <MathView math={`${math} \\mathbb{B} = \\{2, 4\\}}`} />
           </View>
 
           <View style={stylesTheorie.containerMid}>
@@ -188,7 +197,7 @@ export function Mengenoperationen() {
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-            <MathView math={`${mathMid} \\mathbb{C} = \\mathbb{A} \\setminus \\mathbb{B} = \\{1, 3, 5\\}`} />
+            <MathView math={`${mathMid} \\mathbb{C} = \\mathbb{A} \\setminus \\mathbb{B} = \\{1, 3, 5\\}}`} />
           </View>
 
           <View style={stylesTheorie.paragraphContainer}>
@@ -199,11 +208,11 @@ export function Mengenoperationen() {
           </View>
 
           <View style={stylesTheorie.mathExpression}>
-            <MathView math={`${math} \\mathbb{A} \\setminus \\mathbb{B} \\neq \\mathbb{B} \\setminus \\mathbb{A}`} />
+            <MathView math={`${math} \\mathbb{A} \\setminus \\mathbb{B} \\neq \\mathbb{B} \\setminus \\mathbb{A}}`} />
           </View>
 
           <View style={stylesTheorie.imageContainer}>
-            <Image source={require('./img/Differenzmenge.png')} style={{ width: 330, height: 250 }} />
+            <Image source={theme.mode === 'dark' ? require('./img/Differenzmenge-dark.png') : require('./img/Differenzmenge.png')} style={{ width: 330, height: 250 }} />
           </View>
 
           <View style={stylesTheorie.space}></View>

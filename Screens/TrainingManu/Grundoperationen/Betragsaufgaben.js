@@ -2,9 +2,18 @@ import React, { useState } from 'react';
 import { View, SafeAreaView, ScrollView, Pressable, Text } from 'react-native';
 import MathView from 'react-native-math-view';
 import stylesUebungen from '../StylesUebungen';
+import { colors } from '../../../theme';
+import { ThemeContext } from '../../../Context/themeContext';
+import { useContext } from 'react';
+import useStylesUebungen from '../StylesUebungen';
 
 export function Betragsaufgaben() {
   const mathMid = '\\Large';
+
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const stylesUebungen = useStylesUebungen();
 
   const AufgabenUndLoesungen = [
     
@@ -130,7 +139,7 @@ export function Betragsaufgaben() {
   };
 
   return (
-    <View style={{backgroundColor: 'white'}}>
+    <View style={{backgroundColor: activeColors.background}}>
       <SafeAreaView>
         <ScrollView>
           <View style={stylesUebungen.container}>
@@ -168,7 +177,7 @@ export function Betragsaufgaben() {
               </View>           
             ))}           
           </View>  
-          <View style={{height: 200, backgroundColor: 'white'}}></View>  
+          <View style={{height: 200}}></View>  
         </ScrollView>
       </SafeAreaView>
     </View>

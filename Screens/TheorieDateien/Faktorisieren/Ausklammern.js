@@ -2,9 +2,22 @@ import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView } from 'rea
 import stylesTheorie from '../StylesTheorie';
 import { useNavigation } from '@react-navigation/native';
 import MathView from 'react-native-math-view';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
+import useStyles from '../StylesTheorie';
 
 export function Ausklammern() {
   const navigation = useNavigation();
+
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const math = `\\huge \\textcolor{${activeColors.text}}{ `;
+  const mathSmall = `\\large \\textcolor{${activeColors.text}}{ `;
+  const mathMid = `\\Large \\textcolor{${activeColors.text}}{ `;
+
+  const stylesTheorie = useStyles();
 
   const nextPage = () => {
     return (
@@ -12,14 +25,10 @@ export function Ausklammern() {
     );
   }
 
-  const math = '\\huge'
-  const mathSmall = '\\large'
-  const mathMid = '\\Large'
-
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: activeColors.background}}>
       <ScrollView>
-        <View style={stylesTheorie.container}>
+        <View style={[stylesTheorie.container, {backgroundColor: activeColors.background}]}>
           <Text style={stylesTheorie.header}>
             Ausklammern
           </Text>
@@ -32,7 +41,7 @@ export function Ausklammern() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} a \\cdot (b + c) = a \\cdot b + a \\cdot c`}
+              math={`${mathMid} a \\cdot (b + c) = a \\cdot b + a \\cdot c}`}
             />
           </View>
 
@@ -44,7 +53,7 @@ export function Ausklammern() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} 3x + 6y = 3 \\cdot (x + 2y)`}
+              math={`${mathMid} 3x + 6y = 3 \\cdot (x + 2y)}`}
             />
           </View>
 
@@ -56,7 +65,7 @@ export function Ausklammern() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathSmall} 360abc + 180ac = 180ac \\cdot (2b + 1)`}
+              math={`${mathSmall} 360abc + 180ac = 180ac \\cdot (2b + 1)}`}
             />
           </View>
 
@@ -74,13 +83,13 @@ export function Ausklammern() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} 35qd + 25q + 40d `}
+              math={`${mathMid} 35qd + 25q + 40d} `}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} = 5 \\cdot (7qd + 5q + 8d)`}
+              math={`${mathMid} = 5 \\cdot (7qd + 5q + 8d)}`}
             />
           </View>
 
@@ -92,7 +101,7 @@ export function Ausklammern() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} a - b = -1 \\cdot (b - a)`}
+              math={`${mathMid} a - b = -1 \\cdot (b - a)}`}
             />
           </View>
 

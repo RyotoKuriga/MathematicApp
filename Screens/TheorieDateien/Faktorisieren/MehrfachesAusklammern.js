@@ -2,6 +2,11 @@ import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView } from 'rea
 import stylesTheorie from '../StylesTheorie';
 import { useNavigation } from '@react-navigation/native';
 import MathView from 'react-native-math-view';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
+import useStyles from '../StylesTheorie';
+
 
 export function MehrfachesAusklammern() {
   const navigation = useNavigation();
@@ -12,14 +17,19 @@ export function MehrfachesAusklammern() {
     );
   }
 
-  const math = '\\huge'
-  const mathSmall = '\\large'
-  const mathMid = '\\Large'
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const math = `\\huge \\textcolor{${activeColors.text}}{ `;
+  const mathSmall = `\\large \\textcolor{${activeColors.text}}{ `;
+  const mathMid = `\\Large \\textcolor{${activeColors.text}}{ `;
+
+  const stylesTheorie = useStyles();
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: activeColors.background}}>
       <ScrollView>
-        <View style={stylesTheorie.container}>
+        <View style={[stylesTheorie.container, {backgroundColor: activeColors.background}]}>
           <Text style={stylesTheorie.header}>
             Mehrfaches Ausklammern
           </Text>
@@ -32,19 +42,19 @@ export function MehrfachesAusklammern() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} ax + ay + bx + by`}
+              math={`${mathMid} ax + ay + bx + by}`}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} =a(x + y) + b(x + y)`}
+              math={`${mathMid} =a(x + y) + b(x + y)}`}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}=(x + y)(a + b)`}
+              math={`${mathMid}=(x + y)(a + b)}`}
             />
           </View>
 
@@ -62,25 +72,25 @@ export function MehrfachesAusklammern() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}36 + 20a - 9x + 5ax`}
+              math={`${mathMid}36 + 20a - 9x + 5ax}`}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}= 5ax + 20a - 9x + 36`}
+              math={`${mathMid}= 5ax + 20a - 9x + 36}`}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}= 5a \\cdot (x + 4) - 9 \\cdot (x + 4)`}
+              math={`${mathMid}= 5a \\cdot (x + 4) - 9 \\cdot (x + 4)}`}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}= (5a - 9)(x + 4)`}
+              math={`${mathMid}= (5a - 9)(x + 4)}`}
             />
           </View>
 
@@ -90,7 +100,7 @@ export function MehrfachesAusklammern() {
             </Text>
           </View>
 
-          <View style={stylesTheorie.containerMid}>
+          <View style={stylesTheorie.conainerMid}>
             <Pressable onPress={nextPage}>
               <Text style={stylesTheorie.link}>Nächstes Kapitel!</Text>
             </Pressable>

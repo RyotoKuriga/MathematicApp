@@ -2,13 +2,22 @@ import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView } from 'rea
 import stylesTheorie from '../StylesTheorie';
 import { useNavigation } from '@react-navigation/native';
 import MathView from 'react-native-math-view';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
+import useStyles from '../StylesTheorie';
 
 export function KuerzenUndErweitern() {
   const navigation = useNavigation();
 
-  const math = '\\huge';
-  const mathSmall = '\\large';
-  const mathMid = '\\Large';
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const math = `\\huge \\textcolor{${activeColors.text}}{ `;
+  const mathSmall = `\\large \\textcolor{${activeColors.text}}{ `;
+  const mathMid = `\\Large \\textcolor{${activeColors.text}}{ `;
+
+  const stylesTheorie = useStyles();
 
   const nextPage = () => {
     return (
@@ -17,9 +26,9 @@ export function KuerzenUndErweitern() {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: activeColors.background}}>
       <ScrollView>
-        <View style={stylesTheorie.container}>
+        <View style={[stylesTheorie.container, {backgroundColor: activeColors.background}]}>
           <Text style={stylesTheorie.header}>
             Kürzen & Erweitern
           </Text>
@@ -35,7 +44,7 @@ export function KuerzenUndErweitern() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${math} \\dfrac{6}{8} = \\dfrac{6 : 2}{8 : 2} = \\dfrac{3}{4}`}
+              math={`${math} \\dfrac{6}{8} = \\dfrac{6 : 2}{8 : 2} = \\dfrac{3}{4}}`}
             />
           </View>
 
@@ -47,7 +56,7 @@ export function KuerzenUndErweitern() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${math} \\dfrac{a \\cdot y}{b \\cdot y} = \\dfrac{a}{b}`}
+              math={`${math} \\dfrac{a \\cdot y}{b \\cdot y} = \\dfrac{a}{b}}`}
             />
           </View>
 
@@ -59,7 +68,7 @@ export function KuerzenUndErweitern() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${math} \\dfrac{30}{9}`}
+              math={`${math} \\dfrac{30}{9}}`}
             />
           </View>
 
@@ -71,7 +80,7 @@ export function KuerzenUndErweitern() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${math} \\dfrac{10}{3}`}
+              math={`${math} \\dfrac{10}{3}}`}
             />
           </View>
 
@@ -83,7 +92,7 @@ export function KuerzenUndErweitern() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathSmall} \\dfrac{2x + 4}{3x + 6} = \\dfrac{2 \\cdot (x + 2)}{3 \\cdot (x + 2)} = \\dfrac{2}{3}`}
+              math={`${mathSmall} \\dfrac{2x + 4}{3x + 6} = \\dfrac{2 \\cdot (x + 2)}{3 \\cdot (x + 2)} = \\dfrac{2}{3}}`}
             />
           </View>
 
@@ -95,19 +104,21 @@ export function KuerzenUndErweitern() {
 
           <View style={stylesTheorie.paragraphContainer}>
             <Text style={stylesTheorie.text}>
-              Hier wurde zuerst beim Nenner und beim Zähler ausgeklammert und danach das Glied $(x + 2)$ gekürzt.
+              Hier wurde zuerst beim Nenner und beim Zähler ausgeklammert und danach das Glied (x + 2) gekürzt.
             </Text>
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} \\dfrac{4z + 2y}{16z^2 + 16zy + 4y^2} `}
+              math={`${mathMid} \\dfrac{4z + 2y}{16z^2 + 16zy + 4y^2}} `}
             />
           </View>
 
+          <View style={{height: 20}}></View>
+
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} = \\dfrac{4z + 2y}{(4z + 2y)^2} = \\dfrac{1}{4z + 2y}`}
+              math={`${mathMid} = \\dfrac{4z + 2y}{(4z + 2y)^2} = \\dfrac{1}{4z + 2y}}`}
             />
           </View>
 
@@ -125,13 +136,13 @@ export function KuerzenUndErweitern() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} \\dfrac{a - b}{b - a} = \\dfrac{a - b}{-1 \\cdot (-b + a)} `}
+              math={`${mathMid} \\dfrac{a - b}{b - a} = \\dfrac{a - b}{-1 \\cdot (-b + a)}} `}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} = \\dfrac{a - b}{-1 \\cdot (a - b)} = \\dfrac{1}{-1} = -1`}
+              math={`${mathMid} = \\dfrac{a - b}{-1 \\cdot (a - b)} = \\dfrac{1}{-1} = -1}`}
             />
           </View>
 
@@ -147,13 +158,13 @@ export function KuerzenUndErweitern() {
 
           <View style={stylesTheorie.paragraphContainer}>
             <Text style={stylesTheorie.text}>
-              Um verschiedene Brüche, die durch Addition und Subtraktion verbunden sind, zusammenzufassen, muss man die einzelnen Brüche erweitern. Das Erweitern ist die inverse Operation des Kürzens. Anstatt den Bruch im Nenner und im Zähler mit derselben Zahl zu dividieren, multipliziert man nun den Nenner und den Zähler mit derselben Zahl. Wir können so zum Beispiel den Bruch $\\frac{3}{4}$ auf 8-tel erweitern, indem wir den Nenner und den Zähler mit 2 multiplizieren.
+              Um verschiedene Brüche, die durch Addition und Subtraktion verbunden sind, zusammenzufassen, muss man die einzelnen Brüche erweitern. Das Erweitern ist die inverse Operation des Kürzens. Anstatt den Bruch im Nenner und im Zähler mit derselben Zahl zu dividieren, multipliziert man nun den Nenner und den Zähler mit derselben Zahl. Wir können so zum Beispiel den Bruch <MathView math={`\\frac{3}{4} `}/> auf 8-tel erweitern, indem wir den Nenner und den Zähler mit 2 multiplizieren.
             </Text>
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${math} \\dfrac{3}{4} = \\dfrac{3 \\cdot 2}{4 \\cdot 2} = \\dfrac{6}{8}`}
+              math={`${math} \\dfrac{3}{4} = \\dfrac{3 \\cdot 2}{4 \\cdot 2} = \\dfrac{6}{8}}`}
             />
           </View>
 
@@ -165,7 +176,7 @@ export function KuerzenUndErweitern() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${math} \\dfrac{a}{b} = \\dfrac{a \\cdot y}{b \\cdot y}`}
+              math={`${math} \\dfrac{a}{b} = \\dfrac{a \\cdot y}{b \\cdot y}}`}
             />
           </View>
 
@@ -177,13 +188,13 @@ export function KuerzenUndErweitern() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} \\dfrac{5x}{6} + \\dfrac{10x}{3} = \\dfrac{5x}{6} + \\dfrac{10x \\cdot 2}{3 \\cdot 2} `}
+              math={`${mathMid} \\dfrac{5x}{6} + \\dfrac{10x}{3} = \\dfrac{5x}{6} + \\dfrac{10x \\cdot 2}{3 \\cdot 2}} `}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} = \\dfrac{5x}{6} + \\dfrac{20x}{6} = \\dfrac{25x}{6}`}
+              math={`${mathMid} = \\dfrac{5x}{6} + \\dfrac{20x}{6} = \\dfrac{25x}{6}}`}
             />
           </View>
 

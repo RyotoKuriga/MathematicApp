@@ -3,10 +3,23 @@ import stylesTheorie from '../StylesTheorie';
 import MathJax from 'react-native-mathjax';
 import { useNavigation } from '@react-navigation/native';
 import MathView from 'react-native-math-view';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
+import useStyles from '../StylesTheorie';
 
 export function PotenzenUndWurzeln() {
   const divStyle = "font-size: 20px; background-color: 'white'; border: none; font-family: Arial";
+
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const math = `\\huge \\textcolor{${activeColors.text}}{ `;
+  const mathSmall = `\\large \\textcolor{${activeColors.text}}{ `;
+  const mathMid = `\\Large \\textcolor{${activeColors.text}}{ `;
   const navigation = useNavigation();
+
+  const stylesTheorie = useStyles();
 
   const nextPage = () => {
     return (
@@ -14,14 +27,10 @@ export function PotenzenUndWurzeln() {
     );
   }
 
-  const math = '\\huge'
-  const mathSmall = '\\large'
-  const mathMid = '\\Large'
-
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: activeColors.background}}>
       <ScrollView>
-        <View style={stylesTheorie.container}>
+        <View style={[stylesTheorie.container, {backgroundColor: activeColors.background}]}>
           <Text style={stylesTheorie.header}>
             Potenzen und Wurzeln
           </Text>
@@ -40,7 +49,7 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} x^y = z`}
+                math={`${math} x^y = z}`}
               />
           </View>
 
@@ -52,13 +61,13 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} \\sqrt[y]{x} = z`}
+                math={`${math} \\sqrt[y]{x} = z}`}
               />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} \\sqrt[2]{x} = \\sqrt{x}`}
+                math={`${math} \\sqrt[2]{x} = \\sqrt{x}}`}
               />
           </View>
 
@@ -70,7 +79,7 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} 2^3 = 2 \\cdot 2 \\cdot 2 = 8`}
+                math={`${math} 2^3 = 2 \\cdot 2 \\cdot 2 = 8}`}
               />
           </View>
 
@@ -82,7 +91,7 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} \\sqrt{64} = 8`}
+                math={`${math} \\sqrt{64} = 8}`}
               />
           </View>
 
@@ -100,7 +109,7 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} \\sqrt{5} = 2.2360...`}
+                math={`${math} \\sqrt{5} = 2.2360...}`}
               />
           </View>
 
@@ -118,13 +127,13 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathMid} (-3)^2 = -3 \\cdot -3 = 9`}
+                math={`${mathMid} (-3)^2 = -3 \\cdot -3 = 9}`}
               />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathMid} (-3)^3 = -3 \\cdot -3 \\cdot -3 = -27`}
+                math={`${mathMid} (-3)^3 = -3 \\cdot -3 \\cdot -3 = -27}`}
               />
           </View>
 
@@ -136,25 +145,25 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.paragraphContainer}>
             <Text style={stylesTheorie.text}>
-              Wurzeln und Potenzen sind eigentlich dasselbe. Man kann nämlich jede Wurzel als Potenz darstellen, indem man den Wurzelexponenten als Kehrwert in den Exponenten schreibt.
+              Wurzeln und Potenzen sind eigentlich dasselbe. Man kann jede Wurzel als Potenz darstellen, indem man den Wurzelexponenten als Kehrwert in den Exponenten schreibt.
             </Text>
           </View>
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} \\sqrt[n]{x} = x^{\\frac{1}{n}}`}
+                math={`${math} \\sqrt[n]{x} = x^{\\frac{1}{n}}}`}
               />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} \\sqrt{5} = 5^{\\frac{1}{2}}`}
+                math={`${math} \\sqrt{5} = 5^{\\frac{1}{2}}}`}
               />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} \\sqrt[5]{7} = 7^{\\frac{1}{5}}`}
+                math={`${math} \\sqrt[5]{7} = 7^{\\frac{1}{5}}}`}
               />
           </View>
 
@@ -182,7 +191,7 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} 9^3 \\cdot 9^2 = 9^5`}
+                math={`${math} 9^3 \\cdot 9^2 = 9^5}`}
               />
           </View>
 
@@ -194,7 +203,7 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} (9 \\cdot 9 \\cdot 9) \\cdot (9 \\cdot 9)`}
+                math={`${math} (9 \\cdot 9 \\cdot 9) \\cdot (9 \\cdot 9)}`}
               />
           </View>
 
@@ -206,7 +215,7 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} = 9 \\cdot 9 \\cdot 9 \\cdot 9 \\cdot 9`}
+                math={`${math} = 9 \\cdot 9 \\cdot 9 \\cdot 9 \\cdot 9}`}
               />
           </View>
 
@@ -218,7 +227,7 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} 9^5`}
+                math={`${math} 9^5}`}
               />
           </View>
 
@@ -230,7 +239,7 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} a^n \\cdot a^m = a^{n + m}`}
+                math={`${math} a^n \\cdot a^m = a^{n + m}}`}
               />
           </View>
 
@@ -242,7 +251,7 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathMid} 9^3 : 9^2 = 9^{3-2} = 9^1 = 9`}
+                math={`${mathMid} 9^3 : 9^2 = 9^{3-2} = 9^1 = 9}`}
               />
           </View>
 
@@ -254,7 +263,7 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} a^n : a^m = a^{n - m}`}
+                math={`${math} a^n : a^m = a^{n - m}}`}
               />
           </View>
 
@@ -272,13 +281,13 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathMid} (3^2)^3 = (3 \\cdot 3) \\cdot (3 \\cdot 3) \\cdot (3 \\cdot 3)`}
+                math={`${mathMid} (3^2)^3 = (3 \\cdot 3) \\cdot (3 \\cdot 3) \\cdot (3 \\cdot 3)}`}
               />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathMid} =3 \\cdot 3 \\cdot 3 \\cdot 3 \\cdot 3 \\cdot 3 = 3^6`}
+                math={`${mathMid} =3 \\cdot 3 \\cdot 3 \\cdot 3 \\cdot 3 \\cdot 3 = 3^6}`}
               />
           </View>
 
@@ -296,7 +305,7 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} (a^n)^m = a^{n \\cdot m}`}
+                math={`${math} (a^n)^m = a^{n \\cdot m}}`}
               />
           </View>
 
@@ -308,13 +317,13 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} \\sqrt{9} \\cdot 9^4 = 9^{\\frac{1}{2}} \\cdot 9^4 `}
+                math={`${math} \\sqrt{9} \\cdot 9^4 = 9^{\\frac{1}{2}} \\cdot 9^4} `}
               />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} = 9^{\\frac{1}{2} \\cdot 4} = 9^2 = 81`}
+                math={`${math} = 9^{\\frac{1}{2} \\cdot 4} = 9^2 = 81}`}
               />
           </View>
 
@@ -332,13 +341,13 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} (4 \\cdot 3)^2 = 4^2 \\cdot 3^2 `}
+                math={`${math} (4 \\cdot 3)^2 = 4^2 \\cdot 3^2} `}
               />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} = 16 \\cdot 9 = 144`}
+                math={`${math} = 16 \\cdot 9 = 144}`}
               />
           </View>
 
@@ -350,13 +359,13 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} 2^2 \\cdot 3^2 = (2 \\cdot 3)^2`}
+                math={`${math} 2^2 \\cdot 3^2 = (2 \\cdot 3)^2}`}
               />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} = 6^2 = 36`}
+                math={`${math} = 6^2 = 36}`}
               />
           </View>
 
@@ -368,7 +377,7 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} (a \\cdot b)^n = a^n \\cdot b^n`}
+                math={`${math} (a \\cdot b)^n = a^n \\cdot b^n}`}
               />
           </View>
 
@@ -386,25 +395,31 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} (9 : 3)^2 = 9^2 : 3^2 `}
+                math={`${math} (9 : 3)^2 = 9^2 : 3^2} `}
               />
           </View>
 
-          <View style={stylesTheorie.mathExpression}>
-              <MathView
-                math={`${math} = 81 : 9 = 9`}
-              />
-          </View>
+          <View style={{height: 20}}></View>
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} \\left (\\dfrac{9}{3} \\right)^2 = \\dfrac{9^2}{3^2} `}
+                math={`${math} = 81 : 9 = 9}`}
               />
           </View>
 
+          <View style={{height: 20}}></View>
+
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} = \\dfrac{81}{9} = 9`}
+                math={`${math} \\left (\\dfrac{9}{3} \\right)^2 = \\dfrac{9^2}{3^2}} `}
+              />
+          </View>
+
+          <View style={{height: 20}}></View>
+
+          <View style={stylesTheorie.mathExpression}>
+              <MathView
+                math={`${math} = \\dfrac{81}{9} = 9}`}
               />
           </View>
 
@@ -416,13 +431,14 @@ export function PotenzenUndWurzeln() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} (a : b)^n = a^n : b^n `}
+                math={`${math} (a : b)^n = a^n : b^n} `}
               />
           </View>
+          <View style={{height: 20}}></View>
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} = \\left( \\dfrac{a}{b} \\right)^n = \\dfrac{a^n}{b^n}`}
+                math={`${math} = \\left( \\dfrac{a}{b} \\right)^n = \\dfrac{a^n}{b^n}}`}
               />
           </View>
 

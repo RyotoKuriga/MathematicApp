@@ -2,6 +2,10 @@ import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView } from 'rea
 import stylesTheorie from '../StylesTheorie';
 import { useNavigation } from '@react-navigation/native';
 import MathView from 'react-native-math-view';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
+import useStyles from '../StylesTheorie';
 
 export function Klammeransatz() {
   const navigation = useNavigation();
@@ -12,14 +16,19 @@ export function Klammeransatz() {
     );
   }
 
-  const math = '\\huge'
-  const mathSmall = '\\large'
-  const mathMid = '\\Large'
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const math = `\\huge \\textcolor{${activeColors.text}}{ `;
+  const mathSmall = `\\large \\textcolor{${activeColors.text}}{ `;
+  const mathMid = `\\Large \\textcolor{${activeColors.text}}{ `;
+
+  const stylesTheorie = useStyles();
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: activeColors.background}}>
       <ScrollView>
-        <View style={stylesTheorie.container}>
+        <View style={[stylesTheorie.container, {backgroundColor: activeColors.background}]}>
           <Text style={stylesTheorie.header}>
             Klammeransatz
           </Text>
@@ -32,7 +41,7 @@ export function Klammeransatz() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${math} x^2 + 5x + 6`}
+              math={`${math} x^2 + 5x + 6}`}
             />
           </View>
 
@@ -44,25 +53,25 @@ export function Klammeransatz() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathSmall} 1 + 2 = 3 \\neq 5`}
+              math={`${mathSmall} 1 + 2 = 3 \\neq 5}`}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathSmall} 1 + 3 = 4 \\neq 5`}
+              math={`${mathSmall} 1 + 3 = 4 \\neq 5}`}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathSmall} 1 + 6 = 7 \\neq 5`}
+              math={`${mathSmall} 1 + 6 = 7 \\neq 5}`}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}\\underline{\\underline{2 + 3 = 5}}`}
+              math={`${mathMid}\\underline{\\underline{2 + 3 = 5}}}`}
             />
           </View>
 
@@ -74,7 +83,7 @@ export function Klammeransatz() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} (x + 2) \\cdot (x + 3)`}
+              math={`${mathMid} (x + 2) \\cdot (x + 3)}`}
             />
           </View>
 
@@ -86,25 +95,25 @@ export function Klammeransatz() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} x^2 + ax + c `}
+              math={`${mathMid} x^2 + ax + c }`}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} = (x + m)(x + n)`}
+              math={`${mathMid} = (x + m)(x + n)}`}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} x^2 - 5x + 6 `}
+              math={`${mathMid} x^2 - 5x + 6 }`}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} = (x - 2) \\cdot (x - 3)`}
+              math={`${mathMid} = (x - 2) \\cdot (x - 3)}`}
             />
           </View>
 

@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import * as math from 'mathjs';
 import MathView from 'react-native-math-view';
 import { ScaledSheet, moderateScale, verticalScale, scale } from 'react-native-size-matters';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
 
 export function GleichungssystemeAufloesen() {
   const [Expression1, setExpression1] = useState('');
@@ -22,6 +25,9 @@ export function GleichungssystemeAufloesen() {
     } while (exceptions.includes(num));
     return num;
   };
+
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
 
   const createExpression = () => {
     setIsSolution(false);
@@ -171,43 +177,43 @@ export function GleichungssystemeAufloesen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: activeColors.background}]}>
       <View style={styles.containerExpression}>
-        <Text style={stylesScaled.text}>
-          {Expression1 ? <MathView math={`\\Large ${Expression1}`}/> : createExpression}
+        <Text style={[stylesScaled.text, {color: activeColors.text}]}>
+          {Expression1 ? <MathView math={`\\Large \\textcolor{${activeColors.text}}{${Expression1}}`}/> : createExpression()}
         </Text>
       </View>
 
       <View style={styles.containerExpression2}>
-        <Text style={stylesScaled.text}>
-          {Expression2? <MathView math={`\\Large ${Expression2}`}/> : createExpression}
+        <Text style={[stylesScaled.text, {color: activeColors.text}]}>
+          {Expression2? <MathView math={`\\Large \\textcolor{${activeColors.text}}{${Expression2}}`}/> : createExpression}
         </Text>
       </View>
 
       <View style={styles.button1}>
         <Pressable onPress={solveExpression}>
-          <Text style={stylesScaled.text}>
-            {isSolution ? <MathView math={`\\Large a = ${Solution1}`}/> : 'Lösung anzeigen'}
+          <Text style={[stylesScaled.text, {color: activeColors.text}]}>
+            {isSolution ? <MathView math={`\\Large \\textcolor{${activeColors.text}}{a = ${Solution1}}`}/> : 'Lösung anzeigen'}
           </Text>
         </Pressable>
       </View>
       
       <View style={styles.button3}>
-        <Text style={stylesScaled.text}>
-          {isSolution ? <MathView math={`\\Large b = ${Solution2}`}/> : ''}
+        <Text style={[stylesScaled.text, {color: activeColors.text}]}>
+          {isSolution ? <MathView math={`\\Large \\textcolor{${activeColors.text}}{b = ${Solution2}}`}/> : ''}
         </Text>
       </View>
 
       <View style={styles.button2}>
         <Pressable onPress={createExpression}>
-          <Text style={stylesScaled.text}>
+          <Text style={[stylesScaled.text, {color: activeColors.text}]}>
             Ausdruck erstellen
           </Text>
         </Pressable>
       </View>
-      <View style={styles.toggleContainer}>
+      <View style={[styles.toggleContainer, {borderColor: activeColors.text}]}>
         <View>
-          <Text style={styles.toggleText}>
+          <Text style={[styles.toggleText, {color: activeColors.text}]}>
             Nur ganze Zahlen
           </Text>
         </View>

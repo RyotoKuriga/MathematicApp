@@ -2,6 +2,10 @@ import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView } from 'rea
 import stylesTheorie from '../StylesTheorie';
 import { useNavigation } from '@react-navigation/native';
 import MathView from 'react-native-math-view';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
+import useStyles from '../StylesTheorie';
 
 export function BinomischeFormeln() {
   const navigation = useNavigation();
@@ -12,14 +16,19 @@ export function BinomischeFormeln() {
     );
   }
 
-  const math = '\\huge'
-  const mathSmall = '\\large'
-  const mathMid = '\\Large'
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const math = `\\huge \\textcolor{${activeColors.text}}{ `;
+  const mathSmall = `\\large \\textcolor{${activeColors.text}}{ `;
+  const mathMid = `\\Large \\textcolor{${activeColors.text}}{ `;
+
+  const stylesTheorie = useStyles();
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: activeColors.background}}>
       <ScrollView>
-        <View style={stylesTheorie.container}>
+        <View style={[stylesTheorie.container, {backgroundColor: activeColors.background}]}>
           <Text style={stylesTheorie.header}>
             Binomische Formeln
           </Text>
@@ -36,7 +45,7 @@ export function BinomischeFormeln() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}(a + b)^2 = a^2 + 2ab + b^2`}
+              math={`${mathMid}(a + b)^2 = a^2 + 2ab + b^2}`}
             />
           </View>
 
@@ -48,19 +57,23 @@ export function BinomischeFormeln() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}(a + b)^2 = (a + b) \\cdot (a + b)`}
+              math={`${mathMid}(a + b)^2 = (a + b) \\cdot (a + b)}`}
             />
           </View>
 
-          <View style={stylesTheorie.mathExpression}>
-            <MathView
-              math={`${mathMid}= a^2 + ab + ab + b^2`}
-            />
-          </View>
+          <View style={{height: 20}}></View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}= a^2 + 2ab + b^2`}
+              math={`${mathMid}= a^2 + ab + ab + b^2}`}
+            />
+          </View>
+
+          <View style={{height: 20}}></View>
+
+          <View style={stylesTheorie.mathExpression}>
+            <MathView
+              math={`${mathMid}= a^2 + 2ab + b^2}`}
             />
           </View>
 
@@ -72,19 +85,23 @@ export function BinomischeFormeln() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}(8x + 3)^2 = (8x + 3)(8x + 3)`}
+              math={`${mathMid}(8x + 3)^2 = (8x + 3)(8x + 3)}`}
             />
           </View>
 
-          <View style={stylesTheorie.mathExpression}>
-            <MathView
-              math={`${mathMid}= (8x)^2 + 2 \\cdot 8x \\cdot 3 + 3^2`}
-            />
-          </View>
+          <View style={{height: 20}}></View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}= 64x^2 + 48x + 9`}
+              math={`${mathMid}= (8x)^2 + 2 \\cdot 8x \\cdot 3 + 3^2}`}
+            />
+          </View>
+
+          <View style={{height: 20}}></View>
+
+          <View style={stylesTheorie.mathExpression}>
+            <MathView
+              math={`${mathMid}= 64x^2 + 48x + 9}`}
             />
           </View>
 
@@ -100,7 +117,7 @@ export function BinomischeFormeln() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}(a - b)^2 = a^2 - 2ab + b^2`}
+              math={`${mathMid}(a - b)^2 = a^2 - 2ab + b^2}`}
             />
           </View>
 
@@ -112,19 +129,23 @@ export function BinomischeFormeln() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}(a - b)^2 = (a - b) \\cdot (a - b)`}
+              math={`${mathMid}(a - b)^2 = (a - b) \\cdot (a - b)}`}
             />
           </View>
 
-          <View style={stylesTheorie.mathExpression}>
-            <MathView
-              math={`${mathMid}= a^2 - ab - ab + b^2`}
-            />
-          </View>
+          <View style={{height: 20}}></View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}= a^2 - 2ab + b^2`}
+              math={`${mathMid}= a^2 - ab - ab + b^2}`}
+            />
+          </View>
+
+          <View style={{height: 20}}></View>
+
+          <View style={stylesTheorie.mathExpression}>
+            <MathView
+              math={`${mathMid}= a^2 - 2ab + b^2}`}
             />
           </View>
 
@@ -136,25 +157,31 @@ export function BinomischeFormeln() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}(12 - 5qd)^2 `}
+              math={`${mathMid}(12 - 5qd)^2} `}
             />
           </View>
 
-          <View style={stylesTheorie.mathExpression}>
-            <MathView
-              math={`${mathMid}= (12 - 5qd)(12 - 5qd)`}
-            />
-          </View>
+          <View style={{height: 20}}></View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}= 12^2 - 2 \\cdot 12 \\cdot 5qd + (-5qd)^2`}
+              math={`${mathMid}= (12 - 5qd)(12 - 5qd)}`}
             />
           </View>
 
+          <View style={{height: 20}}></View>
+
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}= 144 - 120qd + 25q^2d^2`}
+              math={`${mathMid}= 12^2 - 2 \\cdot 12 \\cdot 5qd + (-5qd)^2}`}
+            />
+          </View>
+
+          <View style={{height: 20}}></View>
+
+          <View style={stylesTheorie.mathExpression}>
+            <MathView
+              math={`${mathMid}= 144 - 120qd + 25q^2d^2}`}
             />
           </View>
 
@@ -170,7 +197,7 @@ export function BinomischeFormeln() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}(a + b) \\cdot (a - b) = a^2 - b^2`}
+              math={`${mathMid}(a + b) \\cdot (a - b) = a^2 - b^2}`}
             />
           </View>
 
@@ -182,19 +209,23 @@ export function BinomischeFormeln() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}(a + b) \\cdot (a - b)`}
+              math={`${mathMid}(a + b) \\cdot (a - b)}`}
             />
           </View>
 
-          <View style={stylesTheorie.mathExpression}>
-            <MathView
-              math={`${mathMid}=a^2 - ab + ab - b^2`}
-            />
-          </View>
+          <View style={{height: 20}}></View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}=a^2 - b^2`}
+              math={`${mathMid}=a^2 - ab + ab - b^2}`}
+            />
+          </View>
+
+          <View style={{height: 20}}></View>
+
+          <View style={stylesTheorie.mathExpression}>
+            <MathView
+              math={`${mathMid}=a^2 - b^2}`}
             />
           </View>
 
@@ -206,19 +237,23 @@ export function BinomischeFormeln() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}(15abc + 12q) \\cdot (15abc - 12q)`}
+              math={`${mathMid}(15abc + 12q) \\cdot (15abc - 12q)}`}
             />
           </View>
 
-          <View style={stylesTheorie.mathExpression}>
-            <MathView
-              math={`${mathMid}= (15abc)^2 - (12q)^2`}
-            />
-          </View>
+          <View style={{height: 20}}></View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid}= 225a^2b^2c^2 - 144q^2`}
+              math={`${mathMid}= (15abc)^2 - (12q)^2}`}
+            />
+          </View>
+
+          <View style={{height: 20}}></View>
+
+          <View style={stylesTheorie.mathExpression}>
+            <MathView
+              math={`${mathMid}= 225a^2b^2c^2 - 144q^2}`}
             />
           </View>
 

@@ -1,18 +1,26 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import { colors } from '../../theme';
+import { ThemeContext } from '../../Context/themeContext';
+import { useContext } from 'react';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const stylesUebungen = StyleSheet.create({
+const useStylesUebungen = () => {
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  return StyleSheet.create({
   container: {
     flex: 1,
     padding: 1,
-    backgroundColor: 'white',
+    backgroundColor: activeColors.background,
     alignItems: 'flex-start',
   },
   mathText: {
     textAlign: 'left',
     alignSelf: 'stretch',
+    color: activeColors.text,
   },
   taskContainer: {
     padding: 10,
@@ -20,13 +28,14 @@ const stylesUebungen = StyleSheet.create({
   },
   titleContainer: {
     padding: 10,
-    backgroundColor: 'white',
+    backgroundColor: activeColors.background,
     marginBottom: 10,
     width: '100%',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: activeColors.text
   },
   solution: {
     fontSize: 20,
@@ -43,11 +52,14 @@ const stylesUebungen = StyleSheet.create({
   },
   taskText: {
     fontSize: 20,
+    color: activeColors.text
   },
   solutionText: {
     fontSize: 20,
+    color: activeColors.text
   }
   
 });
+};
 
-export default stylesUebungen;
+export default useStylesUebungen;

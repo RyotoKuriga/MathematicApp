@@ -3,11 +3,19 @@ import React, { useState } from 'react';
 import * as math from 'mathjs';
 import { ScaledSheet, moderateScale, verticalScale, scale } from 'react-native-size-matters';
 import MathView from 'react-native-math-view';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
 
 export function MengenoperationenUebung() {
 
-  const mathMid = '\\Large';
-  const math = '\\Huge';
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const math = `\\huge \\textcolor{${activeColors.text}}{ `;
+  const mathSmall = `\\large \\textcolor{${activeColors.text}}{ `;
+  const mathMid = `\\Large \\textcolor{${activeColors.text}}{ `;
+
 
   const [set1, setSet1] = useState([]);
   const [set2, setSet2] = useState([]);
@@ -70,30 +78,30 @@ export function MengenoperationenUebung() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: activeColors.background}]}>
       <View style={styles.containerSet1}>
-        <MathView math={`${mathMid} \\mathbb{A} = \\{ ${set1.join(', ')} \\}`} />
+        <MathView math={`${mathMid} \\mathbb{A} = \\{ ${set1.join(', ')} \\}}`} />
       </View>
 
       <View style={styles.containerSet2}>
-        <MathView math={`${mathMid} \\mathbb{B} = \\{ ${set2.join(', ')} \\}`} />
+        <MathView math={`${mathMid} \\mathbb{B} = \\{ ${set2.join(', ')} \\}}`} />
       </View>
 
       <View style={styles.containerExpression}>
-        <MathView math={`${math} \\mathbb{A} ${math} ${Operation} ${math} \\mathbb{B}`} />
+        <MathView math={`${math} \\mathbb{A} ${math} ${Operation} ${math} \\mathbb{B}}}}`} />
       </View>
 
       <View style={styles.containerSolution}>
         <Pressable onPress={solveExpression}>
-          <Text style={styles.text}>
-            {Solution ? <MathView math={`${mathMid} ${Solution}`} /> : 'Lösung anzeigen'}
+          <Text style={[styles.text, {color: activeColors.text}]}>
+            {Solution ? <MathView math={`${mathMid} ${Solution}}`} /> : 'Lösung anzeigen'}
           </Text>
         </Pressable>
       </View>
 
       <View style={styles.containerButtonCreate}>
         <Pressable onPress={createExpression}>
-          <Text style={styles.text}>
+          <Text style={[styles.text, {color: activeColors.text}]}>
             Ausdruck erstellen
           </Text>
         </Pressable>

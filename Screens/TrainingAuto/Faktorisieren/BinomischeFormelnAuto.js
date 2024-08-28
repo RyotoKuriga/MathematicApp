@@ -2,15 +2,24 @@ import { StyleSheet, Text, View, Pressable, Switch } from 'react-native';
 import React, { useState } from 'react';
 import MathView from 'react-native-math-view';
 import { re } from 'mathjs';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
+import { verticalScale } from 'react-native-size-matters';
 
 export function BinomischeFormelnAuto() {
 
-  const math = '\\LARGE';
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const math = `\\LARGE \\textcolor{${activeColors.text}}{`;
 
   const [Solution, setSolution] = useState('');
   const [Result, setResult] = useState('');
   const [Expression, setExpression] = useState('');
   const [State, setState] = useState(false);
+
+
 
   const getRandomNumber = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -47,31 +56,31 @@ export function BinomischeFormelnAuto() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: activeColors.background}]}>
       <View style={styles.containerExpression}>
-        <MathView math={`${math} ${Expression}`} />
+        <MathView math={`${math} ${Expression}}`} />
       </View>
       
       <View style={styles.button1}>
         <Pressable onPress={solveExpression}>
-          <Text style={{ textAlign: 'center', fontSize: 30 }}>
-            {Solution ? <MathView math={`${math} ${Solution}`} /> : 'Lösung anzeigen'}
+          <Text style={{ textAlign: 'center', fontSize: 30, color: activeColors.text }}>
+            {Solution ? <MathView math={`${math} ${Solution}}`} /> : 'Lösung anzeigen'}
           </Text>
         </Pressable>
       </View>
 
       <View style={styles.button2}>
         <Pressable onPress={createExpression}>
-          <Text style={{ textAlign: 'center', fontSize: 30 }}>
+          <Text style={{ textAlign: 'center', fontSize: 30, color: activeColors.text }}>
             Ausdruck erstellen
           </Text>
         </Pressable>
       </View>
 
 
-      <View style={styles.toggleContainer}>
+      <View style={[styles.toggleContainer, {borderColor: activeColors.text, backgroundColor: activeColors.background}]}>
         <View>
-          <Text style={styles.toggleText}>
+          <Text style={[styles.toggleText, {color: activeColors.text}]}>
             Fragen umkehren
           </Text>
         </View>
@@ -125,7 +134,7 @@ const styles = StyleSheet.create({
     width: 300,
     borderWidth: 4,
     position: 'absolute',
-    marginTop: 400,
+    marginTop: verticalScale(330),
     backgroundColor: '',
     borderRadius: 20,
   },

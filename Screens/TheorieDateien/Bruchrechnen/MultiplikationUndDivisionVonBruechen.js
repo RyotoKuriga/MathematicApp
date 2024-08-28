@@ -2,14 +2,22 @@ import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView } from 'rea
 import stylesTheorie from '../StylesTheorie';
 import { useNavigation } from '@react-navigation/native';
 import MathView from 'react-native-math-view';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
+import useStyles from '../StylesTheorie';
 
 export function MultiplikationUndDivisionVonBruechen() {
   const navigation = useNavigation();
 
-  const math = '\\huge';
-  const mathSmall = '\\large';
-  const mathMid = '\\Large';
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
 
+  const math = `\\huge \\textcolor{${activeColors.text}}{ `;
+  const mathSmall = `\\large \\textcolor{${activeColors.text}}{ `;
+  const mathMid = `\\Large \\textcolor{${activeColors.text}}{ `;
+
+  const stylesTheorie = useStyles();
   const nextPage = () => {
     return (
       navigation.navigate('Doppelbrüche')
@@ -17,9 +25,9 @@ export function MultiplikationUndDivisionVonBruechen() {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: activeColors.background}}>
       <ScrollView>
-        <View style={stylesTheorie.container}>
+        <View style={[stylesTheorie.container, {backgroundColor: activeColors.background}]}>
           <Text style={stylesTheorie.header}>
             Multiplikation & Division von Brüchen
           </Text>
@@ -36,7 +44,7 @@ export function MultiplikationUndDivisionVonBruechen() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} \\dfrac{10}{7} \\cdot \\dfrac{2}{3} = \\dfrac{10 \\cdot 2}{7 \\cdot 3} = \\dfrac{20}{21}`}
+              math={`${mathMid} \\dfrac{10}{7} \\cdot \\dfrac{2}{3} = \\dfrac{10 \\cdot 2}{7 \\cdot 3} = \\dfrac{20}{21}}`}
             />
           </View>
 
@@ -48,7 +56,7 @@ export function MultiplikationUndDivisionVonBruechen() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} \\dfrac{a}{b} \\cdot \\dfrac{c}{d} = \\dfrac{a \\cdot c}{b \\cdot d}`}
+              math={`${mathMid} \\dfrac{a}{b} \\cdot \\dfrac{c}{d} = \\dfrac{a \\cdot c}{b \\cdot d}}`}
             />
           </View>
 
@@ -64,13 +72,13 @@ export function MultiplikationUndDivisionVonBruechen() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} \\dfrac{25}{4} : \\dfrac{5}{3} = \\dfrac{25}{4} \\cdot \\dfrac{3}{5} `}
+              math={`${mathMid} \\dfrac{25}{4} : \\dfrac{5}{3} = \\dfrac{25}{4} \\cdot \\dfrac{3}{5}} `}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} = \\dfrac{75}{20} = \\dfrac{15}{4}`}
+              math={`${mathMid} = \\dfrac{75}{20} = \\dfrac{15}{4}}`}
             />
           </View>
 
@@ -82,13 +90,13 @@ export function MultiplikationUndDivisionVonBruechen() {
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} \\dfrac{a}{b} : \\dfrac{c}{d} = \\dfrac{a}{b} \\cdot \\dfrac{d}{c} `}
+              math={`${mathMid} \\dfrac{a}{b} : \\dfrac{c}{d} = \\dfrac{a}{b} \\cdot \\dfrac{d}{c}} `}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={`${mathMid} = \\dfrac{a \\cdot d}{b \\cdot c}`}
+              math={`${mathMid} = \\dfrac{a \\cdot d}{b \\cdot c}}`}
             />
           </View>
 

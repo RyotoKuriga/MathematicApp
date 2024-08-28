@@ -2,10 +2,10 @@
   "expo": {
     "name": "Radian",
     "slug": "Radian",
-    "version": "1.0.2",
+    "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -14,14 +14,14 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.mathapp.radian",
-      "buildNumber": "3"
+      "buildNumber": "9"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-
-      }
+      },
+      "package": "com.mathapp.radian"
     },
     "web": {
       "favicon": "./assets/favicon.png"

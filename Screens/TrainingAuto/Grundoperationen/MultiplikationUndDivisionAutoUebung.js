@@ -4,6 +4,9 @@ import * as math from 'mathjs';
 import { ScaledSheet, moderateScale, verticalScale, scale } from 'react-native-size-matters';
 import MathViewFallback from 'react-native-math-view/src/fallback';
 import Slider from '@react-native-community/slider';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
 
 export function MultiplikationUndDivisionAutoUebung() {
   const [Expression, setExpression] = useState('');
@@ -11,6 +14,9 @@ export function MultiplikationUndDivisionAutoUebung() {
   const [Result, setResult] = useState('');
   const [isEnabled, setIsEnabled] = useState(false);
   const [SliderValue, setSliderValue] = useState(3);
+
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
 
   const mathText = '\\LARGE'
 
@@ -44,7 +50,7 @@ export function MultiplikationUndDivisionAutoUebung() {
 
     expr = expr.join('  ');
     
-    setExpression(expr);
+    
 
 
     sol = math.simplify(`${expr}`).toString();
@@ -54,8 +60,11 @@ export function MultiplikationUndDivisionAutoUebung() {
     console.log(sol);
     sol = getFraction(sol);
 
+    expr = expr.replace(/\*/g, ' \\times ');
+    sol = sol.replace(/\*/g, ' ');
 
-    
+
+    setExpression(expr);
     setResult(sol);
   };
 
@@ -95,32 +104,32 @@ export function MultiplikationUndDivisionAutoUebung() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: activeColors.background}]}>
       <View style={styles.containerExpression}>
-        <Text style={stylesScaled.text}>
-          {Expression ? <MathViewFallback math={`${mathText} ${Expression}`}/> : createExpression(isEnabled)}
+        <Text style={[stylesScaled.text, {color: activeColors.text}]}>
+          {Expression ? <MathViewFallback math={`${mathText} \\textcolor{${activeColors.text}}{${Expression}}`}/> : createExpression(isEnabled)}
         </Text>
       </View>
 
       <View style={styles.button1}>
         <Pressable onPress={solveExpression}>
-          <Text style={stylesScaled.text}>
-            {Solution ? <MathViewFallback math={`${mathText} ${Solution}`}/> : 'Lösung anzeigen'}
+          <Text style={[stylesScaled.text, {color: activeColors.text}]}>
+            {Solution ? <MathViewFallback math={`${mathText} \\textcolor{${activeColors.text}}{${Solution}}`}/> : 'Lösung anzeigen'}
           </Text>
         </Pressable>
       </View>
 
       <View style={styles.button2}>
         <Pressable onPress={() => createExpression(isEnabled)}>
-          <Text style={stylesScaled.text}>
+          <Text style={[stylesScaled.text, {color: activeColors.text}]}>
             Ausdruck erstellen
           </Text>
         </Pressable>
       </View>
 
-      <View style={styles.toggleContainer}>
+      <View style={[styles.toggleContainer, {borderColor: activeColors.text}]}>
         <View>
-          <Text style={styles.toggleText}>
+          <Text style={[styles.toggleText, {color: activeColors.text}]}>
             Anzahl Glieder
           </Text>
         </View>

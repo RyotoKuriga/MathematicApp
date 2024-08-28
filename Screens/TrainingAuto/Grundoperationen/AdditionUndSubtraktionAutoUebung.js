@@ -2,11 +2,18 @@ import { StyleSheet, Text, View, Pressable, Switch } from 'react-native';
 import React, { useState } from 'react';
 import * as math from 'mathjs';
 import { ScaledSheet, moderateScale, verticalScale, scale } from 'react-native-size-matters';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
 
 export function AdditionUndSubtraktionAutoUebung() {
   const [Expression, setExpression] = useState('');
   const [Solution, setSolution] = useState('');
   const [isEnabled, setIsEnabled] = useState(false);
+
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
 
   const toggleSwitch = () => {
     setIsEnabled(previousState => {
@@ -219,16 +226,16 @@ export function AdditionUndSubtraktionAutoUebung() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: activeColors.background}]}>
       <View style={styles.containerExpression}>
-        <Text style={stylesScaled.text}>
+        <Text style={[stylesScaled.text, {color: activeColors.text}]}>
           {Expression ? Expression : createExpression(isEnabled)}
         </Text>
       </View>
 
       <View style={styles.button1}>
         <Pressable onPress={solveExpression}>
-          <Text style={stylesScaled.text}>
+          <Text style={[stylesScaled.text, {color: activeColors.text}]}>
             {Solution ? Solution : 'Lösung anzeigen'}
           </Text>
         </Pressable>
@@ -236,20 +243,20 @@ export function AdditionUndSubtraktionAutoUebung() {
 
       <View style={styles.button2}>
         <Pressable onPress={() => createExpression(isEnabled)}>
-          <Text style={stylesScaled.text}>
+          <Text style={[stylesScaled.text, {color: activeColors.text}]}>
             Ausdruck erstellen
           </Text>
         </Pressable>
       </View>
 
-      <View style={styles.toggleContainer}>
+      <View style={[styles.toggleContainer, {borderColor: activeColors.text}]}>
         <View>
-          <Text style={styles.toggleText}>
+          <Text style={[styles.toggleText, {color: activeColors.text}]}>
             Variabeln
           </Text>
         </View>
 
-        <View style={styles.switchContainer}>
+        <View style={[styles.switchContainer]}>
           <Switch
           trackColor={{ false: '#767577', true: '#81b0ff' }}
           thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}

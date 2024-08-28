@@ -1,20 +1,29 @@
-import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView } from 'react-native';
-import stylesTheorie from '../StylesTheorie';
+import { StyleSheet, Text, View, Pressable, ScrollView,} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MathView from 'react-native-math-view';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
+import useStyles from '../StylesTheorie';
 
 export function WasSindMengen() {
-  const math = '\\huge';
-  const mathSmall = '\\large';
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const math = `\\huge \\textcolor{${activeColors.text}}{ `;
+  const mathSmall = `\\large \\textcolor{${activeColors.text}}{ `;
   const navigation = useNavigation();
+  
+  
+  const stylesTheorie = useStyles();
 
   const nextPage = () => {
     return navigation.navigate('Zahlenmengen');
   };
 
   return (
-    <ScrollView>
-      <View style={stylesTheorie.container}>
+    <ScrollView style={{backgroundColor: activeColors.background}}>
+      <View style={[stylesTheorie.container, {backgroundColor: activeColors.background}]}>
         <Text style={stylesTheorie.header}>
           Was sind Mengen?
         </Text>
@@ -27,13 +36,13 @@ export function WasSindMengen() {
 
         <View style={stylesTheorie.paragraphContainer}>
           <Text style={stylesTheorie.text}>
-            <Text style={stylesTheorie.marked}>Eine Menge ist eine Gruppe von Dingen, die sich unterscheiden.</Text> Man stellt Mengen meist durch einen Grossbuchstaben dar, der einen Strich hat. Zum Beispiel kann man alle Primzahlen in eine Menge zusammenfassen und diese mit einem Buchstaben kennzeichnen. Die einzelnen Primzahlen 2, 3, 5, 7, ... sind dann Elemente dieser Menge. Um zu zeigen, dass ein Element zu einer Menge gehört, schreibt man:
+            <Text style={stylesTheorie.marked}>Eine Menge ist eine Gruppe von Dingen, die sich unterscheiden.</Text> Man stellt Mengen meist durch einen Grossbuchstaben dar - digital mit der Doppelstrichschrift und auf Papier mit einem senkrechten Strich am linken Teil des Buchstabens. Zum Beispiel kann man alle Primzahlen in eine Menge zusammenfassen und diese mit einem Buchstaben kennzeichnen. Die einzelnen Primzahlen 2, 3, 5, 7, ... sind dann Elemente dieser Menge. Um zu zeigen, dass ein Element zu einer Menge gehört, schreibt man:
           </Text>
         </View>
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={`${math} 5 \\in \\mathbb{P}`}
+            math={`${math} 5 \\in \\mathbb{P}}`}
           />
         </View>
 
@@ -51,7 +60,7 @@ export function WasSindMengen() {
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={`${math} 6 \\notin \\mathbb{P}`}
+            math={`${math} 6 \\notin \\mathbb{P}}`}
           />
         </View>
 
@@ -69,7 +78,7 @@ export function WasSindMengen() {
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={`${math} \\mathbb{M} = \\{20, 40, 60 \\}`}
+            math={`${math} \\mathbb{M} = \\{20, 40, 60 \\}}`}
           />
         </View>
 
@@ -81,7 +90,7 @@ export function WasSindMengen() {
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={`${math} \\mathbb{A} = \\{\\}`}
+            math={`${math} \\mathbb{A} = \\{\\}}`}
           />
         </View>
 
@@ -93,7 +102,7 @@ export function WasSindMengen() {
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={`${math} \\mathbb{G} = \\{\\mathbb{S}, \\mathbb{T}\\}`}
+            math={`${math} \\mathbb{G} = \\{\\mathbb{S}, \\mathbb{T}\\}}`}
           />
         </View>
 
@@ -105,7 +114,7 @@ export function WasSindMengen() {
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={`${math} \\mathbb{G} = \\{\\{10, 4\\}, \\{32\\}\\}`}
+            math={`${math} \\mathbb{G} = \\{\\{10, 4\\}, \\{32\\}\\}}`}
           />
         </View>
 
@@ -123,7 +132,7 @@ export function WasSindMengen() {
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={`${math} \\mathbb{A} \\subset \\mathbb{B}`}
+            math={`${math} \\mathbb{A} \\subset \\mathbb{B}}`}
           />
         </View>
 
@@ -142,19 +151,19 @@ export function WasSindMengen() {
         <View style={{ alignItems: 'flex-start' }}>
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={` ${math}\\mathbb{A} = \\{3, 6\\}`}
+              math={` ${math}\\mathbb{A} = \\{3, 6\\}}`}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={` ${math}\\mathbb{B} = \\{3, 6, 9\\}`}
+              math={` ${math}\\mathbb{B} = \\{3, 6, 9\\}}`}
             />
           </View>
         </View>
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={` ${math}\\mathbb{A} \\subset \\mathbb{B}`}
+            math={` ${math}\\mathbb{A} \\subset \\mathbb{B}}`}
           />
         </View>
 
@@ -166,7 +175,7 @@ export function WasSindMengen() {
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={` ${math}\\mathbb{B} \\not\\subset \\mathbb{A}`}
+            math={` ${math}\\mathbb{B} \\not\\subset \\mathbb{A}}`}
           />
         </View>
 
@@ -184,13 +193,13 @@ export function WasSindMengen() {
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={` ${math}\\mathbb{A} \\subset \\mathbb{A}`}
+            math={` ${math}\\mathbb{A} \\subset \\mathbb{A}}`}
           />
         </View>
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={` ${math}\\mathbb{B} \\subset \\mathbb{B}`}
+            math={` ${math}\\mathbb{B} \\subset \\mathbb{B}}`}
           />
         </View>
 
@@ -203,31 +212,31 @@ export function WasSindMengen() {
         <View style={{ alignItems: 'flex-start' }}>
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={` ${math} \\mathbb{A} = \\{3, 6\\}`}
+              math={` ${math} \\mathbb{A} = \\{3, 6\\}}`}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={` ${math} \\mathbb{T}_1 = \\{3\\}`}
+              math={` ${math} \\mathbb{T}_1 = \\{3\\}}`}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={` ${math} \\mathbb{T}_2 = \\{6\\}`}
+              math={` ${math} \\mathbb{T}_2 = \\{6\\}}`}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={` ${math} \\mathbb{T}_3 = \\{3, 6\\}`}
+              math={` ${math} \\mathbb{T}_3 = \\{3, 6\\}}`}
             />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
             <MathView
-              math={` ${math} \\mathbb{T}_4 = \\{\\}`}
+              math={` ${math} \\mathbb{T}_4 = \\{\\}}`}
             />
           </View>
         </View>
@@ -252,7 +261,7 @@ export function WasSindMengen() {
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={` ${math} \\mathbb{D} = \\{2, 4, 6, 8\\}`}
+            math={` ${math} \\mathbb{D} = \\{2, 4, 6, 8\\}}`}
           />
         </View>
 
@@ -264,13 +273,13 @@ export function WasSindMengen() {
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={` ${math} 3x = 9`}
+            math={` ${math} 3x = 9}`}
           />
         </View>
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={` ${math} x = 3`}
+            math={` ${math} x = 3}`}
           />
         </View>
 
@@ -282,7 +291,7 @@ export function WasSindMengen() {
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={` ${math} \\mathbb{L} = \\{\\}`}
+            math={` ${math} \\mathbb{L} = \\{\\}}`}
           />
         </View>
 
@@ -300,7 +309,7 @@ export function WasSindMengen() {
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={` ${math} \\mathbb{L} = \\{x| x < 10\\}`}
+            math={` ${math} \\mathbb{L} = \\{x| x < 10\\}}`}
           />
         </View>
 
@@ -318,7 +327,7 @@ export function WasSindMengen() {
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={` ${mathSmall} \\mathbb{L} = \\{.., -10, -2,124, 5, \\sqrt{35}\\}`}
+            math={` ${mathSmall} \\mathbb{L} = \\{.., -10, -2,124, 5, \\sqrt{35}\\}}`}
           />
         </View>
 
@@ -330,25 +339,25 @@ export function WasSindMengen() {
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={` ${mathSmall} \\mathbb{G} = \\{n | nur \\;positive \\; Zahlen\\}`}
+            math={` ${mathSmall} \\mathbb{G} = \\{n | nur \\;positive \\; Zahlen\\}}`}
           />
         </View>
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={` ${mathSmall} \\mathbb{L} = \\{x \\in \\mathbb{G} | x < 10\\}`}
+            math={` ${mathSmall} \\mathbb{L} = \\{x \\in \\mathbb{G} | x < 10\\}}`}
           />
         </View>
 
         <View style={stylesTheorie.paragraphContainer}>
           <Text style={stylesTheorie.text}>
-            Die Bedingung kann auch in Worten formuliert werden. Wenn man die Menge nun in aufzählender Form notieren möchte, ist dies einfacher, jedoch nicht möglich, da die Menge immer noch unendlich gross ist, da unendlich viele Kommazahlen in der Grundmenge enthalten sind.
+            Die Bedingung kann auch in Worten formuliert werden. Man kann diese Menge nicht in aufzählender Form notieren, da sie unendlich gross ist.
           </Text>
         </View>
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={` ${mathSmall} \\mathbb{L} = \\{2, 4.3234, 5, \\sqrt{23}, etc.\\}`}
+            math={` ${mathSmall} \\mathbb{L} = \\{2, 4.3234, 5, \\sqrt{23}, etc.\\}}`}
           />
         </View>
 
@@ -366,18 +375,18 @@ export function WasSindMengen() {
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={` ${math} \\mathbb{Q} = \\{4, 5, 6\\}`}
+            math={` ${math} \\mathbb{Q} = \\{4, 5, 6\\}}`}
           />
         </View>
 
         <View style={stylesTheorie.mathExpression}>
           <MathView
-            math={` ${math} |\\mathbb{Q}| = 3`}
+            math={` ${math} |\\mathbb{Q}| = 3}`}
           />
         </View>
 
         <View style={stylesTheorie.containerMid}>
-          <Pressable onPress={nextPage}>
+          <Pressable onPress={nextPage} style={{backgroundColor: activeColors.background}}>
             <Text style={stylesTheorie.link}>Nächstes Kapitel!</Text>
           </Pressable>
         </View>

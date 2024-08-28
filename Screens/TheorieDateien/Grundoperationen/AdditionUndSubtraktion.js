@@ -2,14 +2,23 @@ import { StyleSheet, Text, View, Pressable, ScrollView, SafeAreaView } from 'rea
 import stylesTheorie from '../StylesTheorie';
 import { useNavigation } from '@react-navigation/native';
 import MathView from 'react-native-math-view';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
+import useStyles from '../StylesTheorie';
 
 export function AdditionUndSubtraktion() {
   const divStyle = "font-size: 20px; background-color: 'white'; border: none; font-family: Arial";
+
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const math = `\\huge \\textcolor{${activeColors.text}}{ `;
+  const mathSmall = `\\large \\textcolor{${activeColors.text}}{ `;
+  const mathMid = `\\Large \\textcolor{${activeColors.text}}{ `;
   const navigation = useNavigation();
 
-  const math = '\\huge'
-  const mathSmall = '\\large'
-  const mathMid = '\\Large'
+  const stylesTheorie = useStyles();
 
   const nextPage = () => {
     return (
@@ -18,9 +27,9 @@ export function AdditionUndSubtraktion() {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: activeColors.background}}>
       <ScrollView>
-        <View style={stylesTheorie.container}>
+        <View style={[stylesTheorie.container, {backgroundColor: activeColors.background}]}>
           <Text style={stylesTheorie.header}>
             Addition und Subtraktion
           </Text>
@@ -39,7 +48,7 @@ export function AdditionUndSubtraktion() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} x + y = z`}
+                math={`${math} x + y = z}`}
               />
           </View>
 
@@ -51,7 +60,7 @@ export function AdditionUndSubtraktion() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} x - y = z`}
+                math={`${math} x - y = z}`}
               />
           </View>
 
@@ -81,7 +90,7 @@ export function AdditionUndSubtraktion() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} 7 + 3 = 3 + 7 = 10`}
+                math={`${math} 7 + 3 = 3 + 7 = 10}`}
               />
           </View>
 
@@ -93,7 +102,7 @@ export function AdditionUndSubtraktion() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${math} a + b = b + a`}
+                math={`${math} a + b = b + a}`}
               />
           </View>
 
@@ -105,7 +114,7 @@ export function AdditionUndSubtraktion() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathMid} 7 - 3 = -3 + 7 = 4`}
+                math={`${mathMid} 7 - 3 = -3 + 7 = 4}`}
               />
           </View>
 
@@ -117,7 +126,7 @@ export function AdditionUndSubtraktion() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathMid} 7 - 3 = 4 \\neq 3 - 7 = -4`}
+                math={`${mathMid} 7 - 3 = 4 \\neq 3 - 7 = -4}`}
               />
           </View>
 
@@ -135,7 +144,7 @@ export function AdditionUndSubtraktion() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathSmall} (7 + 3) + 10 = 7 + (3 + 10) = 20`}
+                math={`${mathSmall} (7 + 3) + 10 = 7 + (3 + 10) = 20}`}
               />
           </View>
 
@@ -147,13 +156,13 @@ export function AdditionUndSubtraktion() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathSmall} (a + b) + c = a + (b + c)`}
+                math={`${mathSmall} (a + b) + c = a + (b + c)}`}
               />
           </View>
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathSmall} = a + b + c`}
+                math={`${mathSmall} = a + b + c}`}
               />
           </View>
 
@@ -165,7 +174,7 @@ export function AdditionUndSubtraktion() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathSmall} 7 - (3 + 10) = 7 - 3 - 10 = -6`}
+                math={`${mathSmall} 7 - (3 + 10) = 7 - 3 - 10 = -6}`}
               />
           </View>
 
@@ -177,7 +186,7 @@ export function AdditionUndSubtraktion() {
 
           <View style={stylesTheorie.mathExpression}>
               <MathView
-                math={`${mathMid} a - (b + c) = a - b - c`}
+                math={`${mathMid} a - (b + c) = a - b - c}`}
               />
           </View>
 

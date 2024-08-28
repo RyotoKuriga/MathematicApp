@@ -1,15 +1,22 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, StatusBar, Pressable, Animated } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Pressable, Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { ThemeContext } from '../Context/themeContext';
+import { colors } from '../theme';
+import useStyles from './TheorieDateien/StylesTheorie';
+import { useContext } from 'react';
 
 export function Theorie() {
   const [openMenuIds, setOpenMenuIds] = React.useState({});
   const navigation = useNavigation();
 
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
   const buttons = [
     { id: 1, text: 'Mengenlehre', subButtons: ['Was sind Mengen?', 'Zahlenmengen', 'Mengenoperationen'] },
     { id: 2, text: 'Grundoperationen', subButtons: ['Addition & Subtraktion', 'Multiplikation & Division', 'Potenzen & Wurzeln', 'Betrag'] },
-    { id: 3, text: 'Faktorisieren', subButtons: ['Ausklammern', 'Mehrfaches Ausklammern', 'Klammeransatz', '  Binomische Formeln  '] },
+    { id: 3, text: 'Faktorisieren', subButtons: ['Ausklammern', 'Mehrfaches Ausklammern', 'Klammeransatz', 'Binomische Formeln'] },
     { id: 4, text: 'Bruchrechnen', subButtons: ['Was ist ein Bruch?', 'Kürzen & Erweitern', 'Multiplikation & Division von Brüchen', 'Doppelbrüche'] },
     { id: 5, text: 'Gleichungssysteme', subButtons: ['Gleichungssysteme auflösen'] },
     { id: 6, text: 'Lineare Funktionen', subButtons: ['Was ist eine Funktion?', 'Lineare Funktionen I', 'Lineare Funktionen II', 'Lineare Funktionen III'] },
@@ -48,25 +55,28 @@ export function Theorie() {
   };
 
   return (
-    <ScrollView style={styles.scrollView}>
+    <ScrollView style={[styles.scrollView, {backgroundColor: activeColors.background}]}>
       {buttons.map((button) => (
         <View key={button.id}>
-          <View style={styles.outerBorder}>
-            <Pressable style={styles.innerBorder} onPress={() => handleButtonPress(button.id, button.subButtons.length)}>
-              <Text style={styles.text}>{button.text}</Text>
+          <View style={[styles.outerBorder, {borderColor: activeColors.text}]}>
+            <Pressable style={[styles.innerBorder, {backgroundColor: activeColors.background}]} onPress={() => handleButtonPress(button.id, button.subButtons.length)}>
+              <Text style={[styles.text, {color: activeColors.text}]}>{button.text}</Text>
             </Pressable>
           </View>
           {openMenuIds[button.id] && (
             <View style={{ overflow: 'hidden' }}>
               <Animated.View style={[{ height: openMenuIds[button.id] }, styles.animatedContainer]}>
                 {button.subButtons.map((subButton, index) => (
-                  <Pressable
-                    key={index}
-                    style={styles.subMenuButton}
-                    onPress={() => handleSubMenuButtonPress(subButton)}
-                  >
-                    <Text style={styles.subMenuButtonText}>{subButton}</Text>
-                  </Pressable>
+                  <View style={{backgroundColor: activeColors.background}}>
+                    <Pressable
+                      key={index}
+                      style={[styles.subMenuButton, {backgroundColor: activeColors.background}, {borderColor: activeColors.text}]}
+                      onPress={() => handleSubMenuButtonPress(subButton)}
+                    >
+                      <Text style={[styles.subMenuButtonText, {color: activeColors.text}]}>{subButton}</Text>
+                    </Pressable>
+                  </View>
+                  
                 ))}
               </Animated.View>
             </View>

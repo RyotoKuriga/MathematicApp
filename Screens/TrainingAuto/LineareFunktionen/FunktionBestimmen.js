@@ -3,11 +3,17 @@ import React, { useState } from 'react';
 import * as math from 'mathjs';
 import MathView from 'react-native-math-view';
 import { ScaledSheet, moderateScale, verticalScale, scale } from 'react-native-size-matters';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
 
 export function FunktionBestimmen() {
   const [Expression, setExpression] = useState('');
   const [Solution, setSolution] = useState('');
   const [Result, setResult] = useState('');
+
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
 
   const createExpression = () => {
     setSolution(0);
@@ -101,24 +107,24 @@ export function FunktionBestimmen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: activeColors.background}]}>
       <View style={styles.containerExpression}>
-        <Text style={stylesScaled.text}>
-          {Expression ? <MathView math={`\\Large ${Expression}`}/> : createExpression()}
+        <Text style={[stylesScaled.text, {color: activeColors.text}]}>
+          {Expression ? <MathView math={`\\Large \\textcolor{${activeColors.text}}{${Expression}}`}/> : createExpression()}
         </Text>
       </View>
 
       <View style={styles.button1}>
         <Pressable onPress={solveExpression}>
-          <Text style={stylesScaled.text}>
-            {Solution ? <MathView math={`\\Large ${Solution}`}/> : 'Lösung anzeigen'}
+          <Text style={[stylesScaled.text, {color: activeColors.text}]}>
+            {Solution ? <MathView math={`\\Large \\textcolor{${activeColors.text}}{${Solution}}`}/> : 'Lösung anzeigen'}
           </Text>
         </Pressable>
       </View>
 
       <View style={styles.button2}>
         <Pressable onPress={() => createExpression()}>
-          <Text style={stylesScaled.text}>
+          <Text style={[stylesScaled.text, {color: activeColors.text}]}>
             Ausdruck erstellen
           </Text>
         </Pressable>

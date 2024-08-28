@@ -4,6 +4,9 @@ import * as math from 'mathjs';
 import MathView from 'react-native-math-view';
 import { ScaledSheet, moderateScale, verticalScale, scale } from 'react-native-size-matters';
 import Slider from '@react-native-community/slider';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../Context/themeContext';
+import { colors } from '../../../theme';
 
 export function DoppelbruecheAuto() {
   const [Expression1, setExpression1] = useState('');
@@ -12,6 +15,10 @@ export function DoppelbruecheAuto() {
   const [Result, setResult] = useState('');
   const [Brueche, setBrueche] = useState(false);
   const [SliderValue, setSliderValue] = useState(3);
+
+  
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
 
 
   const getRandomInt = (min, max, exclude) => {
@@ -84,30 +91,30 @@ export function DoppelbruecheAuto() {
 
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: activeColors.background}]}>
       <View style={styles.containerExpression}>
-        <Text style={stylesScaled.text}>
-          {Expression1 ? <MathView math={`\\Large ${Expression1}`}/> : createExpression}
+        <Text style={[stylesScaled.text, {color: activeColors.text}]}>
+          {Expression1 ? <MathView math={`\\Large \\textcolor{${activeColors.text}}{${Expression1}}`}/> : createExpression()}
         </Text>
       </View>
 
       <View style={styles.containerExpression2}>
         <Text style={stylesScaled.text}>
-          {Expression2 ? <MathView math={`\\Large ${Expression2}`}/> : createExpression}
+          {Expression2 ? <MathView math={`\\Large \\textcolor{${activeColors.text}}{${Expression2}}`}/> : createExpression}
         </Text>
       </View>
 
       <View style={styles.button1}>
         <Pressable onPress={solveExpression}>
-          <Text style={stylesScaled.text}>
-            {Solution ? <MathView math={`\\Large ${Solution}`}/> : 'Lösung anzeigen'}
+          <Text style={[stylesScaled.text, {color: activeColors.text}]}>
+            {Solution ? <MathView math={`\\Large \\textcolor{${activeColors.text}}{${Solution}}`}/> : 'Lösung anzeigen'}
           </Text>
         </Pressable>
       </View>
 
       <View style={styles.button2}>
         <Pressable onPress={createExpression}>
-          <Text style={stylesScaled.text}>
+          <Text style={[stylesScaled.text, {color: activeColors.text}]}>
             Ausdruck erstellen
           </Text>
         </Pressable>
@@ -133,11 +140,11 @@ const styles = ScaledSheet.create({
   },
   button1: {
     position: 'absolute',
-    top: verticalScale(170),
+    top: verticalScale(240),
   },
   button2: {
     position: 'absolute',
-    top: verticalScale(240),
+    top: verticalScale(300),
   },
   text: {
     fontSize: scale(40),

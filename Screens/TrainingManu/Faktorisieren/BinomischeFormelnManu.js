@@ -2,9 +2,18 @@ import React, { useState } from 'react';
 import { View, SafeAreaView, ScrollView, Pressable, Text, StyleSheet } from 'react-native';
 import MathView from 'react-native-math-view';
 import stylesUebungen from '../StylesUebungen';
+import { colors } from '../../../theme';
+import { ThemeContext } from '../../../Context/themeContext';
+import { useContext } from 'react';
+import useStylesUebungen from '../StylesUebungen';
 
 export function BinomischeFormelnManu() {
   const mathMid = '\\normalsize';
+
+  const { theme } = useContext(ThemeContext);
+  let activeColors = colors[theme.mode];
+
+  const stylesUebungen = useStylesUebungen();
 
   const AufgabenUndLoesungen = [
     {
@@ -187,7 +196,7 @@ export function BinomischeFormelnManu() {
   };
 
   return (
-    <View style={{ backgroundColor: 'white' }}>
+    <View style={{ backgroundColor: activeColors.background }}>
       <SafeAreaView>
         <ScrollView>
           <View style={stylesUebungen.container}>
@@ -225,7 +234,7 @@ export function BinomischeFormelnManu() {
               </View>
             ))}
           </View>
-          <View style={{ height: 200, backgroundColor: 'white' }} />
+          <View style={{ height: 200}} />
         </ScrollView>
       </SafeAreaView>
     </View>
