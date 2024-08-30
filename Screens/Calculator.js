@@ -429,9 +429,9 @@ export function Calculator() {
     setMathExpression(updatedMathExpressionList.join(''));
     consoleLogs();
   };
-
+ßß
   const handleHistoryInput = (value, buttonValue) => {
-    let button = {buttonValue: buttonValue, value: value}
+    let button = {buttonValue: `(${buttonValue})`, value: `(${value})`}
 
     handleInput(button);
   }
